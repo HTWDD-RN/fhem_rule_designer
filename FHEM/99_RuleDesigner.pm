@@ -75,13 +75,6 @@ RD_CGI()
 				when 'at'		{ $rule{'at'} =$a; $rule{'at'} =~ s/%3A/:/g;}
 				when 'json'		{ $rule{'json'} = urlDecode($a); }
 			}
-			
-#			if ($k eq 'q') { $query = $a; }
-#			if ($k eq 't') { $text = $a; }
-#			if ($k eq 'name') { $rule{'name'} = $a; }
-#			if ($k eq 'device') { $rule{'device'} = $a; }
-#			if ($k eq 'state') { $rule{'state'} = $a; }
-#			if ($k eq 'at') { $rule{'at'} =$a; $rule{'at'} =~ s/%3A/:/g;}
 		}
 		
 		given ($query) {
@@ -116,7 +109,29 @@ RD_CGI_Definerule
 	if ($attr{'at'}) {
 		$rule = "define $attr{'name'} at $attr{'at'} set $attr{'device'} $attr{'state'}";
 	} elsif ($attr{'json'}) {
-		return createRule($attr{'json'});
+		my $json = decode_json($attr{'json'});
+		#my $r1 = @json[0];
+	
+		#my $rule = %r1;#&parseRule(\%r1);
+		my $rule = "";
+		my $ret = "";
+		#while ( my($key, $value) = each $r1) {
+		while ( my($key, $value) = each $json) {
+			#$rule .= "$key = $value\n";
+			
+			$rule = parseRule($value);
+			$ret .= $rule;
+			$ret .= "\n";
+			RD_Telnet($rule);
+			
+			#while ( my($k, $v) = each %rn) {
+			#	$rule .= "$k = $v\n";
+			#}
+			
+		#	#$rule .= parseRule($value);
+		}
+		
+		return $ret;
 	} else {
 		$rule = "set $attr{'device'} $attr{'state'}";
 	}
@@ -183,16 +198,144 @@ sub RD_Repo_Insert
 ################################################################################
 # RULE COMPILER
 ################################################################################
-sub createRule
+sub parseRule
 {
-	my $json = @_;
-	$json = decode_json($json);
+	my ($rule) = @_;
+
+	my $id		= undef;
+	my $params	= undef;
+	my $cond	= undef;
+	my $action	= undef;
 	
-	my $rule = "";
-	
-	while ( my($key, $value) = each $json ) {
-		$rule .= "$key = $value\n";
+	while ( my($k, $v) = each $rule) {
+		given ($k) {
+			when 'ID' {
+				$id = $v; 
+			}
+			#when 'PARAMS' {
+			#	$params = parseParams($v);
+			#}
+			when 'COND'	{
+				$cond = parseCond($v);
+			}
+			when 'ACTION' {
+				$action = parseActionArray($v);
+			}
+		}
 	}
+	
+	#define Schalter1NotifyOfficeOn notify EnO_switch_00295543 { if ("%" eq "on") { fhem("set Office on") } }
+	my $rule = "define ";
+	$rule .= $id;
+	$rule .= $cond;
+	$rule .= $action;
+	$rule .= '}';
+	
+	return $rule;
+}
+
+sub parseParams
+{
+	return "";
+}
+
+sub parseCond
+{
+	my ($cond) = @_;
+	
+	my $sensor = undef;
+	my $params = undef;
+	
+	while ( my($k, $v) = each $cond) {
+		given ($k) {
+			when 'SENSOR' {
+				$sensor = $v; 
+			}
+			when 'PARAMS'	{
+				$params = "";
+				while ( my($k2, $v2) = each $v) {
+					$params .= parseCondParams($v2);
+				}	
+			}
+		}
+	}
+	
+	my $ret = " notify ";
+	$ret .= $sensor;
+	$ret .= ' { if ';
+	$ret .= $params;
+	#$ret .= ')';
+	
+	return $ret;
+}
+
+sub parseCondParams
+{
+	my ($params) = @_;
+	
+	my $ret = "";
+	
+	#my $op = $params[0];
+	#my $st = $params[1];
+	#$ret .= '("%" eq "'. $op .'")';
+	
+	while( my($k,$v) = each $params) {
+		given($k) {
+			when 0 {
+				my $op = undef;
+				given $v {
+					when '==' {$op = 'eq'; }
+					when '!=' {$op = 'ne'; }
+				}
+				$ret .= '("%" '. $op; #eq "'. $op .'")';
+				#$ret .= $k .' = '. $v;
+				#my $op = $v[0];
+				#my $st = $v[1];
+				#$ret .= '("%" eq "'. $st .'")';
+			}
+			when 1 {
+				$ret .= ' "'. $v .'")';
+			}
+		}
+	}
+	
+	return $ret;
+}
+
+sub parseActionArray
+{
+	my ($actions) = @_;
+	
+	my $act = "";
+	
+	while ( my($k, $v) = each $actions) {
+		$act .= parseAction($v);
+	}
+	
+	return $act;
+}
+
+sub parseAction
+{
+	my ($action) = @_;
+	
+	my $actor	= undef;
+	my $state	= undef;
+	
+	while ( my($k, $v) = each $action) {
+		given ($k) {
+			when 'ACTOR' {
+				$actor = $v; 
+			}
+			when 'PARAMS'	{
+				$state = $v;	
+			}
+		}
+	}
+	
+	my $rule = '{ fhem("set ';
+	$rule .= $actor ." ". $state;
+	$rule .= '") }';
 	
 	return $rule;
 }

@@ -1,0 +1,119 @@
+html,body {
+	padding: 0;
+	margin: 0;
+	height: 100%;
+	overflow: hidden;
+}
+
+body { /*	background-color: #ffe8e8; */
+	
+}
+
+div {
+	display: block;
+	padding: 5px 10px;
+}
+
+#rd_rules>div {
+	overflow: scroll;
+	z-index:1001
+}
+
+#rd_toolbar>* {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+#rd_toolbar>form>* {
+	display: inline-block;
+}
+
+#rd_rules li span.ui-icon { display: block; float: right; margin: 0 0 0 0.3em; cursor: pointer; }
+
+#rd_draggbar ul {
+	list-style: none;
+	padding: 0px;
+}
+
+#rd_draggbar li {
+	margin: 2px 3px;
+	z-index: 1002;
+}
+
+button {
+	margin: 3px 5px;
+}
+
+button,img {
+	background: url(../images/sprite.png) no-repeat top left;
+	padding: 5px 3px 5px 40px;
+	width: 120px;
+	height: 45px;
+}
+
+#btnNew {
+	background-position: 5px 5px;
+}
+
+#btnLoad {
+	background-position: 5px -335px;
+}
+
+#btnSave {
+	background-position: 5px -63px;
+}
+
+#btnSaveAs {
+	background-position: 5px -131px;
+}
+
+#imgTrash {
+	border: 2px dotted #ddd;
+	background-position: 5px -193px;
+}
+
+div.rule-obj-box {
+	position: relative;
+	/* The connectors are located in absolute position to her parent Flag*/
+	font-size: 10px;
+	display: inline-block;
+	width: 150px;
+	min-height: 100px;
+	margin: 10px;
+	z-index: 1001;
+}
+
+div.rule-obj-box  span {
+	text-align: center;
+}
+
+div.rule-obj-box  span.title {
+	padding-top: 10px;
+	font-size: 12px;
+	display: block;
+	border-bottom: 3px double #666;
+}
+
+div.rule-obj-box span.connector {
+	position: absolute;
+	background-color: #ddd;
+	z-index: 1000;
+}
+.ui-draggable:hover {
+	cursor: pointer;
+	background-color: #ccc;	
+}
+.ui-draggable.ui-draggable-dragging:hover  {
+	cursor: move;	
+}
+/*
+.sprite-document_new{ background-position: 0 0; width: 32px; height: 32px; } 
+.sprite-document_save{ background-position: 0 -68px; width: 32px; height: 32px; } 
+.sprite-document_save_as{ background-position: 0 -136px; width: 32px; height: 32px; } 
+.sprite-edit_clear{ background-position: 0 -204px; width: 32px; height: 32px; } 
+.sprite-emblem_system{ background-position: 0 -272px; width: 32px; height: 32px; } 
+.sprite-folder_drag_accept{ background-position: 0 -340px; width: 32px; height: 32px; } 
+.sprite-help_browser{ background-position: 0 -408px; width: 32px; height: 32px; } 
+.sprite-user_trash_full{ background-position: 0 -476px; width: 32px; height: 32px; } 
+.sprite-view_refresh{ background-position: 0 -544px; width: 32px; height: 32px; } 
+*/

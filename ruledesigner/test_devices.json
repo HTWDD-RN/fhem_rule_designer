@@ -1,5 +1,3 @@
-<?php
- echo <<< BLOCK
 {
     "Dev1":{
       "_UNIQUE_ID":"Dev1",
@@ -102,5 +100,3 @@
       }
    }
 }
-BLOCK;
-?>

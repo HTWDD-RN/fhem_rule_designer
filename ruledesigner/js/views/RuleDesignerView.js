@@ -196,32 +196,50 @@ function RuleDesignerView(_controller) {
 			return objList;
 		};
 
-		this.actualize = function(o, rules) {
+		this.actualize = function(blocks, rules) {
 
 			console
 					.log("RuleDesignerView.generateDraggableObjectList.actualize");
 
-			if (o === undefined || o === null)
+			if (blocks === undefined || blocks === null)
 				return;
 
 			var node;
+			$.each(blocks, function(key, value){
+				if($('#'+key).size() <= 0){
+					// Create List Of Devices
+					node = document.createElement('ul');
+					node.setAttribute('class', 'ui-widget-content');
+					node.id = key
+					$('#' + id).append(node);
+				}
+				var i = 0;
+				if(i <= 0){
+					var e = document.createElement('li');
+					e.innerHTML = key
+					$(node).append(e);
+					$(node).append('<hr>');
+				} i++;
+				$.each(value, function(index, obj) {
+					var e = document.createElement('li');
+					if(key != 'gather' && obj.Internals.NR !== undefined){
+						e.id = obj.Internals.NR;
+						e.setAttribute('rel', obj.Internals.NR);
+						e.innerHTML = obj.Internals.NAME;
+					} else {
+						e.id = obj[0]
+						e.innerHTML = obj[0]
+					}
+					// e.setAttribute('draggable', 'true');
+					// e.setAttribute('ondrag', 'drag(event)');
 
-			// Create List Of Devices
-			node = document.createElement('ul');
-			node.setAttribute('class', 'ui-widget-content');
-			$('#' + id).html(node);
+					$(node).append(e);
+				});	
+				
+				
+			})
 
-			$.each(o, function(key, item) {
-				var e = document.createElement('li');
-				e.id = item._UNIQUE_ID;
-				e.setAttribute('rel', item._UNIQUE_ID);
-				e.innerHTML = item.name;
 
-				// e.setAttribute('draggable', 'true');
-				// e.setAttribute('ondrag', 'drag(event)');
-
-				$(node).append(e);
-			});
 
 			// Create List Of Rules
 			if (rules === undefined || rules === null)
@@ -536,9 +554,11 @@ function RuleDesignerView(_controller) {
 	};
 
 	this.actualize = function() {
-		var Rules = _controller.getRules();
-		objList.actualize(_controller.getDevices(), Rules);
-		objField.actualize(Rules);
+		var rules = _controller.getRules();
+		var blocks = _controller.getDevicesByType();
+		console.log(blocks);
+		objList.actualize(blocks, rules);
+	//	objField.actualize(Rules);
 		
 		$('span.connector, div[rel$=".sensor"], div[rel$=".actor"]').droppable( {
 			tolerance: "touch",

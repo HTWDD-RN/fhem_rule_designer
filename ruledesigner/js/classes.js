@@ -1,207 +1,27 @@
 /**
- * Create a clone function
- * 
- * @param object
- *            to clone
- * @return cloned object
- */
-
-Function.prototype.clone = function(_obj_to_clone) {
-	return JSON.parse(JSON.stringify(_obj_to_clone));
-};
-
-/**
  * Set global variables
- */
-(this.Vars = {
-	linktypes : [ "AND", "OR", "XOR" ]
-});
+ **/
+
+// structure of Array [element type, number of used arguments]
+// "-1" stand for infinity
+var _GatherList = [ ["AND", -1], ["OR", -1] , ["NOT", 1] ];
 
 /**
- * This function counts his call itself
- * 
- * @returns {Function}
- */
-function Counter() {
-	return function() {
-		var counter = 0;
-		return function() {
-			if (arguments[0] !== undefined) {
-				counter = arguments[0];
-			} else {
-				counter++;
-			}
-			return counter;
-		};
-	}();
-}
-
-function LinkedList(_verify_prototype) {
-
-	var Count = Counter();
-
-	// Store the prototype for use the verifying
-	var _proto_ = null;
-
-	// Set the prototype on which is test, if the param is taken over.
-	if (_verify_prototype !== undefined)
-		_proto_ = _verify_prototype;
-
-	/**
-	 * Funkction to verify
-	 * 
-	 * @param prototype
-	 */
-	var verify = function(_obj) {
-		return _obj.prototype.isPrototypeOf(_proto_);
-	};
-
-	var ObjectList = new Object();
+ * Re-built start symbol
+ **/
+// node <rules>
+var Root = function(){
 	
-	var Root = null;
-
-	/**
-	 * Item-Klasse
-	 */
-	function ManagedItem(_obj) {
-
-		var _UNIQUE_ID = 'ITEM' + Count();
-
-		this.PrevObj = null;
-
-		this.FollowObj = null;
-
-		this.UpObj = null;
-
-		this.DownObj = null;
-
-		this.Item = _obj;
-
-		this.TimerObj = null;
-
-		this.getUID = function() {
-			return _UNIQUE_ID;
-		};
-	};
-
-	ManagedItem.prototype = {
-
-		execCallback: function(callback){
-			
-		},
-		/**
-		 * 
-		 */
-		getItem : function() {
-			return this.Item;
-		},
-
-		/**
-		 * Set the linked object which is in previous
-		 * 
-		 * @param _obj
-		 * @returns
-		 */
-		setPrevObj : function(_obj) {
-
-			if (this.PrevObj != null) { // If position occupied
-				tmp = this.PrevObj; // store placed object
-				_obj.PrevObj = tmp; // set the old as previous of the new
-				tmp.FollowObj=_obj; // set the new object as followed
-			}
-			_obj.FollowObj = this;
-			return this.PrevObj = _obj; // set the new object as previous
-
-		},
-		/**
-		 * Set the linked object which is following up
-		 * 
-		 * @param _obj
-		 */
-		setFollowObj : function(_obj) {
-
-			if (this.FollowObj != null) { // If position occupied
-				tmp = this.FollowObj; // store placed object
-				_obj.FollowObj = tmp; // set the old as follower of the new
-				tmp.PrevObj = _obj; // set the new object as previous element of
-									// the old
-			}
-			_obj.PrevObj = this;
-			return this.FollowObj = _obj; // set the new object as followed
-		},
-		/**
-		 * Returns the Representation of the stored object
-		 * 
-		 * @param _obj
-		 * @returns string
-		 */
-		toString : function(_obj) {
-			_obj.toString();
-		}
-	};
-
-	this.getRootItem = function() {
-		return Root;
-	};
+	var rules = []
 	
-	this.getObjectsAsList = function() {
-		return ObjectList;
-	};
-	
-	this.addObject = function(_mItem, _rel) {
-		
-		var newObj = new ManagedItem(_mItem);
-		
-		eval('ObjectList.' + newObj.getUID() + '= newObj');
-		
-		if (Root != null) {
-			eval('ObjectList.' + _rel[1] + '.setFollowObj(newObj)');
-				return true;
-		} else {
-			Root = newObj;
-			return true;
-		}
-	};
-
-	this.removeObject = function(_key) {
-	
-		// Remove object references
-		var tmp = ObjectList[key];
-		
-		//TODO - Handle removing root element
-		
-		// Is re-linking the exiting objects
-		if (tmp.PrevObj != null && tmp.FollowObj != null){
-			tmp.PrevObj.FollowObj = tmp.FollowObj;
-			tmp.FollowObj.PrevObj = tmp.PrevObj;
-		} else if (tmp.PrevObj != null) {
-		 tmp.PrevObj.FollowObj = null;
-		} else if (tmp.FollowObj != null) {
-		 tmp.FollowObj.PrevObj = null;
-		}
-		
-		if (tmp.UpObj != null) {
-			delete tmp.UpObj;
-		}
-		delete tmp;
-		
-		
-	};
-
-	this.searchObject = function(_rel) {
-		console.log('LinkedList.searchObject: ' + _rel);
-		if( ObjectList[_rel]  !== undefined )
-			return ObjectList[_rel];
-	};
-	
-	this.doCallForEach = function( func, callback){
-
+	this.Add = function (rule_obj) {
 		
 	}
-
+	
+	this.Remove = function (id){
+		
+	}
 };
-
-console.log(this.vars);
 
 /**
  * AbstractRuleObject
@@ -233,8 +53,18 @@ Device.prototype = {
  * Klasse RulesDesigner TODO: Singleton
  */
 function __RuleDesigner() {
+	
+	var _devices;	
+	var sensors = [];
+	var actors = [];
+	var vdevs = [];
 
-	var Count = Counter();
+	var _count = Helpers.counter();
+	
+	
+	this.getDevicesByType = function () {
+		return {"sensors": sensors, "actors": actors, "virtual_algorythms": vdevs, "gather": _GatherList}
+	}
 
 	// BEGIN
 	this.getNewRule = function() {
@@ -244,13 +74,13 @@ function __RuleDesigner() {
 		 */
 		function Rule(arguments) {
 
-			var _UNIQUE_ID = 'RULE' + Count();
+			var _UNIQUE_ID = 'RULE' + _count();
 
 			this.Name = '[' + _UNIQUE_ID + ']';
 
 			this.Descr = null;
 
-			if (arguments[0] != null ) {
+			if (arguments[0] != null) {
 				this.Name = arguments[0];
 				if (arguments[1] != null)
 					this.Descr = arguments[1];
@@ -258,13 +88,10 @@ function __RuleDesigner() {
 				this.Name = '[' + _UNIQUE_ID + ']';
 			}
 
-			this.ObjectList = new LinkedList();
-			
-			this.getUID = function(){
+			this.getUID = function() {
 				return _UNIQUE_ID;
 			};
-		}
-		;
+		};
 
 		return new Rule(arguments);
 	};
@@ -272,64 +99,30 @@ function __RuleDesigner() {
 
 	var view = new RuleDesignerView(this);
 
-	var RuleObject = new Object;
-
-	var Devices = new Object;
-
-	this.init = function() {
-		console.log("Initialisiere RulesDesigner");
-
-		this.loadAjax("test_devices.json.php", "parseDevices(data)");
-
-		view.actualize();
-
-		// $(window).resize();
-	};
-
-	this.parseDevices = function(data) {
-		console.log("parseDevices as Callback");
-		$.each(data, function(key, value) {
-			eval('Devices.' + value._UNIQUE_ID + ' = value');
+	this.init = function(data) {
+		console.log(data)
+		$.each(data.Results, function(index, obj){
+			if(obj.Attributes !== undefined && obj.Attributes.room !== undefined){
+				if(obj.Readings !== undefined && Object.keys(obj.Readings).length)				
+					sensors.push(obj);
+				if(obj.PossibleSets !== undefined && obj.PossibleSets != "")
+					actors.push(obj);
+			} else {
+				vdevs.push(obj);
+			}
 		});
-		console.log(Devices);
+		console.log("Initialisiere RulesDesigner");
+		view.actualize();
+		$(window).resize();
 	};
+
 
 	this.getDevices = function() {
-		return Devices;
+//		return Devices;
 	};
 
 	this.getRules = function() {
-		return RuleObject;
-	};
-
-	// TODO - parse Macro
-	this.parseMacro = function(data) {
-		console.log("parseDevices as Callback");
-		$.each(data, function(key, value) {
-			// eval('devices.' + value._UNIQUE_ID + ' = value');
-		});
-		console.log(data);
-	};
-
-	/**
-	 * L�dt Sensor- und Aktorinformationen
-	 */
-	this.loadAjax = function(_file_url, callback) {
-
-		var self = this;
-
-		console.log("Load Informations from server");
-
-		$.ajax({
-			type : 'GET',
-			url : _file_url,
-			dataType : "json",
-			async : false,
-			success : function(data) {
-			}
-		}).done(function(data) {
-			eval('self.' + callback);
-		});
+//		return RuleObject;
 	};
 
 	/**
@@ -349,7 +142,7 @@ function __RuleDesigner() {
 	};
 
 	this.deleteRule = function(_UNIQUE_ID) {
-		// TODO - Verkn�pfungen in anderen Objekten l�schen
+		// TODO - Verknuepfungen in anderen Objekten loeschen
 		eval('delete RuleObject.' + _UNIQUE_ID);
 		view.actualize();
 	};
@@ -387,87 +180,88 @@ function __RuleDesigner() {
 		return JSON.stringify(RuleObject, null, 3);
 	};
 
-	this.doEventAction = function(_task, _objInfo, _eventInfo) {
+//	this.doEventAction = function(_task, _objInfo, _eventInfo) {
+//
+//		console.log('xdoEventAction Method: ' + _task);
+//		console.log($(_eventInfo.target).hasClass('connector-right'));
+//		console.log($(_eventInfo.target).hasClass('connector-left'));
+//
+//		var task = _task.split('.', 2);
+//
+//		if (task[0] === undefined || task[0] == null || task[1] == undefined
+//				|| task[1] == null)
+//			return;
+//
+//		switch (task[0]) {
+//		case 'drop':
+//			if (doDropEvents(task[1], _objInfo, _eventInfo))
+//				view.actualize();
+//			break;
+//		}
+//		;
+//	};
+//
+//	var doDropEvents = function(_task, _objInfo, _eventInfo) {
+//		var task = new Object();
+//		task.method = _task.split('.', 2);
+//		task.source = _objInfo.attr('rel');
+//
+//		var log = $(_eventInfo.target).parent('div').attr('rel');
+//		if ($(_eventInfo.target).attr('rel') !== undefined)
+//			task.target = $(_eventInfo.target).attr('rel').split('.');
+//
+//		switch (task.method[0]) {
+//		case 'ruleTarget':
+//			var Rule = eval('RuleObject.' + task.target[0]);
+//			if (Rule === undefined)
+//				return false; // Break up if match, whom circle injection
+//
+//			if (eval('Devices.' + task.source) !== undefined) {
+//				eval('var _data = Devices.' + task.source);
+//				var _obj = Object.clone(_data);
+//				console.log(_obj);
+//				var target = task.target[1];
+//				if ( (eval('/'+Vars.rel_sensorlist_prefix+'([0-9])*/')).test(target) )
+//					return Rule.getSensorList().addObject(_obj, task.target);
+//				
+//				if ( (eval('/'+Vars.rel_actorlist_prefix+'([0-9])*/')).test(target) )
+//					return Rule.getActorList().addObject(_obj, task.target);
+//				
+//			} else if (eval('RuleObject.' + task.source) !== undefined) { //
+//				eval('var _data = RuleObject.' + task.source);
+//				var _obj = Object.clone(_data);
+//				console.log(_obj);
+//
+//				if( task.target[1] == 'actor' )
+//					return Rule.getActorList().addObject(_obj, task.target);
+//			}
+//			break;
+//
+//		case 'trash':
+//			if (_objInfo._DEVICE_ID !== undefined) { // Is a device or a device similar object
+//				if (eval('RuleObject.SensorList.' + _objInfo_DEVICE_ID) !== undefined) // Is in ActorList
+//					return eval('RuleObject.Sensorlist.deleteObject('
+//							+ _objInfo.DEVICE_ID + ')');
+//
+//				if (eval('RuleObject.ActorList.' + _objInfo_DEVICE_ID) !== undefined) // Is in Sensorlist
+//					return eval('RuleObject.Actorlist.deleteObject('
+//							+ _objInfo.DEVICE_ID + ')');
+//			}
+//
+//			if (eval('RuleObject.' + _objInfo._RULE_ID) !== undefined) { // Is rule
+//				eval('delete RuleObject.' + _objInfo._RULE_ID);
+//				return true;
+//			}
+//			return false;
+//			break;
+//		default:
+//			return false;
+//		}
+//		;
+//	};
 
-		console.log('xdoEventAction Method: ' + _task);
-		console.log($(_eventInfo.target).hasClass('connector-right'));
-		console.log($(_eventInfo.target).hasClass('connector-left'));
 
-		var task = _task.split('.', 2);
-
-		if (task[0] === undefined || task[0] == null || task[1] == undefined
-				|| task[1] == null)
-			return;
-
-		switch (task[0]) {
-		case 'drop':
-			if (doDropEvents(task[1], _objInfo, _eventInfo))
-				view.actualize();
-			break;
-		}
-		;
-	};
-
-	var doDropEvents = function(_task, _objInfo, _eventInfo) {
-		var task = new Object();
-		task.method = _task.split('.', 2);
-		task.source = _objInfo.attr('rel');
-
-		var log= $(_eventInfo.target).parent('div').attr('rel');
-		if ($(_eventInfo.target).attr('rel') !== undefined)
-			task.target = $(_eventInfo.target).attr('rel').split('.');
-
-		switch (task.method[0]) {
-		case 'ruleTarget':
-			var Rule = eval('RuleObject.' + task.target[0]);
-			if (Rule === undefined)
-				return false; // Break up if match, whom circle injection
-
-			if (eval('Devices.' + task.source) !== undefined) {
-				eval('var _data = Devices.' + task.source);
-				var _obj = Object.clone(_data);
-				console.log(_obj);
-				return Rule.ObjectList.addObject(_obj, task.target);
-
-			} else if (eval('RuleObject.' + task.source) !== undefined) {
-				eval('var _data = RuleObject.' + task.source);
-				var _obj = Object.clone(_data);
-				console.log(_obj);
-				return Rule.ObjectList.addObject(_obj, task.target);
-			}
-			break;
-
-		case 'trash':
-			if (_objInfo._DEVICE_ID !== undefined) {
-				return eval('RuleObject.Objectlist.deleteObject('
-						+ _objInfo.DEVICE_ID + ')');
-			}
-
-			if (eval('RuleObject.' + _objInfo._RULE_ID) !== undefined) {
-				eval('delete RuleObject.' + _objInfo._RULE_ID);
-				return true;
-			}
-			break;
-		default:
-			return false;
-		}
-		;
-	};
-
-	this.init();
+	
+	
+	Helpers.LoadAjax(this.init);
 };
-
-
-this.displayMultitree(treeRoot){
-	
-	function goLeft(){
-	
-	}
-	
-	function goRight(){
-	
-	}
-
-}
-
-

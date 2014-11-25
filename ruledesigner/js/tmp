@@ -1,0 +1,171 @@
+
+
+//function LinkedList() {
+//
+//	var Count = Counter();
+//
+//	// Store the prototype for use the verifying
+//	var _proto_ = null;
+//	
+//	var rel_prefix = 'ITEM';
+//	
+//	if(arguments[0] !== undefined){
+//		rel_prefix = arguments[0];
+//	}
+//	var _verify_prototype;
+//	// Set the prototype on which is test, if the param is taken over.
+//	if (_verify_prototype !== undefined)
+//		_proto_ = _verify_prototype;
+//
+//	/**
+//	 * Funkction to verify
+//	 * 
+//	 * @param prototype
+//	 */
+//	var verify = function(_obj) {
+//		return _obj.prototype.isPrototypeOf(_proto_);
+//	};
+//
+//	var ObjectList = new Object();
+//	
+//	var Root = null;
+//
+//	/**
+//	 * Item-Klasse
+//	 */
+//	function ManagedItem(_obj) {
+//
+//		var _UNIQUE_ID = rel_prefix + Count();
+//
+//		this.PrevObj = null;
+//
+//		this.FollowObj = null;
+//
+//		this.UpObj = null;
+//
+//		this.DownObj = null;
+//
+//		this.Item = _obj;
+//
+//		this.TimerObj = null;
+//
+//		this.getUID = function() {
+//			return _UNIQUE_ID;
+//		};
+//	};
+//
+//	ManagedItem.prototype = {
+//
+//		execCallback: function(callback){
+//			
+//		},
+//		/**
+//		 * 
+//		 */
+//		getItem : function() {
+//			return this.Item;
+//		},
+//
+//		/**
+//		 * Set the linked object which is in previous
+//		 * 
+//		 * @param _obj
+//		 * @returns
+//		 */
+//		setPrevObj : function(_obj) {
+//
+//			if (this.PrevObj != null) { // If position occupied
+//				tmp = this.PrevObj; // store placed object
+//				_obj.PrevObj = tmp; // set the old as previous of the new
+//				tmp.FollowObj=_obj; // set the new object as followed
+//			}
+//			_obj.FollowObj = this;
+//			return this.PrevObj = _obj; // set the new object as previous
+//
+//		},
+//		/**
+//		 * Set the linked object which is following up
+//		 * 
+//		 * @param _obj
+//		 */
+//		setFollowObj : function(_obj) {
+//
+//			if (this.FollowObj != null) { // If position occupied
+//				tmp = this.FollowObj; // store placed object
+//				_obj.FollowObj = tmp; // set the old as follower of the new
+//				tmp.PrevObj = _obj; // set the new object as previous element of
+//									// the old
+//			}
+//			_obj.PrevObj = this;
+//			return this.FollowObj = _obj; // set the new object as followed
+//		},
+//		/**
+//		 * Returns the Representation of the stored object
+//		 * 
+//		 * @param _obj
+//		 * @returns string
+//		 */
+//		toString : function(_obj) {
+//			_obj.toString();
+//		}
+//	};
+//
+//	this.getRootItem = function() {
+//		return Root;
+//	};
+//	
+//	this.getObjectsAsList = function() {
+//		return ObjectList;
+//	};
+//	
+//	this.addObject = function(_mItem, _rel) {
+//		
+//		var newObj = new ManagedItem(_mItem);
+//		
+//		eval('ObjectList.' + newObj.getUID() + '= newObj');
+//		
+//		if (Root != null) {
+//			eval('ObjectList.' + _rel[1] + '.setFollowObj(newObj)');
+//				return true;
+//		} else {
+//			Root = newObj;
+//			return true;
+//		}
+//	};
+//
+//	this.removeObject = function(_key) {
+//	
+//		// Remove object references
+//		var tmp = ObjectList[key];
+//		
+//		//TODO - Handle removing root element
+//		
+//		// Is re-linking the exiting objects
+//		if (tmp.PrevObj != null && tmp.FollowObj != null){
+//			tmp.PrevObj.FollowObj = tmp.FollowObj;
+//			tmp.FollowObj.PrevObj = tmp.PrevObj;
+//		} else if (tmp.PrevObj != null) {
+//		 tmp.PrevObj.FollowObj = null;
+//		} else if (tmp.FollowObj != null) {
+//		 tmp.FollowObj.PrevObj = null;
+//		}
+//		
+//		if (tmp.UpObj != null) {
+//			delete tmp.UpObj;
+//		}
+//		delete tmp;
+//		
+//		
+//	};
+//
+//	this.searchObject = function(_rel) {
+//		console.log('LinkedList.searchObject: ' + _rel);
+//		if( ObjectList[_rel]  !== undefined )
+//			return ObjectList[_rel];
+//	};
+//	
+//	this.doCallForEach = function( func, callback){
+//		
+//	}
+//
+//};

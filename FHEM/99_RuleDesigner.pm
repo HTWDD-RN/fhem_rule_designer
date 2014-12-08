@@ -8,6 +8,7 @@ use DBI;
 use Switch 'Perl5', 'Perl6';
 use Net::Telnet;
 use JSON;	# search.cpan.org/~makamaka/JSON-2.90/lib/JSON.pm
+use Data::Dumper;
 
 use vars qw(%data);
 
@@ -79,7 +80,10 @@ RD_CGI()
 		
 		given ($query) {
 			when 'devicelist'	{ $json_ret = RD_CGI_Devicelist(); }
-			when 'define'		{ $json_ret = &RD_CGI_Definerule(\%rule); }
+			when 'define'		{ 
+				#$json_ret = &RD_CGI_Definerule(\%rule);
+				$json_ret = RD_CGI_Definerule(%rule); 
+			}
 			default				{ $json_ret = '{"type": "error", "msg": "unsupported query"}'; }
 		}
 		
@@ -103,37 +107,22 @@ RD_CGI_Devicelist()
 sub
 RD_CGI_Definerule
 {
-	my %attr = %{(shift)};
+	my %attr = @_;
 	my $rule = "";
 
-	if ($attr{'at'}) {
-		$rule = "define $attr{'name'} at $attr{'at'} set $attr{'device'} $attr{'state'}";
-	} elsif ($attr{'json'}) {
-		my $json = decode_json($attr{'json'});
-		#my $r1 = @json[0];
-	
-		#my $rule = %r1;#&parseRule(\%r1);
-		my $rule = "";
-		my $ret = "";
-		#while ( my($key, $value) = each $r1) {
-		while ( my($key, $value) = each $json) {
-			#$rule .= "$key = $value\n";
-			
-			$rule = parseRule($value);
-			$ret .= $rule;
-			$ret .= "\n";
+	if ($attr{'json'}) {
+		my $json_ref = decode_json($attr{'json'});
+		my @json = @{$json_ref};
+
+		for (values @json) {
+			$rule .= parseRule($_);
+			$rule .= "\n";
 			RD_Telnet($rule);
-			
-			#while ( my($k, $v) = each %rn) {
-			#	$rule .= "$k = $v\n";
-			#}
-			
-		#	#$rule .= parseRule($value);
 		}
 		
-		return $ret;
+		return $rule;
 	} else {
-		$rule = "set $attr{'device'} $attr{'state'}";
+		return "error: no rule";
 	}
 	$attr{"rule"} = $rule;
 	
@@ -200,38 +189,43 @@ sub RD_Repo_Insert
 ################################################################################
 sub parseRule
 {
-	my ($rule) = @_;
-
+	my ($ref) = @_;
+	my %rule = %$ref;
+	#return Dumper($rule);
 	my $id		= undef;
 	my $params	= undef;
 	my $cond	= undef;
 	my $action	= undef;
+	my $vdef	= undef;
 	
-	while ( my($k, $v) = each $rule) {
-		given ($k) {
+	for (keys %rule) {
+		given ($_) {
 			when 'ID' {
-				$id = $v; 
+				$id = $rule{$_}; 
 			}
 			#when 'PARAMS' {
 			#	$params = parseParams($v);
 			#}
 			when 'COND'	{
-				$cond = parseCond($v);
+				$cond = parseCond($rule{$_});
 			}
 			when 'ACTION' {
-				$action = parseActionArray($v);
+				$action = parseActionArray($rule{$_});
+			}
+			when 'VDEV' {
+				$vdef = undef;
 			}
 		}
 	}
 	
 	#define Schalter1NotifyOfficeOn notify EnO_switch_00295543 { if ("%" eq "on") { fhem("set Office on") } }
-	my $rule = "define ";
-	$rule .= $id;
-	$rule .= $cond;
-	$rule .= $action;
-	$rule .= '}';
+	my $r = "define ";
+	$r .= $id;
+	$r .= $cond;
+	$r .= $action;
+	$r .= '}';
 	
-	return $rule;
+	return $r;
 }
 
 sub parseParams
@@ -239,45 +233,119 @@ sub parseParams
 	return "";
 }
 
+#
+# <conditions> -> <condition> | <gather>
 sub parseCond
+{
+	my ($ref) = @_;
+	my %cond = %$ref;
+	my %res;
+	
+	if($cond{'SENSOR'} && $cond{'PARAMS'}) {
+		%res = %{ parseCondition($ref) };
+		return ' notify '.$res{'name'}.' { if '.$res{'params'};
+	}
+
+	%res = %{parseGather($ref)};
+	return ' notify '.$res{'names'}.' { '. $res{'decs'} .' if ('.$res{'params'}.')';
+}
+
+#
+# <conditions> -> <condition> | <gather>
+sub parseGatherCond
+{
+	my ($ref) = @_;
+	
+	#return "\n\n". Dumper($ref) ."\n\n";
+	
+	my %cond = %{$ref};
+	
+	my %res;
+	if($cond{'SENSOR'} && $cond{'PARAMS'}) {
+		%res = %{ parseCondition($ref) };
+	} else {
+		%res = parseGather($ref);
+		return "\n\n". Dumper(%res) ."\n\n";
+	}
+	return \%res;
+}
+
+#
+#	<condition>	->	"SENSOR" : ID, 
+#					"REF_PARAMS" : {<ref_param>(, <ref_param>)?}
+sub parseCondition
 {
 	my ($cond) = @_;
 	
-	my $sensor = undef;
-	my $params = undef;
+	my %condition;
 	
 	while ( my($k, $v) = each $cond) {
 		given ($k) {
 			when 'SENSOR' {
-				$sensor = $v; 
+				$condition{'name'} = $v;
+				$condition{'dec'} = 'my $'.$v.'_val = $value("'.$v.'");;';
+				$condition{'var'} = '$'.$v.'_val';  
 			}
 			when 'PARAMS'	{
-				$params = "";
+				$condition{'params'} = "";
 				while ( my($k2, $v2) = each $v) {
-					$params .= parseCondParams($v2);
+					$condition{'params'} .= parseCondParams($v2);
 				}	
 			}
 		}
 	}
 	
-	my $ret = " notify ";
-	$ret .= $sensor;
-	$ret .= ' { if ';
-	$ret .= $params;
-	#$ret .= ')';
+	$condition{'params'} =~ s/%/$condition{'var'}/ge; 
 	
-	return $ret;
+	return \%condition;
 }
 
+#
+#	<LOG_GATHER> : [<conditions>(, <conditions>)?]
+sub parseGather
+{
+	my ($gather) = @_;
+	
+	my $loggather = undef;
+	my @conditions5;
+	#return "\n\n".Dumper($gather)."\n\n";
+	my @k = keys %{$gather};
+	
+	given(@k[0]) {
+		when 'AND'	{ $loggather = '&&'; }
+		when 'OR'	{ $loggather = '||'; }
+	}
+	
+	for(values $gather) {
+		for (values $_) {
+			push(@conditions5, parseGatherCond($_));
+		}
+	}
+	
+	my @names;
+	my @decs;
+	my @params;
+	for (@conditions5) {
+		my %c = %{$_};
+		push(@names, $c{'name'});
+		push(@decs, $c{'dec'});
+		push(@params, $c{'params'});
+	}
+	
+	my %res;
+	$res{'names'} = "(".createSeperatedString("|", @names).")";
+	$res{'decs'} = createSeperatedString("\n", @decs)."\n";
+	$res{'params'} = createSeperatedString($loggather, @params)." ";
+	
+	return \%res;
+}
+
+#
+#	<ref_param> : [<log_func>, <value>]
 sub parseCondParams
 {
 	my ($params) = @_;
-	
 	my $ret = "";
-	
-	#my $op = $params[0];
-	#my $st = $params[1];
-	#$ret .= '("%" eq "'. $op .'")';
 	
 	while( my($k,$v) = each $params) {
 		given($k) {
@@ -287,11 +355,7 @@ sub parseCondParams
 					when '==' {$op = 'eq'; }
 					when '!=' {$op = 'ne'; }
 				}
-				$ret .= '("%" '. $op; #eq "'. $op .'")';
-				#$ret .= $k .' = '. $v;
-				#my $op = $v[0];
-				#my $st = $v[1];
-				#$ret .= '("%" eq "'. $st .'")';
+				$ret .= '("%" '. $op;
 			}
 			when 1 {
 				$ret .= ' "'. $v .'")';
@@ -338,6 +402,31 @@ sub parseAction
 	$rule .= '") }';
 	
 	return $rule;
+}
+
+# Returns a seperated string by a given seperator and an array.
+sub createSeperatedString
+{
+	my ($seperator, @list) = @_;
+	
+	my $lastIdx = $#list;
+	my $res = "";
+	
+	if($lastIdx < 0) {
+		return undef;
+	}
+	
+	if($lastIdx == 0) {
+		return $list[0];
+	}
+	
+	for(my $i=0; $i<$lastIdx; $i++) {
+		$res .= $list[$i].$seperator;
+	}
+
+	$res .= $list[$lastIdx];
+	
+	return $res;
 }
 
 sub RD_Telnet

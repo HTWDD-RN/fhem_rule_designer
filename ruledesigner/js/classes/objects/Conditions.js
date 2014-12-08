@@ -7,7 +7,7 @@ var Conditions = function(){
 	var _view = new ConditionsView(_self)
 	
 	this.display = function() {
-		_view.display(_model)
+		return _view.display(_model)
 	}
 	
 	this.toJSON = function(){
@@ -41,7 +41,7 @@ var ConditionsModel = function(controller, id){
 	 * 
 	 */
 	this.getObject =function(){
-		
+		return _obj
 	}
 	
 	/**
@@ -58,8 +58,14 @@ var ConditionsView = function(controller){
 
 	var _controller = controller
 
-	this.display = function(){
-		
+	this.display = function(model){
+		var _obj = model.getObject()
+		if( _obj != null){
+			return _obj.display()			
+		} else {
+			// TODO: Platzhalter
+			return 'Condition/Gather-placeholder'
+		}
 	}
 	
 }

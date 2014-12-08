@@ -8,7 +8,7 @@ var Params = function() {
 
 
 	this.display = function() {
-		_view.display(_model)
+		return _view.display(_model)
 	}
 	
 	this.toJSON = function(){
@@ -90,5 +90,9 @@ var ParamsModel = function(controller, id) {
 var ParamsView = function(controller) {
 
 	var _controller = controller
+	
+	this.display = function (model){
+		return '' //TODO:
+	}
 
 }

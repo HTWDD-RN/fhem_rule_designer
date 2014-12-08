@@ -7,7 +7,7 @@ var Actors = function(){
 	var _view = new ActorsView(_self)
 	
 	this.display = function() {
-		_view.display(_model)
+		return _view.display(_model)
 	}
 	
 	this.toJSON = function(){
@@ -52,8 +52,8 @@ var ActorsView = function(controller){
 
 	var _controller = controller
 
-	this.display = function(){
-		
+	this.display = function(model){
+		return '' //TODO:
 	}
 	
 }

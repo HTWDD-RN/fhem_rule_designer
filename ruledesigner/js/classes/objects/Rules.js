@@ -10,11 +10,11 @@ function Rules() {
 
 	var _model
 
-	var _view
-
-	this.display = function() {
-		_view.display(_model)
-	}
+//	var _view
+//
+//	this.display = function() {
+//		return _view.display(_model)
+//	}
 
 	this.serialize = function() {
 		return _model.toJSON()
@@ -34,7 +34,7 @@ function Rules() {
 		if (_instance === undefined || _instance == null) {
 			_instance = _self // not this!!! - it returns the rule designer
 			_model = new RulesModel(_instance)
-			_view = new RulesView(_instance)
+//			_view = new RulesView(_instance)
 		}
 		return _instance
 	}()
@@ -74,18 +74,16 @@ function RulesModel(controller) {
 		return tmp
 	}
 	
-
-
 }
 
-function RulesView(controller) {
-
-	var _self = this
-
-	var _controller = controller
-
-	this.display = function(_model) {
-
-	}
-
-}
+//function RulesView(controller) {
+//
+//	var _self = this
+//
+//	var _controller = controller
+//
+//	this.display = function(_model) {
+//
+//	}
+//
+//}

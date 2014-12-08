@@ -7,14 +7,14 @@ var Rule = function(id) {
 	var _view = new RuleView(_self)
 
 	this.display = function() {
-		_view.display(_model)
+		return _view.display(_model)
 	}
 	
 	this.toJSON = function(){
 		return _model.toJSON()
 	}
 		
-	this.toInfo = function(){
+	this.getInfo = function(){
 		return _model.toInfo()
 	}
 
@@ -47,7 +47,7 @@ var RuleModel = function(controller, id) {
 	 * @param object
 	 */
 	this.setActions = function(obj) {
-		_actions.obj = obj
+		_actions = obj
 	}
 
 	/**
@@ -56,7 +56,7 @@ var RuleModel = function(controller, id) {
 	 * @return object
 	 */
 	this.getActions = function() {
-		return _actions.obj
+		return _actions
 	}
 
 	/**
@@ -65,7 +65,7 @@ var RuleModel = function(controller, id) {
 	 * @param
 	 */
 	this.setConditions = function(obj) {
-		_conditions.obj = obj
+		_conditions = obj
 	}
 
 	/**
@@ -74,7 +74,7 @@ var RuleModel = function(controller, id) {
 	 * @return
 	 */
 	this.getConditions = function() {
-		return _conditions.obj
+		return _conditions
 	}
 
 	/**
@@ -91,7 +91,7 @@ var RuleModel = function(controller, id) {
 	 * @param
 	 */
 	this.setVirtualDeviceObject = function(obj) {
-		_virtual_device.obj
+		_virtual_device = obj
 	}
 
 	/**
@@ -100,7 +100,7 @@ var RuleModel = function(controller, id) {
 	 * @return
 	 */
 	this.getVirtualDeviceObject = function() {
-		return _virtual_device.obj
+		return _virtual_device
 	}
 
 	/**
@@ -163,6 +163,15 @@ var RuleView = function(controller) {
 	var _controller = controller
 	
 	this.display = function(_model){
-		
+		var condObj = _model.getConditions()
+		var vdevObj = _model.getVirtualDeviceObject()
+		var actionsObj = _model.getActions()
+
+		var html = '<ul class="obj_rule">'
+			+ '<li>' + (condObj.display()) + '</li>'
+			+ '<li>' + (vdevObj.display()) + '</li>'
+			+ '<li>' + (actionsObj.display()) + '</li>'
+			+ '</ul>'
+		return html
 	}
 }

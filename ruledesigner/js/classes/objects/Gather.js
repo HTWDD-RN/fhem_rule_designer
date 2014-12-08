@@ -7,7 +7,7 @@ function Gather(gather) {
 	var _view = GatherView(_self)
 
 	this.display = function() {
-		_view.display(_model)
+		return _view.display(_model)
 	}
 	
 	this.toJSON = function(){
@@ -67,7 +67,7 @@ function GatherView(contoller) {
 
 	var _controller = controller
 
-	this.display = function(_model) {
-
+	this.display = function(model) {
+		return '' //TODO:
 	}
 }

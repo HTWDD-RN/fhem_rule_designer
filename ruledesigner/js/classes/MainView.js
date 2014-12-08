@@ -14,8 +14,10 @@ $(window)
 					var height = $(window).height() - 20;
 
 					// AppContainer Resize
-					$(Configuration.GUI.APP_CONTAINER +' > div').css('margin', margin);
-					$(Configuration.GUI.APP_CONTAINER +' > div').css('margin-bottom', 0);
+					$(Configuration.GUI.APP_CONTAINER + ' > div').css('margin',
+							margin);
+					$(Configuration.GUI.APP_CONTAINER + ' > div').css(
+							'margin-bottom', 0);
 
 					if (width >= 720) {
 
@@ -142,7 +144,7 @@ function MainView(_controller) {
 
 		this.init = function() {
 			var toolbar = document.createElement('ul');
-			
+
 			var container = document.createElement('li');
 			toolbar.id = id;
 			$(toolbar).addClass(Configuration.GUI.TOOLBAR.CLASSES)
@@ -227,52 +229,76 @@ function MainView(_controller) {
 		};
 
 		this.actualize = function(blocks, rules) {
-			
-			$('#'+id).html('')
-			
+
+			$('#' + id).html('')
+
 			Log('MainView.js - generateDraggableObjectList.actualize');
 
 			if (blocks === undefined || blocks === null)
 				return;
 
 			var node;
-			$.each(blocks, function(key, value) {
-				if ($('#' + key).size() <= 0) {
-					// Create List Of Devices
-					node = document.createElement('ul');
-					node.setAttribute('class', Configuration.GUI.OBJECT_LIST.SEGMENTATION.CLASSES);
-					node.id = key
-					$('#' + id).append(node);
-				}
-				var i = 0;
-				if (i <= 0) {
-					var e = document.createElement('li');
-					e.innerHTML = key
-					e.setAttribute('class', Configuration.GUI.OBJECT_LIST.SEGMENTATION.HEAD)
-					$(node).append(e);
-					$(node).append('<hr>');
-				}
-				i++;
-				$.each(value, function(index, obj) {
-					var e = document.createElement('li');
-					if (key != 'gather' && obj.ID !== undefined) {
-						e.id = obj.ID;
-						e.setAttribute('rel', obj.ID);
-						e.setAttribute('class', Configuration.GUI.OBJECT_LIST.SEGMENTATION.BODY)
-						var url = (obj.ICON != '' ? obj.ICON : '')
-						e.setAttribute('style', 'background-image: url(' + url + ');')
-						e.innerHTML = obj.NAME;
-					} else {
-						e.id = obj[0]
-						e.innerHTML = obj[0]
-					}
-					// e.setAttribute('draggable', 'true');
-					// e.setAttribute('ondrag', 'drag(event)');
+			$
+					.each(
+							blocks,
+							function(key, value) {
+								if ($('#' + key).size() <= 0) {
+									// Create List Of Devices
+									node = document.createElement('ul');
+									node
+											.setAttribute(
+													'class',
+													Configuration.GUI.OBJECT_LIST.SEGMENTATION.CLASSES);
+									node.id = key
+									$('#' + id).append(node);
+								}
+								var i = 0;
+								if (i <= 0) {
+									var e = document.createElement('li');
+									e.innerHTML = key
+									e
+											.setAttribute(
+													'class',
+													Configuration.GUI.OBJECT_LIST.SEGMENTATION.HEAD)
+									$(node).append(e);
+									$(node).append('<hr>');
+								}
+								i++;
+								$
+										.each(
+												value,
+												function(index, obj) {
+													var e = document
+															.createElement('li');
+													if (key != 'gather'
+															&& obj.ID !== undefined) {
+														e.id = obj.ID;
+														e.setAttribute('rel',
+																obj.ID);
+														e
+																.setAttribute(
+																		'class',
+																		Configuration.GUI.OBJECT_LIST.SEGMENTATION.BODY)
+														var url = (obj.ICON != '' ? obj.ICON
+																: '')
+														e.setAttribute('style',
+																'background-image: url('
+																		+ url
+																		+ ');')
+														e.innerHTML = obj.NAME;
+													} else {
+														e.id = obj[0]
+														e.innerHTML = obj[0]
+													}
+													// e.setAttribute('draggable',
+													// 'true');
+													// e.setAttribute('ondrag',
+													// 'drag(event)');
 
-					$(node).append(e);
-				});
+													$(node).append(e);
+												});
 
-			})
+							})
 
 			// Create List Of Rules
 			if (rules === undefined || rules === null)
@@ -280,9 +306,9 @@ function MainView(_controller) {
 
 			node = document.createElement('ul');
 			node.setAttribute('class', 'objlist-category ui-widget-content');
-Log(rules.getInfo(),5)
+			Log(rules.getInfo(), 5)
 			$.each(rules.getInfo(), function(rule, info) {
-				
+
 				var e = document.createElement('li');
 				e.id = info._UNIQUE_ID;
 				e.setAttribute('rel', info.getUID());
@@ -295,7 +321,7 @@ Log(rules.getInfo(),5)
 
 			$('#' + id + ' ul').children("li").each(function() {
 				$(this).draggable({
-				//	scroll: true,
+					// scroll: true,
 					revert : true
 				});
 			});
@@ -318,90 +344,39 @@ Log(rules.getInfo(),5)
 
 		var Preview_ID = 'rd_rules_preview';
 
-		var setConnector = function(_class, _rel) {
-			var c = document.createElement('span');
-			$(c).attr('rel', _rel);
-			$(c).addClass('connector');
-			$(c).addClass(_class);
-			return c;
-		};
-
-		var buildPlaceholder = function(bool, _RULE_ID) {
-
-			var box = document.createElement('div');
-			$(box).addClass('rule-obj-box');
-
-			console.log(arguments);
-			if (bool) {
-				$(box).append(
-						setConnector('connector-left', _RULE_ID + '.actor'));
-				$(box).attr('rel', _RULE_ID + '.actor');
-			} else {
-				$(box).append(
-						setConnector('connector-right', _RULE_ID + '.sensor'));
-				$(box).attr('rel', _RULE_ID + '.sensor');
-			}
-
-			var title = document.createElement('span');
-			$(title).addClass('title');
-			title.innerHTML = 'Placeholder';
-			$(box).append(title);
-
-			$(box).addClass('placeholder');
-			$(box).append(
-					'<p>This object will remove when first '
-							+ (bool ? 'actor' : 'sensor') + ' is dropped.</p>');
-			return box;
-		};
-
-		var buildBox = function(_title, _obj) {
-			var box = document.createElement('div');
-			$(box).addClass('rule-obj-box');
-
-			console.log(arguments);
-			var _rel = ((arguments[2] !== undefined && arguments[2] != null) ? arguments[2]
-					+ '.'
-					: '')
-					+ _obj.getUID()
-			$(box).attr('rel', _rel);
-
-			$(box).append(setConnector('connector-left', _rel + '.prev'));
-			$(box).append(setConnector('connector-right', _rel + '.follow'));
-			$(box).append(setConnector('connector-top', _rel + '.up'));
-			$(box).append(setConnector('connector-bottom', _rel + '.down'));
-
-			var title = document.createElement('span');
-			$(title).addClass('title');
-			title.innerHTML = _title;
-			$(box).append(title);
-			return box;
-		};
-
-		this.addRuleTab = function(_rule) {
+		this.addRuleTab = function(rule) {
+			
+			var info = rule.getInfo()
+			
 			var div = document.createElement('div');
-			div.id = 'Tab_' + _rule.ID;
-			div.setAttribute('rel', _rule.ID);
+			div.id = 'Tab_' + info.ID;
+			div.setAttribute('rel', info.ID);
+
 
 			$(div).insertBefore('#' + Preview_ID);
-
+			
+			// Init first display
+			var tmp = rule.display()
+			Log(tmp, 5)
+			$('#Tab_' + info.ID).html(tmp)
+			
 			var li = document.createElement('li');
 			$(li)
 					.html(
 							'<a href="#Tab_'
-									+ _rule.ID
+									+ info.ID
 									+ '"><span class="ui-icon ui-icon-close" role="presentation"></span>'
-									+ (_rule.PARAMS.Name || _rule.ID) + '</a>');
+									+ (info.PARAMS.Name || info.ID) + '</a>');
 			// alert($('li[rel="' + Preview_ID + '"]').html());
+
+			// Add generated tabular
 			$(li).insertBefore($('li[rel="' + Preview_ID + '"]'));
 
-			$(li).each(function() {
-				$(this).draggable({
-					opacity : 0.5,
-					revert : true
-				});
+			// Make it draggable (for trashing)
+			$(li).draggable({
+				opacity : 0.5,
+				revert : true
 			});
-			// $('#' + ID).tabs( "destroy" );
-			// $('#' + ID).tabs( );
 
 			// Refresh tabs
 			$('#' + ID).tabs("refresh");
@@ -413,6 +388,7 @@ Log(rules.getInfo(),5)
 			// Make new tab active
 			$('#' + ID).tabs('option', 'active',
 					$('#' + ID + ' > div ').length - 2);
+			
 
 		};
 
@@ -541,20 +517,20 @@ Log(rules.getInfo(),5)
 
 		var _toolbar = toolbar.init()
 		$(Configuration.GUI.APP_CONTAINER).append(_toolbar);
-		
+
 		var _objList = objList.init()
 		$(Configuration.GUI.APP_CONTAINER).append(_objList);
 
 		var _objField = objField.init()
 		$(Configuration.GUI.APP_CONTAINER).append(_objField);
 		$(_objField).droppable({
-		      drop: function( event, ui ) {
-		          $( this )
-		          	console.log( ui )
-		            alert( ui );
-		        }
-		      });
-		
+			drop : function(event, ui) {
+				$(this)
+				console.log(ui)
+				alert(ui);
+			}
+		});
+
 		$('#btnAddRule').click(function(e) {
 			_controller.addNewRule();
 		});
@@ -620,7 +596,7 @@ Log(rules.getInfo(),5)
 	};
 
 	this.addRuleTab = function(_rule) {
-		objField.addRuleTab(_rule.toInfo());
+		objField.addRuleTab(_rule);
 	};
 
 	this.reset = function() {
@@ -656,21 +632,22 @@ Log(rules.getInfo(),5)
 		var blocks = eval('obj.' + obj.defaultFunc + '()')
 		Log(blocks, 5)
 		var rules = _controller.getRules();
-		
+
 		var gather = _controller.getGatherList();
 		Log('Gather', gather, 5)
-		var gathers = $.map(gather, function(elem, i){
+		var gathers = $.map(gather, function(elem, i) {
 
 			Log('elem', elem, 5)
-			var tmp={}
+			var tmp = {}
 			tmp.ID = elem[0]
 			tmp.NAME = tmp.ID
-			tmp.ICON = '/fhem/rule_designer/ruledesigner/images/' + tmp.ID + '.svg'
+			tmp.ICON = '/fhem/rule_designer/ruledesigner/images/' + tmp.ID
+					+ '.svg'
 			return tmp
 		})
-		
+
 		blocks['gathers'] = gathers
-		
+
 		objList.actualize(blocks, rules);
 	}
 
@@ -692,3 +669,67 @@ Log(rules.getInfo(),5)
  * this.drop = function(ev) { ev.preventDefault();
  * 
  */
+
+/**
+ * Old placeolders
+ */
+//
+// var setConnector = function(_class, _rel) {
+// var c = document.createElement('span');
+// $(c).attr('rel', _rel);
+// $(c).addClass('connector');
+// $(c).addClass(_class);
+// return c;
+// };
+//
+// var buildPlaceholder = function(bool, _RULE_ID) {
+//
+// var box = document.createElement('div');
+// $(box).addClass('rule-obj-box');
+//
+// console.log(arguments);
+// if (bool) {
+// $(box).append(
+// setConnector('connector-left', _RULE_ID + '.actor'));
+// $(box).attr('rel', _RULE_ID + '.actor');
+// } else {
+// $(box).append(
+// setConnector('connector-right', _RULE_ID + '.sensor'));
+// $(box).attr('rel', _RULE_ID + '.sensor');
+// }
+//
+// var title = document.createElement('span');
+// $(title).addClass('title');
+// title.innerHTML = 'Placeholder';
+// $(box).append(title);
+//
+// $(box).addClass('placeholder');
+// $(box).append(
+// '<p>This object will remove when first '
+// + (bool ? 'actor' : 'sensor') + ' is dropped.</p>');
+// return box;
+// };
+//
+// var buildBox = function(_title, _obj) {
+// var box = document.createElement('div');
+// $(box).addClass('rule-obj-box');
+//
+// console.log(arguments);
+// var _rel = ((arguments[2] !== undefined && arguments[2] != null) ?
+// arguments[2]
+// + '.'
+// : '')
+// + _obj.getUID()
+// $(box).attr('rel', _rel);
+//
+// $(box).append(setConnector('connector-left', _rel + '.prev'));
+// $(box).append(setConnector('connector-right', _rel + '.follow'));
+// $(box).append(setConnector('connector-top', _rel + '.up'));
+// $(box).append(setConnector('connector-bottom', _rel + '.down'));
+//
+// var title = document.createElement('span');
+// $(title).addClass('title');
+// title.innerHTML = _title;
+// $(box).append(title);
+// return box;
+// };

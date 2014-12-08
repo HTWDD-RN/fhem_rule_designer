@@ -7,7 +7,7 @@ var RefParams = function() {
 	var _view = new RefParamsView(_self)
 
 	this.display = function() {
-		_view.display(_model)
+		return _view.display(_model)
 	}
 	
 	this.toJSON = function(){
@@ -94,8 +94,8 @@ var RefParamsView = function() {
 
 	var _controller = controller
 	
-	this.display = function() {
-		
+	this.display = function(model) {
+		return '' //TODO:
 	}
 	
 }

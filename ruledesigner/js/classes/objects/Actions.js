@@ -11,7 +11,7 @@ function Actions (){
 	var _view = new ActionsView(_self)
 		
 	this.display = function(){
-		_view.display(_model)
+		return _view.display(_model)
 	}
 	
 	this.toJSON = function(){
@@ -60,8 +60,21 @@ function ActionsView(controller){
 	
 	var _controller = controller
 	
-	this.display = function(_model){
+	this.display = function(model){
 		
+		var actions = model.getActions()
+		
+		if(actions.length > 0){
+			var html = '<ul class="obj_actions">'
+			for(n=0; n<actions.length; n++){
+				html += '<li>' + actions[n].display() + '</li>'	
+			}
+			html += '</ul>'
+			return html
+		} else {
+			// TODO: Platzhalter
+			return 'Action/ActorsGroup-placeholder'
+		}
 	}
 	
 }

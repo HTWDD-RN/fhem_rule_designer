@@ -7,7 +7,7 @@ var Action = function(){
 	var _view = new ActionView(_self)
 	
 	this.display = function() {
-		_view.display(_model)
+		return _view.display(_model)
 	}
 	
 	this.toJSON = function(){
@@ -42,8 +42,8 @@ var ActionView = function(controller){
 
 	var _controller = controller
 
-	this.display = function(){
-		
+	this.display = function(model){
+		return '' //TODO:
 	}
 	
 }

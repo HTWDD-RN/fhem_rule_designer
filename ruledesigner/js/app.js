@@ -4,7 +4,7 @@
 
 var Configuration = {
 	DEBUG_LEVEL : 5,
-	// 0 // failure/ critical,
+	// * // failure/ critical,
 	// 1 // none,
 	// 2 // errors,
 	// 3 // warnings,

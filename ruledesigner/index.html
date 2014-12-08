@@ -1,22 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
 <title>Rules-Designer</title>
 
 <link href="css/style.css" rel="stylesheet" type="text/css" />
 <link href="css/theme/jquery-ui-1.10.4.custom.css" rel="stylesheet">
-<script src="lib/jquery-1.10.2.js"></script>
-<script src="lib/jquery-ui-1.10.4.js"></script>
+<script src="js/lib/jquery-1.10.2.js"></script>
+<script src="js/lib/jquery-ui-1.10.4.js"></script>
 
 
-<script src="js/helpers/init_env.js"></script>
-<script src="js/helpers/database.js"></script>
+<script src="js/classes/helpers/Helpers.js"></script>
+<script src="js/classes/helpers/Counter.js"></script>
+<script src="js/classes/helpers/Log.js"></script>
+<script src="js/classes/RuleDesigner.js"></script>
 
-<script src="js/views/RuleDesignerView.js"></script>
-<script src="js/classes.js"></script>
-<script src="js/onWindowCreate.js"></script>
+<script src="js/classes/objects/Params.js"></script>
+<script src="js/classes/objects/RefParams.js"></script>
+<script src="js/classes/objects/VirtualDevice.js"></script>
+<script src="js/classes/objects/Actor.js"></script>
+<script src="js/classes/objects/Actors.js"></script>
+<script src="js/classes/objects/Actorgroup.js"></script>
+<script src="js/classes/objects/Action.js"></script>
+<script src="js/classes/objects/Actions.js"></script>
+<script src="js/classes/objects/Condition.js"></script>
+<script src="js/classes/objects/Gather.js"></script>
+<script src="js/classes/objects/Conditions.js"></script>
+<script src="js/classes/objects/Rule.js"></script>
+<script src="js/classes/objects/Rules.js"></script>
+
+<script src="js/app.js"></script>
+
 </head>
-<body id="main_container">
-
+<body>
+	<div class="appContainer"></div>
+	<div class="alertContainer">
+	</div>
 </body>
 </html>

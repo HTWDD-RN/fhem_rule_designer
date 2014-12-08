@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<svg width="74" height="37" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" style="vector-effect: non-scaling-stroke;">
+ <!-- Created with SVG-edit - http://svg-edit.googlecode.com/ -->
+
+ <g>
+  <title>Layer 1</title>
+  <rect style="vector-effect: non-scaling-stroke;" fill="#ffffff" stroke="#000000" stroke-width="2" x="12" y="0" width="48" height="36" id="svg_1"/>
+  <line style="vector-effect: non-scaling-stroke;" fill="none" stroke="#000000" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" x1="2" y1="6" x2="12" y2="6" id="svg_3"/>
+  <line fill="none" stroke="#000000" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" x1="60" y1="18" x2="72" y2="18" id="svg_4"/>
+  <text style="vector-effect: non-scaling-stroke;" fill="#000000" stroke="#000000" stroke-width="0" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" x="46.647025" y="18" id="svg_9" font-size="24" font-family="Monospace" text-anchor="middle" xml:space="preserve" transform="matrix(0.601773, 0, 0, 0.505792, 11.0285, 3.98497)">1</text>
+  <line id="svg_2" y2="16" x2="31" y1="16" x1="31" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="2" stroke="#000000" fill="none"/>
+  <line style="vector-effect: non-scaling-stroke;" id="svg_6" y2="11.864258" x2="34" y1="11.864258" x1="27" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke="#000000" fill="none"/>
+  <line style="vector-effect: non-scaling-stroke;" id="svg_11" y2="8.300171" x2="33.974365" y1="5.096558" x1="27.211182" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke="#000000" fill="none"/>
+  <line style="vector-effect: non-scaling-stroke;" id="svg_12" y2="7.944214" x2="33.796387" y1="10.79187" x1="27.38916" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke="#000000" fill="none"/>
+  <line style="vector-effect: non-scaling-stroke;" id="svg_13" fill="none" stroke="#000000" stroke-dasharray="null" stroke-linejoin="null" stroke-linecap="null" x1="387" y1="207" x2="397" y2="207"/>
+  <line style="vector-effect: non-scaling-stroke;" id="svg_14" y2="31" x2="12" y1="31" x1="2" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="null" stroke="#000000" fill="none"/>
+  <ellipse ry="1" rx="1" id="svg_18" cy="18.5" cx="6.5" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="null" stroke="#000000" fill="#000000"/>
+  <ellipse rx="3.5" id="svg_19" cy="-163" cx="-277" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="null" stroke="#000000" fill="#000000"/>
+  <ellipse id="svg_20" ry="1" rx="1" cy="13" cx="6.5" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="null" stroke="#000000" fill="#000000"/>
+  <ellipse id="svg_21" ry="1" rx="1" cy="23.5" cx="6.5" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="null" stroke="#000000" fill="#000000"/>
+ </g>
+</svg>

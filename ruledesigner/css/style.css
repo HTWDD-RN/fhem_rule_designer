@@ -1,22 +1,33 @@
-html,body {
+html, body {
 	padding: 0;
 	margin: 0;
 	height: 100%;
 	overflow: hidden;
 }
 
-body { /*	background-color: #ffe8e8; */
-	
-}
-
 div {
 	display: block;
-	padding: 5px 10px;
+	padding: 0;
+	margin: 0;
+}
+
+div.appContainer{
+	height: 100%;
+}
+
+#alertContainer {
+	position: absolute;
+	height: 150%;
+	width: 150%;
+	margin: -25% 0 0 -25%;
+	background-color: #333333;
+	opacity: 0.5;
+	filter: Alpha(Opacity = 50);
+	z-index: 1001;
 }
 
 #rd_rules>div {
 	overflow: scroll;
-	z-index:1001
 }
 
 #rd_toolbar>* {
@@ -28,7 +39,16 @@ div {
 	display: inline-block;
 }
 
-#rd_rules li span.ui-icon { display: block; float: right; margin: 0 0 0 0.3em; cursor: pointer; }
+#rd_rules li span.ui-icon {
+	display: block;
+	float: right;
+	margin: 0 0 0 0.3em;
+	cursor: pointer;
+}
+
+#rd_draggbar {
+	overflow-y: scroll;
+}
 
 #rd_draggbar ul {
 	list-style: none;
@@ -37,14 +57,13 @@ div {
 
 #rd_draggbar li {
 	margin: 2px 3px;
-	z-index: 1002;
 }
 
 button {
 	margin: 3px 5px;
 }
 
-button,img {
+button, img {
 	background: url(../images/sprite.png) no-repeat top left;
 	padding: 5px 3px 5px 40px;
 	width: 120px;
@@ -80,7 +99,7 @@ div.rule-obj-box {
 	width: 150px;
 	min-height: 100px;
 	margin: 10px;
-	z-index: 1001;
+	z-index: 501;
 }
 
 div.rule-obj-box  span {
@@ -97,14 +116,16 @@ div.rule-obj-box  span.title {
 div.rule-obj-box span.connector {
 	position: absolute;
 	background-color: #ddd;
-	z-index: 1000;
+	z-index: 500;
 }
+
 .ui-draggable:hover {
 	cursor: pointer;
-	background-color: #ccc;	
+	background-color: #ccc;
 }
-.ui-draggable.ui-draggable-dragging:hover  {
-	cursor: move;	
+
+.ui-draggable.ui-draggable-dragging:hover {
+	cursor: move;
 }
 /*
 .sprite-document_new{ background-position: 0 0; width: 32px; height: 32px; } 
@@ -117,3 +138,29 @@ div.rule-obj-box span.connector {
 .sprite-user_trash_full{ background-position: 0 -476px; width: 32px; height: 32px; } 
 .sprite-view_refresh{ background-position: 0 -544px; width: 32px; height: 32px; } 
 */
+.ui-objlist-head {
+	background-color: #e8e8e8;
+}
+
+.ui-objlist li {
+	height: 25px;
+	margin: 3px;
+	padding: 3px 5px;
+	font-size: 1.5em;
+}
+
+.ui-objlist li.ui-objlist-body {
+	border: 1px solid #333;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	background-position: right 7px top 3px;
+	background-size: 25px 25px;
+	background-repeat: no-repeat;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+
+ul#gathers li.ui-objlist-body {
+	background-size: 50px 25px;
+}

@@ -1,4 +1,87 @@
 
+//	this.doEventAction = function(_task, _objInfo, _eventInfo) {
+//
+//		console.log('xdoEventAction Method: ' + _task);
+//		console.log($(_eventInfo.target).hasClass('connector-right'));
+//		console.log($(_eventInfo.target).hasClass('connector-left'));
+//
+//		var task = _task.split('.', 2);
+//
+//		if (task[0] === undefined || task[0] == null || task[1] == undefined
+//				|| task[1] == null)
+//			return;
+//
+//		switch (task[0]) {
+//		case 'drop':
+//			if (doDropEvents(task[1], _objInfo, _eventInfo))
+//				view.actualize();
+//			break;
+//		}
+//		;
+//	};
+//
+//	var doDropEvents = function(_task, _objInfo, _eventInfo) {
+//		var task = new Object();
+//		task.method = _task.split('.', 2);
+//		task.source = _objInfo.attr('rel');
+//
+//		var log = $(_eventInfo.target).parent('div').attr('rel');
+//		if ($(_eventInfo.target).attr('rel') !== undefined)
+//			task.target = $(_eventInfo.target).attr('rel').split('.');
+//
+//		switch (task.method[0]) {
+//		case 'ruleTarget':
+//			var Rule = eval('RuleObject.' + task.target[0]);
+//			if (Rule === undefined)
+//				return false; // Break up if match, whom circle injection
+//
+//			if (eval('Devices.' + task.source) !== undefined) {
+//				eval('var _data = Devices.' + task.source);
+//				var _obj = Object.clone(_data);
+//				console.log(_obj);
+//				var target = task.target[1];
+//				if ( (eval('/'+Vars.rel_sensorlist_prefix+'([0-9])*/')).test(target) )
+//					return Rule.getSensorList().addObject(_obj, task.target);
+//				
+//				if ( (eval('/'+Vars.rel_actorlist_prefix+'([0-9])*/')).test(target) )
+//					return Rule.getActorList().addObject(_obj, task.target);
+//				
+//			} else if (eval('RuleObject.' + task.source) !== undefined) { //
+//				eval('var _data = RuleObject.' + task.source);
+//				var _obj = Object.clone(_data);
+//				console.log(_obj);
+//
+//				if( task.target[1] == 'actor' )
+//					return Rule.getActorList().addObject(_obj, task.target);
+//			}
+//			break;
+//
+//		case 'trash':
+//			if (_objInfo._DEVICE_ID !== undefined) { // Is a device or a device similar object
+//				if (eval('RuleObject.SensorList.' + _objInfo_DEVICE_ID) !== undefined) // Is in ActorList
+//					return eval('RuleObject.Sensorlist.deleteObject('
+//							+ _objInfo.DEVICE_ID + ')');
+//
+//				if (eval('RuleObject.ActorList.' + _objInfo_DEVICE_ID) !== undefined) // Is in Sensorlist
+//					return eval('RuleObject.Actorlist.deleteObject('
+//							+ _objInfo.DEVICE_ID + ')');
+//			}
+//
+//			if (eval('RuleObject.' + _objInfo._RULE_ID) !== undefined) { // Is rule
+//				eval('delete RuleObject.' + _objInfo._RULE_ID);
+//				return true;
+//			}
+//			return false;
+//			break;
+//		default:
+//			return false;
+//		}
+//		;
+//	};
+
+
+	
+	
 
 //function LinkedList() {
 //

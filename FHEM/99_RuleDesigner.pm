@@ -1,4 +1,13 @@
-﻿package main;
+﻿##############################################################################
+#	FHEM Modul zur Erstellung von Regeln, mit Hilfe eines grafischen Editors.
+#	
+#	Dokumentation: http://www2.htw-dresden.de/~wiki_sn/index.php5/FHEM/Regelerstellung#FHEM_Modul
+#
+#	HTW Dresden
+#	Forschungsseminar Sensornetze 2014-2015
+#	Felix Pistorius
+#﻿#############################################################################
+package main;
 use strict;
 use warnings;
 
@@ -69,19 +78,20 @@ RD_CGI()
 			
 			given ($k) {
 				when 'q'		{ $query = $a; }
+				when 'json'		{ $rule{'json'} = urlDecode($a); }
+				
+				#Deprecated parameters, will be removed!
 				when 't'		{ $text = $a; }
 				when 'name'		{ $rule{'name'} = $a; }
 				when 'device'	{ $rule{'device'} = $a; }
 				when 'state'	{ $rule{'state'} = $a; }
 				when 'at'		{ $rule{'at'} =$a; $rule{'at'} =~ s/%3A/:/g;}
-				when 'json'		{ $rule{'json'} = urlDecode($a); }
 			}
 		}
 		
 		given ($query) {
 			when 'devicelist'	{ $json_ret = RD_CGI_Devicelist(); }
 			when 'define'		{ 
-				#$json_ret = &RD_CGI_Definerule(\%rule);
 				$json_ret = RD_CGI_Definerule(%rule); 
 			}
 			default				{ $json_ret = '{"type": "error", "msg": "unsupported query"}'; }
@@ -98,6 +108,7 @@ sub
 RD_CGI_Devicelist()
 {
 	my $json_ret = '{"type": "url"';
+	# TODO: get real hostname
 	$json_ret .= ', "msg":"localhost:8083/fhem?cmd=jsonlist2&XHR=1"';
 	$json_ret .= '}';
 	
@@ -111,12 +122,13 @@ RD_CGI_Definerule
 	my $rule = "";
 
 	if ($attr{'json'}) {
+
 		my $json_ref = decode_json($attr{'json'});
 		my @json = @{$json_ref};
 
 		for (values @json) {
-			$rule .= parseRule($_);
-			$rule .= "\n";
+			$rule = parseRule($_);
+			Log3 $name, 5, 'RD_CGI_Definerule -> $rule: '.$rule;
 			RD_Telnet($rule);
 		}
 		
@@ -218,7 +230,6 @@ sub parseRule
 		}
 	}
 	
-	#define Schalter1NotifyOfficeOn notify EnO_switch_00295543 { if ("%" eq "on") { fhem("set Office on") } }
 	my $r = "define ";
 	$r .= $id;
 	$r .= $cond;
@@ -228,6 +239,10 @@ sub parseRule
 	return $r;
 }
 
+#
+# Parse params rule
+# <params> -> <param> (<param>)*
+# <param> -> <PARAM> <VALUE>
 sub parseParams
 {
 	return "";
@@ -243,10 +258,11 @@ sub parseCond
 	
 	if($cond{'SENSOR'} && $cond{'PARAMS'}) {
 		%res = %{ parseCondition($ref) };
-		return ' notify '.$res{'name'}.' { if '.$res{'params'};
+		return ' notify ('.$res{'name'}.') { '. $res{'dec'} .' if ('.$res{'params'}.')';
 	}
 
 	%res = %{parseGather($ref)};
+	
 	return ' notify '.$res{'names'}.' { '. $res{'decs'} .' if ('.$res{'params'}.')';
 }
 
@@ -255,8 +271,6 @@ sub parseCond
 sub parseGatherCond
 {
 	my ($ref) = @_;
-	
-	#return "\n\n". Dumper($ref) ."\n\n";
 	
 	my %cond = %{$ref};
 	
@@ -283,7 +297,7 @@ sub parseCondition
 		given ($k) {
 			when 'SENSOR' {
 				$condition{'name'} = $v;
-				$condition{'dec'} = 'my $'.$v.'_val = $value("'.$v.'");;';
+				$condition{'dec'} = 'my $'.$v.'_val = $value{"'.$v.'"};;';
 				$condition{'var'} = '$'.$v.'_val';  
 			}
 			when 'PARAMS'	{
@@ -294,6 +308,7 @@ sub parseCondition
 			}
 		}
 	}
+	
 	
 	$condition{'params'} =~ s/%/$condition{'var'}/ge; 
 	
@@ -311,7 +326,7 @@ sub parseGather
 	#return "\n\n".Dumper($gather)."\n\n";
 	my @k = keys %{$gather};
 	
-	given(@k[0]) {
+	given($k[0]) {
 		when 'AND'	{ $loggather = '&&'; }
 		when 'OR'	{ $loggather = '||'; }
 	}
@@ -334,8 +349,8 @@ sub parseGather
 	
 	my %res;
 	$res{'names'} = "(".createSeperatedString("|", @names).")";
-	$res{'decs'} = createSeperatedString("\n", @decs)."\n";
-	$res{'params'} = createSeperatedString($loggather, @params)." ";
+	$res{'decs'} = createSeperatedString(" ", @decs);
+	$res{'params'} = createSeperatedString(' '.$loggather.' ', @params)." ";
 	
 	return \%res;
 }
@@ -355,10 +370,10 @@ sub parseCondParams
 					when '==' {$op = 'eq'; }
 					when '!=' {$op = 'ne'; }
 				}
-				$ret .= '("%" '. $op;
+				$ret .= '% '. $op;
 			}
 			when 1 {
-				$ret .= ' "'. $v .'")';
+				$ret .= ' "'. $v .'"';
 			}
 		}
 	}
@@ -397,9 +412,9 @@ sub parseAction
 		}
 	}
 	
-	my $rule = '{ fhem("set ';
+	my $rule = '{ fhem "set ';
 	$rule .= $actor ." ". $state;
-	$rule .= '") }';
+	$rule .= '" }';
 	
 	return $rule;
 }

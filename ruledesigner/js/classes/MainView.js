@@ -120,6 +120,8 @@ $(window)
 						cancel : '.placeholder',
 						stop : function() {
 							$(this).draggable('option', 'revert', 'invalid');
+							// TODO: proof
+							$(this).draggable('option', 'zIndex', 999);
 						}
 					});
 				});
@@ -322,7 +324,15 @@ function MainView(_controller) {
 			$('#' + id + ' ul').children("li").each(function() {
 				$(this).draggable({
 					// scroll: true,
-					revert : true
+//					revert : true
+					// TODO proof
+					revert: false,
+		            helper: function(){
+		                $copy = $(this).clone();
+		                return $copy;},
+		            appendTo: 'body',
+		            scroll: false,
+					zIndex: 999
 				});
 			});
 
@@ -527,7 +537,8 @@ function MainView(_controller) {
 			drop : function(event, ui) {
 				$(this)
 				console.log(ui)
-				alert(ui);
+				//alert(ui);
+				$.ui.ddmanager.current.cancelHelperRemoval = true;
 			}
 		});
 

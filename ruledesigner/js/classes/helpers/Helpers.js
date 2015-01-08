@@ -75,7 +75,7 @@ var Helpers = {
 	 *            function - is called after the loading is success
 	 */
 	loadWrapper : function(wrapper, successCallback) {
-		var url = Configuration.HA_SVR_URL + '/www/rule_designer/ruledesigner/'
+		var url = Configuration.HA_SVR_URL + '/ruledesigner/'
 				+ Configuration.WRAPPER_URL + '/' + Configuration.WRAPPER
 				+ '.js'
 		console.log(url)

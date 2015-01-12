@@ -326,9 +326,9 @@ function MainView(_controller) {
 														e.innerHTML = obj.NAME;
 														
 														if(obj.ALT){
-															e.alt = obj.ALT;
+															$(e).attr('alt', obj.ALT);
 														} else {
-															e.alt = obj.NAME;
+															$(e).attr('alt', obj.NAME);
 														}
 																												
 													} else {

@@ -1,0 +1,81 @@
+
+/**
+ * Events
+ */
+/*
+ * this.events = function() {
+ * 
+ * return this.events; };
+ * 
+ * this.allowDrop = function(ev) { ev.preventDefault(); };
+ * 
+ * this.drag = function(ev) { ev.dataTransfer.effectAllowed = 'move';
+ * ev.dataTransfer.setData("Text", ev.target.id); };
+ * 
+ * this.drop = function(ev) { ev.preventDefault();
+ * 
+ */
+
+/**
+ * Old placeolders
+ */
+//
+// var setConnector = function(_class, _rel) {
+// var c = document.createElement('span');
+// $(c).attr('rel', _rel);
+// $(c).addClass('connector');
+// $(c).addClass(_class);
+// return c;
+// };
+//
+// var buildPlaceholder = function(bool, _RULE_ID) {
+//
+// var box = document.createElement('div');
+// $(box).addClass('rule-obj-box');
+//
+// console.log(arguments);
+// if (bool) {
+// $(box).append(
+// setConnector('connector-left', _RULE_ID + '.actor'));
+// $(box).attr('rel', _RULE_ID + '.actor');
+// } else {
+// $(box).append(
+// setConnector('connector-right', _RULE_ID + '.sensor'));
+// $(box).attr('rel', _RULE_ID + '.sensor');
+// }
+//
+// var title = document.createElement('span');
+// $(title).addClass('title');
+// title.innerHTML = 'Placeholder';
+// $(box).append(title);
+//
+// $(box).addClass('placeholder');
+// $(box).append(
+// '<p>This object will remove when first '
+// + (bool ? 'actor' : 'sensor') + ' is dropped.</p>');
+// return box;
+// };
+//
+// var buildBox = function(_title, _obj) {
+// var box = document.createElement('div');
+// $(box).addClass('rule-obj-box');
+//
+// console.log(arguments);
+// var _rel = ((arguments[2] !== undefined && arguments[2] != null) ?
+// arguments[2]
+// + '.'
+// : '')
+// + _obj.getUID()
+// $(box).attr('rel', _rel);
+//
+// $(box).append(setConnector('connector-left', _rel + '.prev'));
+// $(box).append(setConnector('connector-right', _rel + '.follow'));
+// $(box).append(setConnector('connector-top', _rel + '.up'));
+// $(box).append(setConnector('connector-bottom', _rel + '.down'));
+//
+// var title = document.createElement('span');
+// $(title).addClass('title');
+// title.innerHTML = _title;
+// $(box).append(title);
+// return box;
+// };

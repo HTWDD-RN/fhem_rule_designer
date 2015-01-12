@@ -2,6 +2,10 @@
  * 
  */
 
+var VIRTUAL_DEVICES = {
+		
+}
+
 var Configuration = {
 	DEBUG_LEVEL : 5,
 	// * // failure/ critical,

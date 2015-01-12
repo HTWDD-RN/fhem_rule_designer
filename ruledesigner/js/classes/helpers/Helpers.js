@@ -75,13 +75,17 @@ var Helpers = {
 	 *            function - is called after the loading is success
 	 */
 	loadWrapper : function(wrapper, successCallback) {
-		var url = Configuration.HA_SVR_URL + '/ruledesigner/'
+		if(Configuration.DEBUG_LEVEL < 5){
+		var url = Configuration.HA_SVR_URL + '/rule_designer/ruledesigner/'
 				+ Configuration.WRAPPER_URL + '/' + Configuration.WRAPPER
 				+ '.js'
 		console.log(url)
 		this.loadScript(url, successCallback, function() {
 			alert('Fehler beim Laden des Wrappers')
 		})
+		} else {
+			successCallback()
+		}
 	},
 
 	/**

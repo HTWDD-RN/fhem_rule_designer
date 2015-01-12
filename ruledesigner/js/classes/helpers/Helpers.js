@@ -95,7 +95,6 @@ var Helpers = {
 	 *            function - is called after the loading is success
 	 */
 	loadGUIContainer : function(successCallback) {
-		
 		if(Configuration.DEBUG_LEVEL < 5){
 			this.loadScript('js/classes/MainView.js', successCallback, function() {
 				alert("Fehler beim Laden der GUI-Ressourcen")

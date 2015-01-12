@@ -690,7 +690,7 @@ function MainView(_controller) {
 
 	this.init();
 
-	this.actualizeObjectList = function(obj) {
+	this.actualizeObjectList = function(obj,vdev) {
 		Log('MainView.js: actualizeObjectList', obj, 4)
 		var blocks = eval('obj.' + obj.defaultFunc + '()')
 		Log(blocks, 5)

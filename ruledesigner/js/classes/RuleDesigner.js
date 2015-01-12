@@ -6,8 +6,6 @@
 // "-1" stand for infinity
 var _GatherList = [ [ "AND", -1 ], [ "OR", -1 ], [ "NOT", 1 ] ];
 
-
-
 // a global counter for generating unique system id's - need for event
 // communication between designer field and rules model objects
 var cSYS_ID = new Counter()

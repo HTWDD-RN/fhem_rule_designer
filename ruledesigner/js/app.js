@@ -2,9 +2,29 @@
  * 
  */
 
-var VIRTUAL_DEVICES = {
-		
-}
+var VIRTUAL_DEVICES = [ {
+	"TYPE" : "VD_DIGITAL_TIMER",
+	"ICON" : "RD_DIGITAL_TIMER",
+	"SETS": [
+		"Weekdays",
+		"BeginTime",
+		"EndTime",
+		"BeginDate",
+		"EndDate"
+	]
+}, {
+	"TYPE" : "VD_DELAY_TIMER",
+	"ICON" : "RD_DELAY_TIMER",
+	"SETS" : [
+	    "","","",
+	]
+}, {
+	"TYPE" : "VD_RANDOM_TIMER",
+	"ICON" : "RD_RANDOM_TIMER",
+	"SETS" : [
+	    "UpperBoundTime","LowerBoundTime","SwitchedTime",
+	]
+} ]
 
 var Configuration = {
 	DEBUG_LEVEL : 5,
@@ -20,7 +40,7 @@ var Configuration = {
 		MBOX_CONTAINER : '.alertContainer',
 		TOOLBAR : {
 			CLASSES : '', // 'ui-widget-header ui-widget ui-widget-content
-							// ui-corner-all',
+		// ui-corner-all',
 		},
 		OBJECT_LIST : {
 			CLASSES : 'ui-tabs ui-widget ui-widget-content ui-corner-all',
@@ -39,7 +59,6 @@ var Configuration = {
 
 var app = function() {
 	$(window).load(function() {
-
 
 		// Initialize MessageBox
 		var mBox = MessageBox.getInstance()

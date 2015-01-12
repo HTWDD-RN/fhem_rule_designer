@@ -45,10 +45,11 @@ function __RuleDesigner() {
 		Log('SuccessCallback', 5)
 
 		var tmp = _wrapper.getAvailableSegmations.getVirtualDevices();
-		if ($(tmp).lenght > 0) {
+		if ($(tmp).length > 0) {
 			$.map(_wrapper.getAvailableSegmations.getVirtualDevices(),
 					function(val) {
-						VIRTUAL_DEVICES['SYS_' + val.TYPE](val)
+						val.TYPE = 'SYS_'+val.ID+'_'+val.NAME
+						VIRTUAL_DEVICES.push(val);
 					})
 		}
 		_view.actualizeObjectList(_wrapper.getAvailableSegmations,
@@ -81,6 +82,7 @@ function __RuleDesigner() {
 		Log('# RuleDesigner.js # Init-function', 4)
 		_view.actualize();
 		$(window).resize();
+
 	};
 
 	/* END INITS */

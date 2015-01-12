@@ -9,7 +9,6 @@ $(window)
 					var border_size = 1;
 					var topPadding = 35;
 					var topMargin = 2;
-					
 
 					var draggbar_width = 250;
 
@@ -26,7 +25,7 @@ $(window)
 
 					$('#rd_rules > div').css('margin-top', topMargin);
 					$('#rd_rules > div').css('padding-top', topPadding);
-					
+
 					$('#rd_toolbar > li:first').css('width', draggbar_width);
 
 					if (width >= 720) {
@@ -39,12 +38,12 @@ $(window)
 						$('#rd_draggbar').css('width', draggbar_width);
 						$('#rd_draggbar').css('float', 'left');
 						$('#rd_draggbar li').css('padding', '2px 5px');
-						$('#rd_draggbar li').css('width', (draggbar_width/2-(2*margin))-10);
-						$('#rd_draggbar li.ui-objlist-head').css('width', draggbar_width-2*margin-20);
-						
-						
-						$('#rd_rules').css(
-								'width', width + 1 * margin-24);
+						$('#rd_draggbar li').css('width',
+								(draggbar_width / 2 - (2 * margin)) - 10);
+						$('#rd_draggbar li.ui-objlist-head').css('width',
+								draggbar_width - 2 * margin - 20);
+
+						$('#rd_rules').css('width', width + 1 * margin - 24);
 						$('#rd_rules').css('margin-left', 0);
 						$('#rd_rules').css('height', height);
 						$('#rd_rules').css('float', 'right');
@@ -58,16 +57,17 @@ $(window)
 						var h = $('#rd_toolbar').height();
 						height -= (h + (2 * border_size + margin));
 						draggbar_width = 125;
-						width -= draggbar_width-8;
-						
+						width -= draggbar_width - 8;
+
 						$('#rd_draggbar').css('height', height);
-						$('#rd_draggbar').css('width', draggbar_width+8);
+						$('#rd_draggbar').css('width', draggbar_width + 8);
 						$('#rd_draggbar').css('float', 'left');
 						$('#rd_draggbar').css('owerflow-x', 'hidden')
-						$('#rd_draggbar li').css('width', (draggbar_width-20));
+						$('#rd_draggbar li')
+								.css('width', (draggbar_width - 20));
 
-						$('#rd_rules').css(
-								'width', width - topPadding - margin +8);
+						$('#rd_rules').css('width',
+								width - topPadding - margin + 8);
 						$('#rd_rules').css('margin-left', 0);
 						$('#rd_rules').css('height', height);
 						$('#rd_rules').css('float', 'right');
@@ -137,36 +137,41 @@ $(window)
 						'border-style' : 'dashed',
 						'text-align' : 'center'
 					});
-					
-//					var remember = ''
-//					$('.rule-obj-box').draggable({
-//					    helper: function(){ // get cloned object
-//					        return $('<div id="draggedItem">'+$(this).html()+'</div>');
-//					    },
-//					    start: function(e, ui) {
-//					        remember = $(this).html();
-//					        $(this).addClass('dragged'); // add class dragged if dragging start
-//					    },
-//					    stop: function(e, ui) {
-//					        $(this).removeClass('dragged'); // remove class dragged if dragging start
-//					    }
-//					});
-					
-//					$("ul li").draggable({
-//					    helper: 'clone',
-//					    start: function(e, ui) {
-//					        remember = $(this);
-//					        $(this).html("<div>"+remember.html()+"</div>");
-//					    },
-//					    stop: function(e, ui) {
-//					        $(this).html(remember.html());
-//					    }
-//					});
+
+					// var remember = ''
+					// $('.rule-obj-box').draggable({
+					// helper: function(){ // get cloned object
+					// return $('<div
+					// id="draggedItem">'+$(this).html()+'</div>');
+					// },
+					// start: function(e, ui) {
+					// remember = $(this).html();
+					// $(this).addClass('dragged'); // add class dragged if
+					// dragging start
+					// },
+					// stop: function(e, ui) {
+					// $(this).removeClass('dragged'); // remove class dragged
+					// if dragging start
+					// }
+					// });
+
+					// $("ul li").draggable({
+					// helper: 'clone',
+					// start: function(e, ui) {
+					// remember = $(this);
+					// $(this).html("<div>"+remember.html()+"</div>");
+					// },
+					// stop: function(e, ui) {
+					// $(this).html(remember.html());
+					// }
+					// });
 				});
 
 /**
  * Function to build the central view object
- * @param controller object
+ * 
+ * @param controller
+ *            object
  * @returns {RuleDesignerView}
  */
 function MainView(_controller) {
@@ -188,7 +193,7 @@ function MainView(_controller) {
 
 			var container = document.createElement('li');
 			toolbar.id = id;
-			
+
 			var ruleNameForm = document.createElement('form');
 
 			var ruleNameField = document.createElement('input');
@@ -237,7 +242,7 @@ function MainView(_controller) {
 							$(container).clone().html(btnSave),
 							$(container).clone().html(btnSaveAs),
 							$(container).clone().html(trash) ]);
-			
+
 			return toolbar;
 		};
 
@@ -320,17 +325,22 @@ function MainView(_controller) {
 																.setAttribute(
 																		'class',
 																		Configuration.GUI.OBJECT_LIST.SEGMENTATION.BODY)
-														var url = (obj.ICON_CLASS != '' ? $(e).addClass(obj.ICON_CLASS)
+														var url = (obj.ICON_CLASS != '' ? $(
+																e).addClass(
+																obj.ICON_CLASS)
 																: '')
-																
+
 														e.innerHTML = obj.NAME;
-														
-														if(obj.ALT){
-															$(e).attr('alt', obj.ALT);
+
+														// TODO: Tooltip
+														if (obj.ALT) {
+															$(e).attr('title',
+																	obj.ALT);
 														} else {
-															$(e).attr('alt', obj.NAME);
+															$(e).attr('title',
+																	obj.NAME);
 														}
-																												
+
 													} else {
 														e.id = obj[0]
 														e.innerHTML = obj[0]
@@ -365,12 +375,19 @@ function MainView(_controller) {
 			$('#' + id).append(node);
 
 			$('#' + id + ' ul').children("li").each(function() {
-//				$(this).draggable({ // TODO:
-//					containment : '#' + id + ' ul',
-//					scroll : false,
-//					revert : true
-//				});
+
+				// Enable toolitips
+
+				// Enable Drag&Drop
+				// $(this).draggable({ // TODO:
+				// containment : '#' + id + ' ul',
+				// scroll : false,
+				// revert : true
+				// });
 			});
+			
+
+			
 
 		};
 
@@ -392,8 +409,10 @@ function MainView(_controller) {
 
 		/**
 		 * Function which is displaying an new rule
-		 * @param obj - Object of the created rule
-		 * @see /classes/objects/Rule.js 
+		 * 
+		 * @param obj -
+		 *            Object of the created rule
+		 * @see /classes/objects/Rule.js
 		 */
 		this.addRuleTab = function(rule) {
 
@@ -501,8 +520,11 @@ function MainView(_controller) {
 
 		/**
 		 * Set size of the main object field
-		 * @param height - Höhe
-		 * @param width - Weite
+		 * 
+		 * @param height -
+		 *            Höhe
+		 * @param width -
+		 *            Weite
 		 */
 		this.setSize = function(height, width) {
 
@@ -514,6 +536,7 @@ function MainView(_controller) {
 
 		/**
 		 * Returns HTML-ID
+		 * 
 		 * @return ID
 		 */
 		this.getID = function() {
@@ -523,6 +546,7 @@ function MainView(_controller) {
 
 		/**
 		 * Function which actualize the rules in the main object field
+		 * 
 		 * @param objects
 		 * @see /classes/objects/Rules.js
 		 */
@@ -564,6 +588,7 @@ function MainView(_controller) {
 
 		/**
 		 * Aktualize the main object field
+		 * 
 		 * @param objects
 		 * @see /classes/objects/Rules.js
 		 */
@@ -661,6 +686,8 @@ function MainView(_controller) {
 
 			}
 		});
+		
+		$( document ).tooltip();
 
 	};
 
@@ -696,7 +723,7 @@ function MainView(_controller) {
 
 	this.init();
 
-	this.actualizeObjectList = function(obj,vdev) {
+	this.actualizeObjectList = function(obj, vdev) {
 		Log('MainView.js: actualizeObjectList', obj, 4)
 		var blocks = eval('obj.' + obj.defaultFunc + '()')
 		Log(blocks, 5)
@@ -708,7 +735,7 @@ function MainView(_controller) {
 			tmp.ID = tmp.TYPE
 			return tmp
 		})
-		
+
 		var gather = _controller.getGatherList();
 		Log('Gather', gather, 5)
 		var gathers = $.map(gather, function(elem, i) {
@@ -719,12 +746,13 @@ function MainView(_controller) {
 			tmp.ICON_CLASS = ('RD_ICON_' + tmp.ID).toLowerCase()
 			return tmp
 		})
-		
+
 		blocks['virtual_devices'] = vdevs
-		
+
 		blocks['gathers'] = gathers
 
 		objList.actualize(blocks, rules);
+		
 	}
 
 };

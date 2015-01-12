@@ -5,7 +5,7 @@
 var VIRTUAL_DEVICES = [ {
 	"TYPE" : "VD_DIGITAL_TIMER",
 	"NAME" : "Digital timer",
-	"ALT":	"Weekday Timer",
+	"ALT":	"Digitale Zeitschaltuhr, welche der realen Bauweise nachempfunden ist",
 	"ICON_CLASS" : "RD_DIGITAL_TIMER",
 	"SETS": [
 		"Weekdays",
@@ -20,7 +20,7 @@ var VIRTUAL_DEVICES = [ {
 }, {
 	"TYPE" : "VD_DELAY_TIMER",
 	"NAME" : "Delay timer",
-	"ALT" : "Delay element",
+	"ALT" : "Ermöglicht verzögerte Ausführung von Befehlen und Schaltvorgängen",
 	"ICON_CLASS" : "RD_DELAY_TIMER",
 	"SETS" : [
 	    "","","",
@@ -31,6 +31,7 @@ var VIRTUAL_DEVICES = [ {
 }, {
 	"TYPE" : "VD_RANDOM_TIMER",
 	"NAME" : "Random timer",
+	"ALT": "Ermöglicht zufallsabhängiges Schalten/ Setzen von Aktoren ",
 	"ICON_CLASS" : "RD_RANDOM_TIMER",
 	"SETS" : [
 	    "UpperBoundTime","LowerBoundTime","SwitchedTime",

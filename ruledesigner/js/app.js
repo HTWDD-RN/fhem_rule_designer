@@ -4,26 +4,40 @@
 
 var VIRTUAL_DEVICES = [ {
 	"TYPE" : "VD_DIGITAL_TIMER",
-	"ICON" : "RD_DIGITAL_TIMER",
+	"NAME" : "Digital timer",
+	"ALT":	"Weekday Timer",
+	"ICON_CLASS" : "RD_DIGITAL_TIMER",
 	"SETS": [
 		"Weekdays",
 		"BeginTime",
 		"EndTime",
 		"BeginDate",
 		"EndDate"
-	]
+	],
+	"IS_ACTOR": true,
+	"IS_SENSOR": true,
+	"IS_VDEV" : true
 }, {
 	"TYPE" : "VD_DELAY_TIMER",
-	"ICON" : "RD_DELAY_TIMER",
+	"NAME" : "Delay timer",
+	"ALT" : "Delay element",
+	"ICON_CLASS" : "RD_DELAY_TIMER",
 	"SETS" : [
 	    "","","",
-	]
+	],
+	"IS_ACTOR": true,
+	"IS_SENSOR": false,
+	"IS_VDEV" : true
 }, {
 	"TYPE" : "VD_RANDOM_TIMER",
-	"ICON" : "RD_RANDOM_TIMER",
+	"NAME" : "Random timer",
+	"ICON_CLASS" : "RD_RANDOM_TIMER",
 	"SETS" : [
 	    "UpperBoundTime","LowerBoundTime","SwitchedTime",
-	]
+	],
+	"IS_ACTOR": true,
+	"IS_SENSOR": false,
+	"IS_VDEV" : true
 } ]
 
 var Configuration = {

@@ -324,6 +324,12 @@ function MainView(_controller) {
 																: '')
 																
 														e.innerHTML = obj.NAME;
+														
+														if(obj.ALT){
+															e.alt = obj.ALT;
+														} else {
+															e.alt = obj.NAME;
+														}
 																												
 													} else {
 														e.id = obj[0]
@@ -696,10 +702,16 @@ function MainView(_controller) {
 		Log(blocks, 5)
 		var rules = _controller.getRules();
 
+		var vdevs = $.map(vdev, function(elem, i) {
+			Log('elem', elem, 5)
+			var tmp = elem
+			tmp.ID = tmp.TYPE
+			return tmp
+		})
+		
 		var gather = _controller.getGatherList();
 		Log('Gather', gather, 5)
 		var gathers = $.map(gather, function(elem, i) {
-
 			Log('elem', elem, 5)
 			var tmp = {}
 			tmp.ID = elem[0]
@@ -707,7 +719,9 @@ function MainView(_controller) {
 			tmp.ICON_CLASS = ('RD_ICON_' + tmp.ID).toLowerCase()
 			return tmp
 		})
-
+		
+		blocks['virtual_devices'] = vdevs
+		
 		blocks['gathers'] = gathers
 
 		objList.actualize(blocks, rules);

@@ -64,7 +64,7 @@ var ConditionsView = function(controller){
 			return _obj.display()			
 		} else {
 			// TODO: Platzhalter
-			return 'Condition/Gather-placeholder'
+			return '<span class="placeholder">Condition/Gather-placeholder</span>'
 		}
 	}
 	

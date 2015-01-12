@@ -169,7 +169,7 @@ var RuleView = function(controller) {
 
 		var html = '<ul class="obj_rule">'
 			+ '<li>' + (condObj.display()) + '</li>'
-			+ '<li>' + (vdevObj.display()) + '</li>'
+			+ '<li class="vdev">' + (vdevObj.display()) + '</li>'
 			+ '<li>' + (actionsObj.display()) + '</li>'
 			+ '</ul>'
 		return html

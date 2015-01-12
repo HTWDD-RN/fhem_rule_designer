@@ -64,7 +64,10 @@ function __RuleDesigner() {
 	var cbBindWrapperData = function() {
 		Log('# RuleDesigner.js # cbBindWrapperData', 4)
 		Log('SuccessCallback', 5)
-		_view.actualizeObjectList(_wrapper.getAvailableSegmations)
+		$.map(_wrapper.getAvailableSegmations.getVirtualDevices(), function(val){
+			VIRTUAL_DEVICES['SYS_' + val.TYPE](val)
+		})
+		_view.actualizeObjectList(_wrapper.getAvailableSegmations, VIRTUAL_DEVICES)
 		_self.addNewRule()
 	}
 

@@ -52,7 +52,7 @@ var VirtualDeviceView = function(controller){
 	var _controller = controller
 
 	this.display = function(model){
-		return '<span> VDEV </span>'
+		return '<span class="placeholder"> VDEV </span>'
 	}
 	
 }

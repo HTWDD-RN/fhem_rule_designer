@@ -73,7 +73,7 @@ function ActionsView(controller){
 			return html
 		} else {
 			// TODO: Platzhalter
-			return 'Action/ActorsGroup-placeholder'
+			return '<span class="placeholder">Action/ActorsGroup-placeholder</span>'
 		}
 	}
 	

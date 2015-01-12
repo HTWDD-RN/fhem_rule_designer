@@ -1,4 +1,4 @@
-Log("Load Wrapper for FHEM", 3)
+﻿Log("Load Wrapper for FHEM", 3)
 
 /**
  * This is a wrapper script for import FHEM data. FHEM is an home automation
@@ -80,6 +80,10 @@ function Wrapper() {
 
 	// A placeholder for fetched locations
 	var locations = []
+	
+	// A placeholder for definition virtual devices
+	// @HINT: Time devices are defined in FHEM by default
+	var virtual_devices = []
 
 	/**
 	 * INIT: Load an array list of supported protocols (protocols) and helper
@@ -90,18 +94,20 @@ function Wrapper() {
 				+ Configuration.HA_SVR_URL + '/docs/commandref.html', 4)
 		Helpers.loadUrl(Configuration.HA_SVR_URL + '/docs/commandref.html', '',
 				function(data) { // success
+				//	Log('STEP 1 - ', data , 5)
+				//	alert('STEP 1 - SUCCESS')
 					data = data.replace('<body', '<body><div id="body"')
 							.replace('</body>', '</div></body>');
 					var uls = $('ul:first ul', $(data).filter('#body'))
-					// console.log($(uls))
+				//	Log('STEP 1 - ', $(uls),5)
 					supported_protocols = $('a', uls[1]).map(function() {
-						return this.innerText
+						return $(this).html()
 					}).toArray()
-					// console.log(supported_protocols)
+					Log('STEP 1 - ', supported_protocols,5)
 					helper_modules = $('a', uls[2]).map(function() {
-						return this.innerText
+						return $(this).html()
 					}).toArray()
-					// console.log(helper_modules)
+					Log('STEP 1 - ', helper_modules,5)
 					step2()
 				}, function(data) { // ERROR: Abbruch bei Aktualisierung nicht
 					// notwendig
@@ -117,7 +123,7 @@ function Wrapper() {
 		Log(
 				'Load wrapper - STEP 2 - Load list of activated protocols and helper modules',
 				4)
-		Helpers.loadUrl(Configuration.HA_SVR_URL, 'cmd=list&XHR',
+		Helpers.loadUrl(Configuration.HA_SVR_URL, 'cmd=list&XHR=1',
 				function(data) { // success
 					var expr = /([A-Za-z0-9_-]*):$/
 					var preresult = data.split('\n');
@@ -248,7 +254,7 @@ function Wrapper() {
 												return elem
 											}),
 									LOCATION : (elem.Attributes.room || ''),
-									ICON : (elem.Attributes.icon? '/fhem/images/openautomation/' + elem.Attributes.icon + '.svg': '')
+									ICON : (elem.Attributes.icon? elem.Attributes.icon : '')
 								}
 								devices.push(tmp)
 								return tmp
@@ -335,7 +341,7 @@ function Wrapper() {
 	 * @return list of virtual devices
 	 */
 	this.getAvailableSegmations.getVirtualDevices = function() {
-
+		return virtual_devices
 	};
 	
 	/**

@@ -7,6 +7,11 @@ $(window)
 
 					var margin = 5;
 					var border_size = 1;
+					var topPadding = 35;
+					var topMargin = 2;
+					
+
+					var draggbar_width = 250;
 
 					var quad_size_of_connectors = 21;
 
@@ -19,39 +24,56 @@ $(window)
 					$(Configuration.GUI.APP_CONTAINER + ' > div').css(
 							'margin-bottom', 0);
 
+					$('#rd_rules > div').css('margin-top', topMargin);
+					$('#rd_rules > div').css('padding-top', topPadding);
+					
+					$('#rd_toolbar > li:first').css('width', draggbar_width);
+
 					if (width >= 720) {
 
 						var h = $('#rd_toolbar').height();
 						height -= (h + (2 * border_size + margin));
+						width -= draggbar_width;
 
 						$('#rd_draggbar').css('height', height);
-						$('#rd_draggbar').css('width', 200);
+						$('#rd_draggbar').css('width', draggbar_width);
 						$('#rd_draggbar').css('float', 'left');
-
-						$('#rd_rules').css('width',
-								width - 226 - (4 * border_size + 1 * margin));
+						$('#rd_draggbar li').css('padding', '2px 5px');
+						$('#rd_draggbar li').css('width', (draggbar_width/2-(2*margin))-10);
+						$('#rd_draggbar li.ui-objlist-head').css('width', draggbar_width-2*margin-20);
+						
+						
+						$('#rd_rules').css(
+								'width', width + 1 * margin-24);
 						$('#rd_rules').css('margin-left', 0);
 						$('#rd_rules').css('height', height);
 						$('#rd_rules').css('float', 'right');
 
-						$('#rd_rules > div').css('height', height - 60);
+						$('#rd_rules > div').css('height',
+								height - topMargin - topPadding - 60);
 
 					} else if (width >= 480) {
 
+						$('#rd_draggbar li').css('width', '');
 						var h = $('#rd_toolbar').height();
 						height -= (h + (2 * border_size + margin));
-
+						draggbar_width = 125;
+						width -= draggbar_width-8;
+						
 						$('#rd_draggbar').css('height', height);
-						$('#rd_draggbar').css('width', 100);
+						$('#rd_draggbar').css('width', draggbar_width+8);
 						$('#rd_draggbar').css('float', 'left');
+						$('#rd_draggbar').css('owerflow-x', 'hidden')
+						$('#rd_draggbar li').css('width', (draggbar_width-20));
 
-						$('#rd_rules').css('width',
-								width - 128 - (4 * border_size + 1 * margin));
+						$('#rd_rules').css(
+								'width', width - topPadding - margin +8);
 						$('#rd_rules').css('margin-left', 0);
 						$('#rd_rules').css('height', height);
 						$('#rd_rules').css('float', 'right');
 
-						$('#rd_rules > div').css('height', height - 100);
+						$('#rd_rules > div').css('height',
+								height - topMargin - topPadding - 100);
 
 					} else {
 
@@ -115,17 +137,36 @@ $(window)
 						'border-style' : 'dashed',
 						'text-align' : 'center'
 					});
-
-					$('.rule-obj-box').draggable({
-						cancel : '.placeholder',
-						stop : function() {
-							$(this).draggable('option', 'revert', 'invalid');
-						}
-					});
+					
+//					var remember = ''
+//					$('.rule-obj-box').draggable({
+//					    helper: function(){ // get cloned object
+//					        return $('<div id="draggedItem">'+$(this).html()+'</div>');
+//					    },
+//					    start: function(e, ui) {
+//					        remember = $(this).html();
+//					        $(this).addClass('dragged'); // add class dragged if dragging start
+//					    },
+//					    stop: function(e, ui) {
+//					        $(this).removeClass('dragged'); // remove class dragged if dragging start
+//					    }
+//					});
+					
+//					$("ul li").draggable({
+//					    helper: 'clone',
+//					    start: function(e, ui) {
+//					        remember = $(this);
+//					        $(this).html("<div>"+remember.html()+"</div>");
+//					    },
+//					    stop: function(e, ui) {
+//					        $(this).html(remember.html());
+//					    }
+//					});
 				});
 
 /**
- * 
+ * Function to build the central view object
+ * @param controller object
  * @returns {RuleDesignerView}
  */
 function MainView(_controller) {
@@ -147,9 +188,7 @@ function MainView(_controller) {
 
 			var container = document.createElement('li');
 			toolbar.id = id;
-			$(toolbar).addClass(Configuration.GUI.TOOLBAR.CLASSES)
-			$(toolbar).attr("style", "margin: 5px")
-
+			
 			var ruleNameForm = document.createElement('form');
 
 			var ruleNameField = document.createElement('input');
@@ -185,9 +224,11 @@ function MainView(_controller) {
 			btnNew.id = 'btnNew';
 			btnNew.innerHTML = 'Neu';
 
-			var trash = document.createElement('img');
+			var trash = document.createElement('div');
 			trash.id = 'imgTrash';
-
+			trash.innerHTML = '<div><span class="ui-corner-all"></span></div>';
+			$(trash).addClass('ui-corner-all ui-state-default');
+			$(ruleNameForm).addClass('ui-corner-all ui-state-default');
 			$(toolbar).append(
 					[ $(container).clone().html(ruleNameForm),
 							$(container).clone().html(btnNew),
@@ -196,7 +237,7 @@ function MainView(_controller) {
 							$(container).clone().html(btnSave),
 							$(container).clone().html(btnSaveAs),
 							$(container).clone().html(trash) ]);
-
+			
 			return toolbar;
 		};
 
@@ -279,13 +320,11 @@ function MainView(_controller) {
 																.setAttribute(
 																		'class',
 																		Configuration.GUI.OBJECT_LIST.SEGMENTATION.BODY)
-														var url = (obj.ICON != '' ? obj.ICON
+														var url = (obj.ICON_CLASS != '' ? $(e).addClass(obj.ICON_CLASS)
 																: '')
-														e.setAttribute('style',
-																'background-image: url('
-																		+ url
-																		+ ');')
+																
 														e.innerHTML = obj.NAME;
+																												
 													} else {
 														e.id = obj[0]
 														e.innerHTML = obj[0]
@@ -320,10 +359,11 @@ function MainView(_controller) {
 			$('#' + id).append(node);
 
 			$('#' + id + ' ul').children("li").each(function() {
-				$(this).draggable({
-					// scroll: true,
-					revert : true
-				});
+//				$(this).draggable({ // TODO:
+//					containment : '#' + id + ' ul',
+//					scroll : false,
+//					revert : true
+//				});
 			});
 
 		};
@@ -344,22 +384,26 @@ function MainView(_controller) {
 
 		var Preview_ID = 'rd_rules_preview';
 
+		/**
+		 * Function which is displaying an new rule
+		 * @param obj - Object of the created rule
+		 * @see /classes/objects/Rule.js 
+		 */
 		this.addRuleTab = function(rule) {
-			
+
 			var info = rule.getInfo()
-			
+
 			var div = document.createElement('div');
 			div.id = 'Tab_' + info.ID;
 			div.setAttribute('rel', info.ID);
 
-
 			$(div).insertBefore('#' + Preview_ID);
-			
+
 			// Init first display
 			var tmp = rule.display()
 			Log(tmp, 5)
 			$('#Tab_' + info.ID).html(tmp)
-			
+
 			var li = document.createElement('li');
 			$(li)
 					.html(
@@ -388,10 +432,12 @@ function MainView(_controller) {
 			// Make new tab active
 			$('#' + ID).tabs('option', 'active',
 					$('#' + ID + ' > div ').length - 2);
-			
 
 		};
 
+		/**
+		 * Function to initialize the main object field
+		 */
 		this.init = function() {
 
 			console.log('MainView.js - generateDropableObjectField.init');
@@ -444,11 +490,14 @@ function MainView(_controller) {
 
 			$(e).tabs();
 
-			// e.setAttribute('ondrop', 'drop(event)');
-			// e.setAttribute('ondragover', 'allowDrop(event)');
 			return e;
 		};
 
+		/**
+		 * Set size of the main object field
+		 * @param height - Höhe
+		 * @param width - Weite
+		 */
 		this.setSize = function(height, width) {
 
 			console.log('MainView.js - generateDropableObjectField.setSize');
@@ -457,11 +506,20 @@ function MainView(_controller) {
 			toolbar.innerheight = height;
 		};
 
+		/**
+		 * Returns HTML-ID
+		 * @return ID
+		 */
 		this.getID = function() {
 			console.log('MainView.js - generateDropableObjectField.getID')
 			return id;
 		};
 
+		/**
+		 * Function which actualize the rules in the main object field
+		 * @param objects
+		 * @see /classes/objects/Rules.js
+		 */
 		var actualizeRules = function(_rules) {
 			console
 					.log('MainView.js - generateDropableObjectField.actualizeRules')
@@ -498,6 +556,11 @@ function MainView(_controller) {
 			});
 		};
 
+		/**
+		 * Aktualize the main object field
+		 * @param objects
+		 * @see /classes/objects/Rules.js
+		 */
 		this.actualize = function(_rules) {
 			Log('MainView.js - generateDropableObjectField.actualize', 4);
 			actualizeRules(_rules);
@@ -641,8 +704,7 @@ function MainView(_controller) {
 			var tmp = {}
 			tmp.ID = elem[0]
 			tmp.NAME = tmp.ID
-			tmp.ICON = '/fhem/rule_designer/ruledesigner/images/' + tmp.ID
-					+ '.svg'
+			tmp.ICON_CLASS = ('RD_ICON_' + tmp.ID).toLowerCase()
 			return tmp
 		})
 
@@ -652,84 +714,3 @@ function MainView(_controller) {
 	}
 
 };
-
-/**
- * Events
- */
-/*
- * this.events = function() {
- * 
- * return this.events; };
- * 
- * this.allowDrop = function(ev) { ev.preventDefault(); };
- * 
- * this.drag = function(ev) { ev.dataTransfer.effectAllowed = 'move';
- * ev.dataTransfer.setData("Text", ev.target.id); };
- * 
- * this.drop = function(ev) { ev.preventDefault();
- * 
- */
-
-/**
- * Old placeolders
- */
-//
-// var setConnector = function(_class, _rel) {
-// var c = document.createElement('span');
-// $(c).attr('rel', _rel);
-// $(c).addClass('connector');
-// $(c).addClass(_class);
-// return c;
-// };
-//
-// var buildPlaceholder = function(bool, _RULE_ID) {
-//
-// var box = document.createElement('div');
-// $(box).addClass('rule-obj-box');
-//
-// console.log(arguments);
-// if (bool) {
-// $(box).append(
-// setConnector('connector-left', _RULE_ID + '.actor'));
-// $(box).attr('rel', _RULE_ID + '.actor');
-// } else {
-// $(box).append(
-// setConnector('connector-right', _RULE_ID + '.sensor'));
-// $(box).attr('rel', _RULE_ID + '.sensor');
-// }
-//
-// var title = document.createElement('span');
-// $(title).addClass('title');
-// title.innerHTML = 'Placeholder';
-// $(box).append(title);
-//
-// $(box).addClass('placeholder');
-// $(box).append(
-// '<p>This object will remove when first '
-// + (bool ? 'actor' : 'sensor') + ' is dropped.</p>');
-// return box;
-// };
-//
-// var buildBox = function(_title, _obj) {
-// var box = document.createElement('div');
-// $(box).addClass('rule-obj-box');
-//
-// console.log(arguments);
-// var _rel = ((arguments[2] !== undefined && arguments[2] != null) ?
-// arguments[2]
-// + '.'
-// : '')
-// + _obj.getUID()
-// $(box).attr('rel', _rel);
-//
-// $(box).append(setConnector('connector-left', _rel + '.prev'));
-// $(box).append(setConnector('connector-right', _rel + '.follow'));
-// $(box).append(setConnector('connector-top', _rel + '.up'));
-// $(box).append(setConnector('connector-bottom', _rel + '.down'));
-//
-// var title = document.createElement('span');
-// $(title).addClass('title');
-// title.innerHTML = _title;
-// $(box).append(title);
-// return box;
-// };

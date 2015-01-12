@@ -1,8 +1,20 @@
+*, *:before, *:after {
+	/* Set global font family */
+	font-family: Calibri;
+	/* Set a more practicable and natural box model */
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
 html, body {
 	padding: 0;
 	margin: 0;
 	height: 100%;
 	overflow: hidden;
+	background-color: #F8F8F8;
 }
 
 div {
@@ -11,7 +23,7 @@ div {
 	margin: 0;
 }
 
-div.appContainer{
+div.appContainer {
 	height: 100%;
 }
 
@@ -26,16 +38,70 @@ div.appContainer{
 	z-index: 1001;
 }
 
+
+button {
+	margin: 3px 5px;
+}
+
+
+#draggedItem {
+	border: 2px dashed #666;
+	text-shadow: 2px;
+	font-weight: bold;
+	padding: 10px;
+	z-index: 65535;
+	cursor: move;
+}
+
+#rd_rules, #rd_draggbar {
+	background-color: #FEFEFE;
+}
+
 #rd_rules>div {
 	overflow: scroll;
+	padding: 18px;
 }
 
-#rd_toolbar>* {
+#rd_rules .placeholder {
+	padding: 10px;
 	display: inline-block;
-	vertical-align: middle;
+	border: 1px dashed #e8e8e8;
+	height: 150px;
+	width: 200px;
+	margin: 5px;
 }
 
-#rd_toolbar>form>* {
+#rd_rules ul.obj_rule {
+	position: relative;
+	padding: 0;
+	margin: 0;
+	min-height: 100%;
+	/** TODO **/
+}
+
+#rd_rules ul.obj_rule>li {
+	position: relative;
+	width: 50%;
+}
+
+#rd_rules ul.obj_rule li.vdev {
+	display: block;
+	position: absolute;
+	right: 30px;
+	top: -30px;
+	z-index: 20;
+}
+
+#rd_rules ul.obj_rule>li>span.placeholder {
+	width: 90%;
+}
+
+#rd_rules ul.obj_rule>li.vdev>.placeholder {
+	height: 30px;
+	width: 30px;
+}
+
+#rd_rules ul.obj_rule li {
 	display: inline-block;
 }
 
@@ -46,8 +112,93 @@ div.appContainer{
 	cursor: pointer;
 }
 
+/**
+ * Toolbar settings
+ **/ 
+#rd_toolbar {
+	padding: 0;
+	margin: 0;
+	overflow: hidden;
+}
+
+#rd_toolbar > li {
+	padding: 0;
+	margin: 0;
+	padding: 5px 3px 5px 5px;
+	width: 120px;
+	height: 75px;
+	display: inline-table;
+	vertical-align: top;
+	overflow: hidden;
+}
+
+#rd_toolbar > li > * {
+	padding: 0;
+	margin: 0;
+	display: table-cell;
+	vertical-align: middle;
+	height: 100%;
+	width: 100%;
+}
+
+#imgTrash {
+ 
+}
+
+#rd_toolbar label {
+	margin-right: 5px;
+}
+
+#rd_toolbar button span{
+	padding-left: 50px;
+	font-weight: bold;
+    vertical-align: middle;
+	padding:10px 5px 10px 45px;
+}
+
+#rd_toolbar button span, #imgTrash.ui-droppable div {
+	background: url(../images/sprite.png) no-repeat top left;
+}
+
+button#btnNew span {
+	background-position: 6px 1px;
+}
+
+button#btnLoad span{
+	background-position: 6px -339px;
+}
+
+button#btnSave span {
+	background-position: 6px -67px;
+}
+
+button#btnSaveAs span {
+	background-position: 6px -129px;
+}
+
+#imgTrash.ui-droppable div {
+	padding: 2px 0;
+	height: 100%;
+	width: 100%;
+	background-position: 6px -194px;
+}
+
+#imgTrash.ui-droppable span {
+	background-color: #FEFEFE;
+	border: 2px dotted #ddd;
+	height: 100%;
+	width: 65px;
+	margin-right: 5px;
+	display:block;
+	padding: 5px;
+	float: right;
+}
+
+/**
+ * Dragbar settings
+ */
 #rd_draggbar {
-	overflow-y: scroll;
+	overflow: hidden;
 }
 
 #rd_draggbar ul {
@@ -56,41 +207,12 @@ div.appContainer{
 }
 
 #rd_draggbar li {
-	margin: 2px 3px;
+	margin: 2px 5px;
 }
 
-button {
-	margin: 3px 5px;
-}
-
-button, img {
-	background: url(../images/sprite.png) no-repeat top left;
-	padding: 5px 3px 5px 40px;
-	width: 120px;
-	height: 45px;
-}
-
-#btnNew {
-	background-position: 5px 5px;
-}
-
-#btnLoad {
-	background-position: 5px -335px;
-}
-
-#btnSave {
-	background-position: 5px -63px;
-}
-
-#btnSaveAs {
-	background-position: 5px -131px;
-}
-
-#imgTrash {
-	border: 2px dotted #ddd;
-	background-position: 5px -193px;
-}
-
+/*
+ *
+ */
 div.rule-obj-box {
 	position: relative;
 	/* The connectors are located in absolute position to her parent Flag*/
@@ -127,6 +249,7 @@ div.rule-obj-box span.connector {
 .ui-draggable.ui-draggable-dragging:hover {
 	cursor: move;
 }
+
 /*
 .sprite-document_new{ background-position: 0 0; width: 32px; height: 32px; } 
 .sprite-document_save{ background-position: 0 -68px; width: 32px; height: 32px; } 
@@ -138,15 +261,11 @@ div.rule-obj-box span.connector {
 .sprite-user_trash_full{ background-position: 0 -476px; width: 32px; height: 32px; } 
 .sprite-view_refresh{ background-position: 0 -544px; width: 32px; height: 32px; } 
 */
-.ui-objlist-head {
-	background-color: #e8e8e8;
-}
-
 .ui-objlist li {
 	height: 25px;
 	margin: 3px;
 	padding: 3px 5px;
-	font-size: 1.5em;
+	font-size: 1.15em;
 }
 
 .ui-objlist li.ui-objlist-body {
@@ -154,13 +273,41 @@ div.rule-obj-box span.connector {
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
-	background-position: right 7px top 3px;
-	background-size: 25px 25px;
-	background-repeat: no-repeat;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 }
 
+.ui-objlist li.ui-objlist-body:before {
+	content: '';
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 0.3;
+	background-position: right 7px top 3px;
+	-ms-background-size: 25px 25px;
+	-o-background-size: 25px 25px;
+	-moz-background-size: 25px 25px;
+	-webkit-background-size: 25px 25px;
+	background-size: 25px 25px;
+	background-repeat: no-repeat;
+	/*	background-color: red; */
+}
+
 ul#gathers li.ui-objlist-body {
 	background-size: 50px 25px;
+}
+
+.ui-objlist li.ui-objlist-head {
+	background-color: #e8e8e8;
+	font-size: 1.5em;
+	text-align: center;
+}
+
+@media ( min-width : 720px) {
+	#rd_draggbar ul li.ui-objlist-body {
+		display: inline-block;
+	}
 }

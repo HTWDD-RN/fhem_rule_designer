@@ -10,8 +10,10 @@ var Conditions = function(){
 		return _view.display(_model)
 	}
 	
-	this.toJSON = function(){
-		return _model.toJSON()
+	// Bind model functions	
+	var keys = Object.keys(_model)
+	for(var n =0; n < keys.length; n++){
+		eval('_self.' + keys[n] +' = _model.'+keys[n])
 	}
 	
 }
@@ -26,7 +28,7 @@ var ConditionsModel = function(controller, id){
 	 * Sets the actions object
 	 * @param object
 	 */	
-	this.setObject = function(obj){
+	this.addObject = function(obj){
 		
 		if(obj instanceof Gather)
 			type = "Gather"
@@ -49,7 +51,7 @@ var ConditionsModel = function(controller, id){
 	 * @return JSON object
 	 */
 	this.toJSON = function (){
-		return obj.toJSON()
+		return (_obj != null ? _obj.toJSON() : _obj)
 	}
 
 }

@@ -1,3 +1,11 @@
+/**
+ * Function to initiate a rule object
+ * @param id - itentifier
+ * @param arg_0 - object of type VirtualDevice, Conditions, Actions or an array in structure of parameters
+ * ...
+ * @param arg_n
+ * @return rule object 
+ **/
 var Rule = function(id) {
 
 	var _self = this
@@ -10,27 +18,38 @@ var Rule = function(id) {
 		return _view.display(_model)
 	}
 	
-	this.toJSON = function(){
-		return _model.toJSON()
+	// Bind model functions	
+	var keys = Object.keys(_model)
+	for(var n =0; n < keys.length; n++){	
+		eval('_self.' + keys[n] +' = _model.'+keys[n])
 	}
-		
-	this.getInfo = function(){
-		return _model.toInfo()
-	}
-
+	
+	if(arguments.length > 0){
+		for(var n=0; n<arguments.length; n++){
+			var type = typeof arguments[n]
+		if(type === 'VirtualDevice'){  // for import configurations of virtual devices
+			_model.setVirtualDeviceObject(arguments[n])
+		} else if(type === 'Conditions') {// for import configurations of conditions
+			_model.setConditions(arguments[n])
+		} else if(type === 'Actions')  {// for import configuration of actions
+			_model.setActons(arguments[n])
+		} else if(type === 'Params' ) {
+			_model.getParams.setParameters(arguments[n])
+		} 
+	}}
 }
 
 var RuleModel = function(controller, id) {
 
 	var _ID = id
 
-	var _params = new Params()
+	var _params = new Params() // Array
 
-	var _actions = new Actions()
+	var _actions = new Actions() // Array
 
-	var _conditions = new Conditions()
+	var _conditions = null // Object
 
-	var _virtual_device = new VirtualDevice()
+	var _virtual_device = null // Object
 
 	/**
 	 * Gets the ID object
@@ -42,23 +61,30 @@ var RuleModel = function(controller, id) {
 	}
 
 	/**
-	 * Sets the actions object
+	 * Gets parameter object
 	 * 
-	 * @param object
+	 * @return object
 	 */
-	this.setActions = function(obj) {
-		_actions = obj
+	this.getParams = function() {
+		return _params
 	}
-
+	
 	/**
-	 * Gets the actions object
+	 * Gets actions object
 	 * 
 	 * @return object
 	 */
 	this.getActions = function() {
 		return _actions
 	}
-
+	/**
+	 * Sets actions object
+	 * 
+	 * @return object
+	 */
+	this.setActions = function(_obj) {
+		_actions = _obj
+	}
 	/**
 	 * Sets the conditions object
 	 * 
@@ -117,29 +143,19 @@ var RuleModel = function(controller, id) {
 	 * @return JSON object
 	 */
 	this.toJSON = function() {
-		var tmp_actions = _actions.toJSON()
-
-		if (tmp_actions == null)
-			throw "JSONBuildObjectException"
-
-		var tmp_conditions = _conditions.toJSON()
-		var tmp_virtual_device = _virtual_device.toJSON()
-
-		if (tmp_conditions == null && tmp_virtual_device == null)
-			throw "JSONBuildObjectException"
 
 		var tmp = {}
 
-		tmp["ID"] = _id
+		tmp["ID"] = _ID
 		tmp["PARAMS"] = _params.toJSON()
 
-		if (tmp_conditions != null)
-			tmp["COND"] = tmp_conditions.toJSON()
+		if (_conditions != null)
+			tmp["COND"] = _conditions.toJSON()
 
-		tmp["ACTIONS"] = tmp_actions.toJSON()
+		tmp["ACTIONS"] = _actions.toJSON()
 
-		if (tmp_virtual_device != null)
-			tmp["VDEV"] = tmp_virtual_device.toJSON()
+		if (_virtual_device != null)
+			tmp["VDEV"] = _virtual_device.toJSON()
 
 		return tmp
 	}
@@ -150,7 +166,7 @@ var RuleModel = function(controller, id) {
 	 * 
 	 * @return Info object
 	 */
-	this.toInfo = function() {
+	this.getInfo = function() {
 		var tmp = { "ID" : _ID, "PARAMS":_params.toJSON() }
 		return tmp
 	}
@@ -168,10 +184,11 @@ var RuleView = function(controller) {
 		var actionsObj = _model.getActions()
 
 		var html = '<ul class="obj_rule">'
-			+ '<li>' + (condObj.display()) + '</li>'
-			+ '<li class="vdev">' + (vdevObj.display()) + '</li>'
+			+ '<li>' + (condObj != null ? condObj.display():'Placeholder') + '</li>'
+			+ '<li class="vdev">' + (vdevObj != null ? vdevObj.display():'VDEV') + '</li>'
 			+ '<li>' + (actionsObj.display()) + '</li>'
 			+ '</ul>'
 		return html
 	}
+	
 }

@@ -21,6 +21,8 @@ var ActorModel = function(controller, id){
 
 	var _self = this
 	
+	var _controller = controller
+	
 	var _id = id
 	
 	var _params = new Params()

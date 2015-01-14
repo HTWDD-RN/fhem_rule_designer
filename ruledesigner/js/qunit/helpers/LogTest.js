@@ -1,8 +1,3 @@
-// Simulate global config
-var Configuration = {
-	DEBUG_LEVEL : 4
-}
-
 QUnit
 		.test(
 				"Test Log-object (js/classes/helpers/Log.js)",

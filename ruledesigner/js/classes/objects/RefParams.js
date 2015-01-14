@@ -1,7 +1,7 @@
 var RefParams = function() {
 
 	var _self = this
-
+	
 	var _model = new RefParamsModel(_self)
 
 	var _view = new RefParamsView(_self)
@@ -18,9 +18,11 @@ var RefParams = function() {
 
 }
 
-var RefParamsModel = function() {
+var RefParamsModel = function(controller) {
 
 	var _self = this
+	
+	var _controller = controller
 
 	var _data = {}
 

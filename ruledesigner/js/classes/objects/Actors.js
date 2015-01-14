@@ -1,7 +1,17 @@
 var Actors = function(){
 
 	var _self = this
-		
+	
+	var _id = cSYS_ID()
+	
+	/**
+	 * Return ID
+	 * @return ID 
+	 */
+	this.getID = function(){
+		return _id
+	}
+	
 	var _model = new ActorsModel(_self)
 	
 	var _view = new ActorsView(_self)
@@ -17,9 +27,12 @@ var Actors = function(){
 	}
 	
 }
-var ActorsModel = function(controller, id){
+
+var ActorsModel = function(controller){
 
 	var _self = this
+	
+	var _controller = controller
 	
 	var _actors = []
 

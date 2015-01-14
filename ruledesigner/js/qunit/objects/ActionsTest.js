@@ -8,10 +8,10 @@ QUnit.test( "Test ActionsTest-object (js/classes/objects/Actions.js)", function(
 	// Prepare
 	assert.deepEqual(obj.getActions(), [], 'getObject: before add Action')
 	
-	var action1 = new Action('L1')
+	var action1 = new Actor('L1')
 	assert.ok(action1.getParamObj().addParam('state', 'on'), 'addParam: add reference parameter / Action')
 
-	var action2 = new Action('L2')
+	var action2 = new Actor('L2')
 	assert.ok(action2.getParamObj().addParam('state',  'off'), 'addParam: add reference parameter / Action')
 
 	// TODO Test with/add Actorgroup

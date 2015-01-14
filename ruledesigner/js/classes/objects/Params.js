@@ -21,6 +21,8 @@ var Params = function() {
 var ParamsModel = function(controller) {
 
 	var _self = this
+	
+	var _controller = controller
 
 	var _data = {}
 

@@ -1,6 +1,16 @@
 var Conditions = function(){
 
 	var _self = this
+	
+	var _id = cSYS_ID()
+	
+	/**
+	 * Return ID
+	 * @return ID 
+	 */
+	this.getID = function(){
+		return _id
+	}
 		
 	var _model = new ConditionsModel(_self)
 	
@@ -18,12 +28,10 @@ var Conditions = function(){
 	
 }
 
-var ConditionsModel = function(controller, id){
+var ConditionsModel = function(controller){
 	
 	var _obj = null
-	
-	var _id = id
-	
+		
 	/**
 	 * Sets the actions object
 	 * @param object

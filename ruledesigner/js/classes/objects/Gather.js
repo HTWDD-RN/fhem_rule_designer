@@ -1,7 +1,17 @@
 function Gather(gather) {
 
 	var _self = this
-
+	
+	var _id = cSYS_ID()
+	
+	/**
+	 * Return ID
+	 * @return ID 
+	 */
+	this.getID = function(){
+		return _id
+	}
+	
 	var _model = new GatherModel(_self, gather)
 
 	var _view = new GatherView(_self)
@@ -26,8 +36,6 @@ function GatherModel(controller, gather) {
 	var _log_gather = gather
 
 	var _conditions = []
-	
-
 	
 	this.addConditions = function(obj) {
 		if (obj instanceof Condition) {

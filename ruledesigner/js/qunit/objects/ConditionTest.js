@@ -1,6 +1,6 @@
 QUnit.test( "Test Condition-object (js/classes/objects/Condition.js)", function( assert ) {
 	// Create instance of object which is testing
-	var obj = new Condition()
+	var obj = new Condition('')
 	
 	// First test instanciation
 	assert.ok( obj instanceof Condition, "Instantiation" );

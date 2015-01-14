@@ -6,6 +6,16 @@ function Actions() {
 
 	var _self = this
 
+	var _id = cSYS_ID()
+	
+	/**
+	 * Return ID
+	 * @return ID 
+	 */
+	this.getID = function(){
+		return _id
+	}
+	
 	var _model = new ActionsModel(_self)
 
 	var _view = new ActionsView(_self)
@@ -27,11 +37,11 @@ function ActionsModel(controller) {
 	var _self = this
 
 	var _controller = controller
-
+	
 	var Actions = []
 
 	this.addAction = function(obj) {
-		if (obj instanceof Action || obj instanceof Actorsgroup) {
+		if (obj instanceof Actor || obj instanceof Actorsgroup) {
 			Actions.push(obj)
 			return true
 		}
@@ -45,7 +55,7 @@ function ActionsModel(controller) {
 	this.removeAction = function(SYS_ID) {
 		for (var n = 0; n < _actors.length; n++) {
 			if (_action[n].getID() == SYS_ID
-					|| ((SYS_ID instanceof Actorsgroup || SYS_ID instanceof Action) && SYS_ID === _actions[n])) {
+					|| ((SYS_ID instanceof Actorsgroup || SYS_ID instanceof Actor) && SYS_ID === _actions[n])) {
 				_actions.splice(n, 1)
 				return true
 			}

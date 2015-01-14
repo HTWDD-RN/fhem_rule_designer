@@ -21,7 +21,7 @@ var ConditionModel = function(controller, id) {
 
 	var _self = this
 
-	var _id = (id || '')
+	var _id = id
 
 	var _ref_params = new RefParams()
 

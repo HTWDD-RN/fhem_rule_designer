@@ -5,6 +5,16 @@ var Actorgroup = function(){
 
 	var _self = this
 		
+	var _id = cSYS_ID()
+	
+	/**
+	 * Return ID
+	 * @return ID 
+	 */
+	this.getID = function(){
+		return _id
+	}
+	
 	var _model = new ActorgroupModel(_self)
 	
 	var _view = new ActorgroupView(_self)
@@ -24,11 +34,11 @@ var Actorgroup = function(){
 /**
  * 
  */
-var ActorgroupModel = function(controller, id){
+var ActorgroupModel = function(controller){
 
 	var _self = this
 	
-	var _id = id
+	var _controller = controller
 	
 	var _actors = new Actors()
 	

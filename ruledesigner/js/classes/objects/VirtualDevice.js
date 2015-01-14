@@ -25,6 +25,8 @@ var VirtualDeviceModel = function(controller, id, asReference){
 
 	var _self = this
 	
+	var _controller = controller
+	
 	var _id = id
 	
 	var _params = (asReference ? new RefParams() : _params = new Params())

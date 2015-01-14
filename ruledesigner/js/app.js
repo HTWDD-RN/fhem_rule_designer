@@ -2,6 +2,45 @@
  * 
  */
 
+var VIRTUAL_DEVICES = [ {
+	"TYPE" : "VD_DIGITAL_TIMER",
+	"NAME" : "Digital timer",
+	"ALT":	"Digitale Zeitschaltuhr, welche der realen Bauweise nachempfunden ist",
+	"ICON_CLASS" : "RD_DIGITAL_TIMER",
+	"SETS": [
+		"Weekdays",
+		"BeginTime",
+		"EndTime",
+		"BeginDate",
+		"EndDate"
+	],
+	"IS_ACTOR": true,
+	"IS_SENSOR": true,
+	"IS_VDEV" : true
+}, {
+	"TYPE" : "VD_DELAY_TIMER",
+	"NAME" : "Delay timer",
+	"ALT" : "Ermöglicht verzögerte Ausführung von Befehlen und Schaltvorgängen",
+	"ICON_CLASS" : "RD_DELAY_TIMER",
+	"SETS" : [
+	    "","","",
+	],
+	"IS_ACTOR": true,
+	"IS_SENSOR": false,
+	"IS_VDEV" : true
+}, {
+	"TYPE" : "VD_RANDOM_TIMER",
+	"NAME" : "Random timer",
+	"ALT": "Ermöglicht zufallsabhängiges Schalten/ Setzen von Aktoren ",
+	"ICON_CLASS" : "RD_RANDOM_TIMER",
+	"SETS" : [
+	    "UpperBoundTime","LowerBoundTime","SwitchedTime",
+	],
+	"IS_ACTOR": true,
+	"IS_SENSOR": false,
+	"IS_VDEV" : true
+} ]
+
 var Configuration = {
 	DEBUG_LEVEL : 5,
 	// * // failure/ critical,
@@ -16,7 +55,7 @@ var Configuration = {
 		MBOX_CONTAINER : '.alertContainer',
 		TOOLBAR : {
 			CLASSES : '', // 'ui-widget-header ui-widget ui-widget-content
-							// ui-corner-all',
+		// ui-corner-all',
 		},
 		OBJECT_LIST : {
 			CLASSES : 'ui-tabs ui-widget ui-widget-content ui-corner-all',
@@ -35,6 +74,13 @@ var Configuration = {
 
 var app = function() {
 	$(window).load(function() {
+
+		// Initialize MessageBox
+		var mBox = MessageBox.getInstance()
+		// mBox.enableClosingButton(false); // Disables closing button
+		// mBox.show('Test', 'Message-Box Test Message') // Show for displaying
+		// setup information
+
 		// Initialize-App
 		new __RuleDesigner()
 	});

@@ -11,10 +11,11 @@ var Params = function() {
 		return _view.display(_model)
 	}
 	
-	this.toJSON = function(){
-		return _model.toJSON()
+	// Bind model functions	
+	var keys = Object.keys(_model)
+	for(var n =0; n < keys.length; n++){	
+		eval('_self.' + keys[n] +' = _model.'+keys[n])
 	}
-
 }
 
 var ParamsModel = function(controller, id) {
@@ -51,8 +52,19 @@ var ParamsModel = function(controller, id) {
 		else
 			_data[param] = value
 	}
-
+	
 	/**
+	 * This is a forcing set up of parameters - olds are deleting
+	 * @param - Params object
+	 */
+	this.setParameter =function(data){
+		if(typeof data == 'Params'){
+			delete _data
+			this._data = data
+		}
+	}
+	/**
+	
 	 * Returns the value of given parameter
 	 * 
 	 * @param String
@@ -62,7 +74,8 @@ var ParamsModel = function(controller, id) {
 	}
 
 	/**
-	 * 
+	 * Deletes an parameter if found
+	 * @param key / parameter
 	 */
 	this.deleteParam = function(param) {
 		if (_data[param] !== undefined)
@@ -70,7 +83,8 @@ var ParamsModel = function(controller, id) {
 	}
 
 	/**
-	 * 
+	 * Returns parameter object
+	 * @return getParams
 	 */
 	this.getParams = function() {
 		return _data

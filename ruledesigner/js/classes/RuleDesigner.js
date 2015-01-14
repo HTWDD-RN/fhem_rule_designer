@@ -17,8 +17,8 @@ var cSYS_ID = new Counter()
  */
 function __RuleDesigner() {
 
-	/* BEGIN INITS*/
-	
+	/* BEGIN INITS */
+
 	var _self = this
 
 	Log('Ruledesigner.js - Create', '(main conroller)', 3)
@@ -34,6 +34,28 @@ function __RuleDesigner() {
 
 	// Model 2: Store rule data
 	var _rules = new Rules()
+
+	var cbInitWrapper = function() {
+		Log('# RuleDesigner.js # cbInitWrapper', 4)
+		_wrapper.init(cbBindWrapperData)
+	}
+
+	var cbBindWrapperData = function() {
+		Log('# RuleDesigner.js # cbBindWrapperData', 4)
+		Log('SuccessCallback', 5)
+
+		var tmp = _wrapper.getAvailableSegmations.getVirtualDevices();
+		if ($(tmp).length > 0) {
+			$.map(_wrapper.getAvailableSegmations.getVirtualDevices(),
+					function(val) {
+						val.TYPE = 'SYS_'+val.ID+'_'+val.NAME
+						VIRTUAL_DEVICES.push(val);
+					})
+		}
+		_view.actualizeObjectList(_wrapper.getAvailableSegmations,
+				VIRTUAL_DEVICES)
+		_self.addNewRule()
+	}
 
 	// Step 1 - Load GUI-Ressource
 	Helpers.loadGUIContainer(function() {
@@ -56,28 +78,17 @@ function __RuleDesigner() {
 		stepsCounter()
 	})
 
-	var cbInitWrapper = function() {
-		Log('# RuleDesigner.js # cbInitWrapper', 4)
-		_wrapper.init(cbBindWrapperData)
-	}
-
-	var cbBindWrapperData = function() {
-		Log('# RuleDesigner.js # cbBindWrapperData', 4)
-		Log('SuccessCallback', 5)
-		_view.actualizeObjectList(_wrapper.getAvailableSegmations)
-		_self.addNewRule()
-	}
-
 	this.init = function(data) {
 		Log('# RuleDesigner.js # Init-function', 4)
 		_view.actualize();
 		$(window).resize();
+
 	};
-	
+
 	/* END INITS */
-	
+
 	/* BEGIN SERVICES */
-	
+
 	/**
 	 * Function to create a new rule
 	 */
@@ -85,11 +96,12 @@ function __RuleDesigner() {
 		Log('# RuleDesigner.js # addNewRule', 4)
 		var newRule = _rules.createRule()
 		_view.addRuleTab(newRule);
-	//	_view.actualize();
+		// _view.actualize();
 	}
 
 	/**
 	 * This function return the rules, representing as root node
+	 * 
 	 * @return rules object {Rules.js}
 	 */
 	this.getRules = function() {
@@ -102,18 +114,18 @@ function __RuleDesigner() {
 	this.deleteRule = function(SYS_ID) {
 		Log('# RuleDesigner.js # deleteRule (SYS_ID: ' + SYS_ID + ')', 4)
 		// TODO - Verknuepfungen in anderen Objekten loeschen
-		for (n = 0; n < rules; n++) {     	// search rule with ...
-			if (rules[n].ID == SYS_ID) {  	// ... SYS_ID 
-				delete rules[n]  			// if found delete rule object, ...
-				view.actualize();			// actualize view ...
-				return						// and break function up
+		for (n = 0; n < rules; n++) { // search rule with ...
+			if (rules[n].ID == SYS_ID) { // ... SYS_ID
+				delete rules[n] // if found delete rule object, ...
+				view.actualize(); // actualize view ...
+				return // and break function up
 			}
 		}
 	};
 
 	/**
-	 * @deprecated
-	 * Function to commit the information about the available gathers to the view
+	 * @deprecated Function to commit the information about the available
+	 *             gathers to the view
 	 */
 	this.getGatherList = function() {
 		Log('# RuleDesigner.js # getGatherList', 4)
@@ -151,7 +163,6 @@ function __RuleDesigner() {
 		return true; // TODO: false if fail
 	};
 
-	
 	this.generateJSONString = function() {
 		return JSON.stringify(_rules.serialize(), null, 3);
 	};

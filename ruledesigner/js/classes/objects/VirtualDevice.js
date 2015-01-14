@@ -10,8 +10,10 @@ var VirtualDevice = function(){
 		return _view.display(_model)
 	}
 	
-	this.toJSON = function(){
-		return _model.toJSON()
+	// Bind model functions	
+	var keys = Object.keys(_model)
+	for(var n =0; n < keys.length; n++){	
+		eval('_self.' + keys[n] +' = _model.'+keys[n])
 	}
 	
 }
@@ -52,7 +54,7 @@ var VirtualDeviceView = function(controller){
 	var _controller = controller
 
 	this.display = function(model){
-		return '<span> VDEV </span>'
+		return '<span class="placeholder"> VDEV </span>'
 	}
 	
 }

@@ -75,13 +75,17 @@ var Helpers = {
 	 *            function - is called after the loading is success
 	 */
 	loadWrapper : function(wrapper, successCallback) {
-		var url = Configuration.HA_SVR_URL + '/ruledesigner/'
+		if(Configuration.DEBUG_LEVEL < 5){
+		var url = Configuration.HA_SVR_URL + '/rule_designer/ruledesigner/'
 				+ Configuration.WRAPPER_URL + '/' + Configuration.WRAPPER
 				+ '.js'
 		console.log(url)
 		this.loadScript(url, successCallback, function() {
 			alert('Fehler beim Laden des Wrappers')
 		})
+		} else {
+			successCallback()
+		}
 	},
 
 	/**
@@ -91,9 +95,14 @@ var Helpers = {
 	 *            function - is called after the loading is success
 	 */
 	loadGUIContainer : function(successCallback) {
-		this.loadScript('js/classes/MainView.js', successCallback, function() {
-			alert("Fehler beim Laden der GUI-Ressourcen")
-		})
+		if(Configuration.DEBUG_LEVEL < 5){
+			this.loadScript('js/classes/MainView.js', successCallback, function() {
+				alert("Fehler beim Laden der GUI-Ressourcen")
+			})
+		} else {
+			// Calls method directly if the MainView.js already initialized statically (DEBUG-MODE)
+			successCallback()
+		}
 	}
 }
 

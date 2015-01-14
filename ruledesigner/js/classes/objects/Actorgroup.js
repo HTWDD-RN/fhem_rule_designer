@@ -13,8 +13,10 @@ var Actorgroup = function(){
 		return _view.display(_model)
 	}
 	
-	this.toJSON = function(){
-		return _model.toJSON()
+	// Bind model functions	
+	var keys = Object.keys(_model)
+	for(var n =0; n < keys.length; n++){
+		eval('_self.' + keys[n] +' = _model.'+keys[n])
 	}
 	
 }

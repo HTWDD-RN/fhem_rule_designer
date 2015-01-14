@@ -1,0 +1,42 @@
+<html>
+<head>
+	<title>FHEM Regel Wizard</title>
+	<link rel="stylesheet" type="text/css" href="../css/main.css" />
+	
+	<script src="../lib/jquery-2.1.3.js"></script>
+	<script src="../js/functions.js"></script>
+	<script src="../js/FormGetter.js"></script>
+	<script src="../js/rule.js"></script>
+</head>
+<body>
+
+	<header>
+		<h1>FHEM Regel Wizard</h1>
+		<h2>FHEM Regeln Schritt für Schritt erstellen</h2>
+		
+		<nav>
+			<ul>
+				<li><a href="http://localhost:8083/fhem">FHEM</a></li>
+				<li><a href="http://localhost:8083/fhem/wizard/index.html">Hauptseite</a></li>
+				<li><a href="http://localhost:8083/fhem/wizard/html/new.html">Neue Regel</a></li>
+				<li><a href="#">Liste aller Regeln</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<section>
+		<h1>List aller Regeln</h1>
+	</section>
+
+	<section id="rulelist">
+		<script type="text/javascript">
+			var url = "http://localhost:8083/fhem/ruledesigner?q=rulelist";
+			$.getJSON( url, function( data ) {
+				//$("#rulelist").text(data);
+				$.each( data, function( i, item ) {
+					$( "<div>" ).text( item ).appendTo( "#rulelist" );})
+			});
+		</script>
+	</section>
+</body>
+</html>

@@ -1,0 +1,110 @@
+* {
+	margin: 0px;
+	padding: 0px;
+}
+
+header {
+	border-bottom: 3px solid #052375;
+	background-color: #74AFED; /*#1A4EDB;*/
+	padding-left: 20px;
+	padding-top: 10px;
+	padding-bottom: 50px;
+	margin-bottom: 20px;
+}
+
+header h1, header h2, header nav, section {
+	width: 800px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+header h1 {
+	font-size: 24pt;
+}
+
+header h2 {
+	font-size: 14pt;
+	font-weight: normal;
+}
+
+header nav ul {
+	list-style: none;
+}
+
+header nav ul li {
+	float: left;
+	margin-top: 15px;
+	margin-right: 20px;
+}
+
+header nav ul li a {
+	color: white;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+header nav ul li a:hover {
+	text-decoration: underline;
+}
+
+section {
+	padding-bottom: 20px;
+	margin-top: 50px;
+	border-bottom: 1px solid #052375;
+}
+
+section h1 {
+	margin-bottom: 20px;
+	color: #FF7F00;
+}
+
+section .hint {
+	border: 1px dashed #AE5600;
+	margin: 10px;
+	padding: 10px;
+}
+
+section .label {
+	font-weight: bold;
+	color: #072E97;
+	margin-top: 25px;
+	margin-bottom: 5px;
+}
+
+#new_rule_if_and_list span.device {
+	font-style: italic;
+	color: #AE5600;
+	margin-right: 25px;
+}
+
+#new_rule_then_and_list span.device {
+	font-style: italic;
+	color: #AE5600;
+}
+
+.device_list {
+	margin-top: 8px;
+	margin-bottom: 8px;
+}
+
+#finish_btn {
+	display: block;
+	width: 300px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	margin: auto;
+	margin-bottom: 50px;
+	border: 2px solid #052375;
+	background-color: #1A4EDB;
+	text-decoration: none;
+	font-weight: bold;
+	font-size: 26pt;
+	color: white;
+	text-align: center;
+	vertical-align: middle;
+}
+
+#finish_btn:hover  {
+	background-color: #1A4EDB;
+	border-color: #052375;
+}

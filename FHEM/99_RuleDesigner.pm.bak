@@ -12,7 +12,7 @@ use strict;
 use warnings;
 
 
-#use HttpUtils;
+use HttpUtils;
 use DBI;
 use Switch 'Perl5', 'Perl6';
 use Net::Telnet;
@@ -30,7 +30,7 @@ use vars qw(%data);
 #sub RD_CGI_Definerule($);
 
 # Variables
-my $name = "wizard";#"ruledesigner";
+my $name = "ruledesigner";
 my $url = "/". $name;
 my $contenttype = "application/json; charset=UTF-8";
 
@@ -45,7 +45,7 @@ RuleDesigner_Initialize($)
 	$hash->{DefFn} = "RD_define";
 	
 	$data{FWEXT}{$url}{LINK} = $name ."/index.html";
-	$data{FWEXT}{$url}{NAME} = $name;#"Rule Designer";
+	$data{FWEXT}{$url}{NAME} = "Rule Designer";
 	$data{FWEXT}{$url}{FUNC} = "RD_CGI";
 	
 	RD_Repo_Init();
@@ -79,6 +79,13 @@ RD_CGI()
 			given ($k) {
 				when 'q'		{ $query = $a; }
 				when 'json'		{ $rule{'json'} = urlDecode($a); }
+				
+				#Deprecated parameters, will be removed!
+				when 't'		{ $text = $a; }
+				when 'name'		{ $rule{'name'} = $a; }
+				when 'device'	{ $rule{'device'} = $a; }
+				when 'state'	{ $rule{'state'} = $a; }
+				when 'at'		{ $rule{'at'} =$a; $rule{'at'} =~ s/%3A/:/g;}
 			}
 		}
 		
@@ -149,7 +156,7 @@ my $dns = "DBI:SQLite:dbname=/tmp/rulerepository.sqlite.db";
 
 sub DBH
 {
-	my $dbh = DBI->connect($dns, "", "", 
+	my $dbh = my $dbh = DBI->connect($dns, "", "", 
 		{	RaiseError => 1,
 			PrintError => 1,
 			AutoCommit => 1
@@ -216,10 +223,10 @@ sub RD_Repo_Rulelist
 	
 	my @values;
 	
-	my $sth = $dbh->prepare("SELECT name FROM rule");
-	$sth->execute() or die "RD_Repo_Rulelist: ". $dbh->errstr();
-	while(my @row = $sth->fetchrow_array()) {
-		push(@values, '"'.$row[0].'"');
+	my $sth = $dbh->prepare("SELECT name FROM rule"); #or die "RD_Repo_Rulelist: ". $dbh->errstr();
+	
+	while(@row = $sth->fetchrow_array()) {
+		push(@values, '"'.$row[0].'"') 
 	}
 	
 	$dbh->disconnect();
@@ -266,8 +273,6 @@ sub parseRule
 	$r .= $cond;
 	$r .= $action;
 	$r .= '}';
-	
-	RD_Repo_Insert($id, "");
 	
 	return $r;
 }

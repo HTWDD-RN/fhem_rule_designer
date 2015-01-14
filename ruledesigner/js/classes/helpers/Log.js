@@ -12,19 +12,33 @@
  *            3 info (Inputs/Outputs) 4 entries/exits 5 debug ]
  */
 function Log() {
-	cmd = ''
-	if (arguments.length > 1
-			&& arguments[arguments.length - 1] <= Configuration.DEBUG_LEVEL)
-		for (n = 0; n < arguments.length - 1; n++) {
-			if (n > 0)
-				cmd += ','
-			cmd += 'arguments[' + n + ']'
-		}
+
+	function isInt(n) {
+		return Number(n) === n && n % 1 === 0;
+	}
+
+	var cmd = ''
+	if (arguments.length > 1) { // more the one argument
+		if (isInt(arguments[arguments.length - 1]) // proof debug leve
+				&& arguments[arguments.length - 1] <= Configuration.DEBUG_LEVEL)
+			for (var n = 0; n < arguments.length - 1; n++) {
+				if (n > 0)
+					cmd += ','
+				cmd += 'arguments[' + n + ']'
+			}
+	} else if (arguments.length == 1) { // only one argument
+		cmd = 'arguments[0]'
+	}
 
 	if (cmd != '') {
 		cmd = 'console.log(' + cmd + ')'
-		eval(cmd)
+		try {
+			eval(cmd)
+			return true
+		} catch (Exception) {
+		}
 	}
+	return false
 }
 
 /**

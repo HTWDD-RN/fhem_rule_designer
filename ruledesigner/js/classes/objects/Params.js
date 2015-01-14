@@ -18,13 +18,11 @@ var Params = function() {
 	}
 }
 
-var ParamsModel = function(controller, id) {
+var ParamsModel = function(controller) {
 
 	var _self = this
 
 	var _data = {}
-
-	var _type = null
 
 	/**
 	 * Add a parameter, when not exists, else calls update function
@@ -34,10 +32,12 @@ var ParamsModel = function(controller, id) {
 	 * @param value
 	 */
 	this.addParam = function(param, value) {
-		if (_data[param] !== undefined)
-			_self.updateParam
-		else
+		if (typeof _data[param] === 'undefined'){
 			_data[param] = value
+			if(_data[param] == value)
+				return true
+		}
+		return false
 	}
 
 	/**
@@ -47,10 +47,12 @@ var ParamsModel = function(controller, id) {
 	 * @param value
 	 */
 	this.updateParam = function(param, value) {
-		if (_data[param] === undefined)
-			_self.addParam(param, value)
-		else
+		if (typeof _data[param] !== 'undefined'){
 			_data[param] = value
+			if(_data[param] == value)
+				return true
+		}
+		return false
 	}
 	
 	/**
@@ -58,11 +60,14 @@ var ParamsModel = function(controller, id) {
 	 * @param - Params object
 	 */
 	this.setParameter =function(data){
-		if(typeof data == 'Params'){
+		if(typeof data == 'object'){
 			delete _data
-			this._data = data
+			_data = data
+			return true
 		}
+		return false
 	}
+	
 	/**
 	
 	 * Returns the value of given parameter
@@ -78,8 +83,12 @@ var ParamsModel = function(controller, id) {
 	 * @param key / parameter
 	 */
 	this.deleteParam = function(param) {
-		if (_data[param] !== undefined)
-			delete _data[param]
+		if (typeof _data[param] !== 'undefined'){
+			delete _data[param]		
+			if (typeof _data[param] === 'undefined')
+				return true
+		}
+		return false
 	}
 
 	/**

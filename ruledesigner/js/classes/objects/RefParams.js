@@ -18,7 +18,7 @@ var RefParams = function() {
 
 }
 
-var RefParamsModel = function(controller, id) {
+var RefParamsModel = function() {
 
 	var _self = this
 
@@ -32,13 +32,17 @@ var RefParamsModel = function(controller, id) {
 	 * @RefParam value
 	 */
 	this.addRefParam = function(RefParam, op, value) {
-		if (_data[RefParam] !== undefined)
-			_self.updateRefParam(RefParam, op, value)
-		else {
-			_data[RefParam] = [ op, value ]
-			for (n = 0; n < arguments.length; n++)
+
+		if(arguments.length < 3)
+			throw LowerArgumentsException
+			
+		if (typeof _data[RefParam] === 'undefined'){
+			_data[RefParam] = [ op, value ] // Add array with first value
+			for (var n = 3; n < arguments.length; n++) // Add other arguments
 				_data[RefParam].push(arguments[n])
+			return true			
 		}
+		return false
 	}
 
 	/**
@@ -48,15 +52,34 @@ var RefParamsModel = function(controller, id) {
 	 * @RefParam value
 	 */
 	this.updateRefParam = function(RefParam, op, value) {
-		if (_data[RefParam] === undefined)
-			_self.addRefParam(RefParam, op, value)
-		else {
-			_data[RefParam] = [ op, value ]
-			for (n = 0; n < arguments.length; n++)
+		if(arguments.length < 3)
+			throw LowerArgumentsException
+			
+		if (typeof _data[RefParam] !== 'undefined'){
+			_data[RefParam] = [ op, value ] // Add array with first value
+			for (var n = 3; n < arguments.length; n++) // Add other arguments
 				_data[RefParam].push(arguments[n])
+			return true			
 		}
+		return false
 	}
 
+	
+	/**
+	 * This is a forcing set up of parameters - olds are deleting
+	 * @param - Params object
+	 */
+	this.setRefParameter =function(data){
+		// TODO: data validation - data object should include arrays only with two parameter at minimum
+		if(typeof data == 'object'){
+			delete _data
+			_data = data
+			return true
+		}
+		return false
+	}
+	
+	
 	/**
 	 * Returns the value of given RefParameter
 	 * 
@@ -70,8 +93,12 @@ var RefParamsModel = function(controller, id) {
 	 * 
 	 */
 	this.deleteRefParam = function(RefParam) {
-		if (_data[RefParam] !== undefined)
+		if (typeof _data[RefParam] !== 'undefined'){
 			delete _data[RefParam]
+			if(typeof _data[RefParam] === 'undefined')
+				return true
+		}
+		return false
 	}
 
 	/**
@@ -92,7 +119,7 @@ var RefParamsModel = function(controller, id) {
 
 }
 
-var RefParamsView = function() {
+var RefParamsView = function(controller) {
 
 	var _controller = controller
 	

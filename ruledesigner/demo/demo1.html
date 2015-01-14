@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Rules-Designer</title>
+
+<link href="../css/style.css" rel="stylesheet" type="text/css" />
+<link href="../css/theme/jquery-ui-1.10.4.custom.css" rel="stylesheet">
+<script src="../js/lib/jquery-1.10.2.js"></script>
+<script src="../js/lib/jquery-ui-1.10.4.js"></script>
+
+<script src="../js/classes/helpers/Log.js"></script>
+
+<script src="../js/classes/objects/Params.js"></script>
+<script src="../js/classes/objects/RefParams.js"></script>
+<script src="../js/classes/objects/VirtualDevice.js"></script>
+<script src="../js/classes/objects/Actor.js"></script>
+<script src="../js/classes/objects/Actors.js"></script>
+<script src="../js/classes/objects/Actorgroup.js"></script>
+<script src="../js/classes/objects/Action.js"></script>
+<script src="../js/classes/objects/Actions.js"></script>
+<script src="../js/classes/objects/Condition.js"></script>
+<script src="../js/classes/objects/Gather.js"></script>
+<script src="../js/classes/objects/Conditions.js"></script>
+<script src="../js/classes/objects/Rule.js"></script>
+</head>
+<body>
+<pre id="result">
+
+</pre>
+<script src="../js/classes/objects/Rules.js"></script>
+<script>
+var demorules = new Rules()
+
+var rule1 = demorules.createRule('Demo1');
+
+var condObj = new ConditionsObject()
+
+var ag1 = new Actorgroup()
+
+var ag2 = new Actorgroup()
+
+rule1.getActionsObject().addAction(ag1)
+rule1.getActionsObject().addAction(ag1)
+
+var rule2 = demorules.createRule('Demo2');
+
+var result = demorules.serialize();
+var jStr = JSON.stringify(result)
+$('#result').html(jStr); 
+</script>
+</body>
+</html>

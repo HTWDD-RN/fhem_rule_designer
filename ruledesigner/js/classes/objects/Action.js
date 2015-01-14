@@ -1,8 +1,8 @@
-var Action = function(){
+var Action = function(id){
 
 	var _self = this
 		
-	var _model = new ActionModel(_self)
+	var _model = new ActionModel(_self, id)
 	
 	var _view = new ActionView(_self)
 	
@@ -24,6 +24,22 @@ var ActionModel = function(controller, id){
 	var _id = id
 	
 	var _params = new Params()
+	
+	/**
+	 * Return the parameter object of device.
+	 * @return parameter object 
+	 */
+	this.getParamObj = function(){
+		return _params
+	}
+	
+	/**
+	 * Return ID
+	 * @return ID 
+	 */
+	this.getID = function(){
+		return _id
+	}
 	
 	/**
 	 * Build JSON tree

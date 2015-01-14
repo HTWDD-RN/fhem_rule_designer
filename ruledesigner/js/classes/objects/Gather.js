@@ -2,9 +2,9 @@ function Gather(gather) {
 
 	var _self = this
 
-	var _model = GatherModel(_self, gather)
+	var _model = new GatherModel(_self, gather)
 
-	var _view = GatherView(_self)
+	var _view = new GatherView(_self)
 
 	this.display = function() {
 		return _view.display(_model)
@@ -17,7 +17,7 @@ function Gather(gather) {
 	}
 }
 
-function GatherModel(contoller, gather) {
+function GatherModel(controller, gather) {
 
 	var _self = this
 
@@ -26,44 +26,64 @@ function GatherModel(contoller, gather) {
 	var _log_gather = gather
 
 	var _conditions = []
+	
 
+	
 	this.addConditions = function(obj) {
-		if (obj instanceof Conditions) {
+		if (obj instanceof Condition) {
 			_conditions.push(obj)
-		} else {
-			throw "Unknown object type exception"
+			return true
 		}
+		return false
+	}
+	
+	this.getConditions = function(obj) {
+		return _conditions
+	}
+	
+	this.removeConditions = function(SYS_ID) {
+		for(var n = 0; n < _conditions.length; n++) {
+			if( _conditions[n].getID() == SYS_ID || (SYS_ID instanceof Condition && SYS_ID === _conditions[n]) ){
+				_conditions.splice(n, 1)
+				return true
+			}
+		}
+		return false
 	}
 	
 	this.setLogical = function(type){
 		if(type == gather)
-			return
-		for(n = 0; n < _GatherList.length; n++){
-			if(type == _Gatherlist[n][0])
-				if(_Gatherlist[n][1] == -1 || _Gatherlist[n][1] >= _conditions.length){
+			return false
+		for(var n = 0; n < _GatherList.length; n++){
+			if(type == _GatherList[n][0])
+				if(_GatherList[n][1] == -1 || _GatherList[n][1] >= _conditions.length){
 					_log_gather = type
-					return
+					return true
 				} else {
 					throw 'The number of conditions is unsupported for this logical (max. ' + _Gatherlist[n][1] + '). Please delete some conditions before.'
 				}
 			
 		}
+		return false
 	}
-
+	
+	this.getLogical = function(type){
+		return _log_gather
+	}
+	
 	this.toJSON = function(){
-		var tmp = {}
-		tmp[_log_gather] = $.map(
-			_conditions,
-			function(i, elem){
-				return _conditions.toJSON()
-			}
-		)
-		return tmp
+		var tmp = []
+		for (var n=0; n < _conditions.length; n++) {
+			tmp.push(_conditions[n].toJSON())
+		}
+		var tobj = new Object()
+		tobj[_log_gather]  = tmp
+		return tobj
 	}
 
 }
 
-function GatherView(contoller) {
+function GatherView(controller) {
 
 	var _self = this
 

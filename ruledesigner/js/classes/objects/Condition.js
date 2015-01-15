@@ -2,18 +2,27 @@ var Condition = function(id) {
 
 	var _self = this
 
+	// Generate SYS_ID
+	this.SYS_ID = cSYS_ID()
+
 	var _model = new ConditionModel(_self, id)
 
 	var _view = new ConditionView(_self)
 
+	/**
+	 * Function to generate the HTML-Output return HTML-string
+	 */
 	this.display = function() {
 		return _view.display(_model)
 	}
 
 	// Bind model functions
-	var keys = Object.keys(_model)
-	for (var n = 0; n < keys.length; n++) {
-		eval('_self.' + keys[n] + ' = _model.' + keys[n])
+//	var keys = Object.keys(_model)
+//	for (var n = 0; n < keys.length; n++) {
+//		eval('_self.' + keys[n] + ' = _model.' + keys[n])
+//	}
+	for (var key in _model){
+		eval('_self.' + key + ' = _model.' + key)
 	}
 
 }
@@ -30,11 +39,12 @@ var ConditionModel = function(controller, id) {
 	/**
 	 * Set a virtual device, e.g. Timer
 	 * 
-	 * @param device
-	 *            object
+	 * @param object -
+	 *            of Virtual device
+	 * @return boolean - true if success
 	 */
 	this.setVirtualDevice = function(obj) {
-		if (obj instanceof VirtualDevice) {
+		if (obj instanceof VirtualDevice && obj.getAsReference()) {
 			_virtual_device = obj
 			return true
 		}
@@ -43,6 +53,8 @@ var ConditionModel = function(controller, id) {
 
 	/**
 	 * Removes virtual device
+	 * 
+	 * @return boolean - true if success
 	 */
 	this.removeVirtualDevice = function() {
 		if (_virtual_device != null) {
@@ -63,9 +75,10 @@ var ConditionModel = function(controller, id) {
 	}
 	/**
 	 * Return ID
-	 * @return ID 
+	 * 
+	 * @return ID
 	 */
-	this.getID = function(){
+	this.getID = function() {
 		return _id
 	}
 	/**
@@ -78,9 +91,9 @@ var ConditionModel = function(controller, id) {
 	}
 
 	/**
-	 * Build JSON tree
+	 * Generates JSON-tree information
 	 * 
-	 * @return JSON object
+	 * @return JSON-object
 	 */
 	this.toJSON = function() {
 		var tmp = {}
@@ -102,6 +115,9 @@ var ConditionView = function(controller) {
 
 	var _controller = controller
 
+	/**
+	 * Function to generate the HTML-Output return HTML-string
+	 */
 	this.display = function(model) {
 		return '' // TODO:
 	}

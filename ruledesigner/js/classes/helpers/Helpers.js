@@ -107,7 +107,7 @@ var Helpers = {
 }
 
 /**
- * TODO: [LOW] Move jQuery extends to an own file
+ * TODO: [LOW] Move jQuery extends to own file
  */
 $.arrayIntersect = function(a, b) {
 	return $.grep(a, function(i) {

@@ -6,7 +6,7 @@
  * # myCounter()
  * to count.
  * 
- * @return enclosed object
+ * @return enclosed function which return number
  */
 function Counter () {
 
@@ -23,21 +23,3 @@ function Counter () {
 	}()
 	
 }
-
-/**
- * TODO: [LOW] remove - The first publication
- */
-//counter : function() {
-//
-//	return function() {
-//		var counter = 0;
-//		return function() {
-//			if (arguments[0] !== undefined) {
-//				counter = arguments[0];
-//			} else {
-//				counter++;
-//			}
-//			return counter;
-//		}
-//	}
-//},

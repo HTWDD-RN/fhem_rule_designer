@@ -32,14 +32,21 @@ function __RuleDesigner() {
 	// server (import device data)
 	var _wrapper
 
-	// Model 2: Store rule data
+	// Model 2: Load rules manager
 	var _rules = new Rules()
 
+	/**
+	 * This function used to initialize the wrapper
+	 * Includes the call of cbBindWrapperData.
+	 */
 	var cbInitWrapper = function() {
 		Log('# RuleDesigner.js # cbInitWrapper', 4)
 		_wrapper.init(cbBindWrapperData)
 	}
-
+	
+	/**
+	 * This function used to bind wrapper data
+	 */
 	var cbBindWrapperData = function() {
 		Log('# RuleDesigner.js # cbBindWrapperData', 4)
 		Log('SuccessCallback', 5)
@@ -90,7 +97,7 @@ function __RuleDesigner() {
 	/* BEGIN SERVICES */
 
 	/**
-	 * Function to create a new rule
+	 * Function to create a new rule and adding to the interface
 	 */
 	this.addNewRule = function() {
 		Log('# RuleDesigner.js # addNewRule', 4)
@@ -105,7 +112,7 @@ function __RuleDesigner() {
 	 * @return rules object {Rules.js}
 	 */
 	this.getRules = function() {
-		return _rules;
+		return _rules.getRules();
 	};
 
 	/**
@@ -114,13 +121,8 @@ function __RuleDesigner() {
 	this.deleteRule = function(SYS_ID) {
 		Log('# RuleDesigner.js # deleteRule (SYS_ID: ' + SYS_ID + ')', 4)
 		// TODO - Verknuepfungen in anderen Objekten loeschen
-		for (n = 0; n < rules; n++) { // search rule with ...
-			if (rules[n].ID == SYS_ID) { // ... SYS_ID
-				delete rules[n] // if found delete rule object, ...
-				view.actualize(); // actualize view ...
-				return // and break function up
-			}
-		}
+		_rules.deleteRule(SYS_ID)
+		view.actualize(); // actualize view ...
 	};
 
 	/**
@@ -136,7 +138,7 @@ function __RuleDesigner() {
 
 	/**
 	 * LoadRule
-	 * 
+	 * TODO: implements interface
 	 */
 	this.loadRule = function() {
 		alert("loadRule");
@@ -145,26 +147,30 @@ function __RuleDesigner() {
 
 	/**
 	 * Save rule
-	 * 
+	 * TODO: implements interface
 	 */
 	this.saveRule = function() {
 		alert("saveRule");
-		alert(JSON.stringify(RuleObject));
+		alert(this.generateJSONString);
 		return true; // TODO: false if fail
 	};
 
 	/**
 	 * SaveAs rule
-	 * 
+	 * TODO: implements interface
 	 */
 	this.saveAsRule = function() {
 		alert("saveAsRule");
-		console.log(JSON.stringify(RuleObject));
+		Log(this.generateJSONString);
 		return true; // TODO: false if fail
 	};
 
+	/**
+	 * Generates JSON-string information for displaying
+	 * @return JSON-string
+	 */
 	this.generateJSONString = function() {
-		return JSON.stringify(_rules.serialize(), null, 3);
+		return _rules.serialize();
 	};
 
 };

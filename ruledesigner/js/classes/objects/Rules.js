@@ -1,7 +1,9 @@
 /**
+ * The Rules class includes model and functions for creating, deleting and
+ * central management of rules representation
  * 
+ * @return singleton-object / instance
  */
-
 function Rules() {
 
 	var _self = this // Important to simulate a singleton
@@ -10,82 +12,111 @@ function Rules() {
 
 	var _model
 
-//	var _view
-//
-//	this.display = function() {
-//		return _view.display(_model)
-//	}
-
+	/**
+	 * Return the JSON-Tree of all rules
+	 * 
+	 * @return cleand JSON objects
+	 */
 	this.serialize = function() {
-		return this.toJSON()
-	}
-
-	this.createRule = function(){
-		var newRule = new Rule((typeof cSYS_ID !== 'undefined' ? cSYS_ID() : arguments[0] ))
-		_model.addRule(newRule)
-		return newRule
+		return  JSON.stringify(_model.toJSON(), null, 3)
 	}
 
 	return function() {
 		if (_instance === undefined || _instance == null) {
 			_instance = _self // not this!!! - it returns the rule designer
 			_model = new RulesModel(_instance)
-			
-				var keys = Object.keys(_model)
-	for(var n =0; n < keys.length; n++){
-		eval('_instance.' + keys[n] +' = _model.'+keys[n])
-	}
-		}	
-//		_view = new RulesView(_instance)
+
+			// var keys = Object.keys(_model)
+			// for (var n = 0; n < keys.length; n++) {
+			// eval('_instance.' + keys[n] + ' = _model.' + keys[n])
+			// }
+			for ( var key in _model) {
+				eval('_instance.' + key + ' = _model.' + key)
+			}
+		}
 		return _instance
 	}()
 
 }
 
-function RulesModel(controller) {
+function RulesModel(controller, id) {
 
 	var _self = this
 
 	var _controller = controller
+	
+	var _ID = id
 
-	var rules = []
+	var _rules = {}
 
+	/**
+	 * Function to add a rule
+	 * 
+	 * @param object
+	 *            of type rule
+	 * @return boolean - true if success
+	 */
 	this.addRule = function(rule) {
-		rules.push(rule)
+		if (rule instanceof Rule) {
+			_rules[rule.SYS_ID] = rule
+			return true
+		}
+		return false
 	}
 
+	/**
+	 * Function to add a rule
+	 * 
+	 * @param object
+	 *            of type rule
+	 * @return boolean - true if success
+	 */
+	this.removeRule = function(SYS_ID) {
+		if ((SYS_ID instanceof Rule) && SYS_ID.SYS_ID in _rules) {
+			delete _rules[SYS_ID.SYS_ID]
+			return true
+		} else if (SYS_ID in _rules) {
+			delete _rules[SYS_ID]
+			return true
+		}
+		return false
+
+	}
+
+	/**
+	 * Return array of Rule objects
+	 */
 	this.getRules = function() {
-		return rules
+		return _rules
 	}
 
+	/**
+	 * Generates JSON-tree information
+	 * 
+	 * @return JSON-object
+	 */
 	this.toJSON = function() {
-		var tmp = []
+		var tmp = {}
 
-		for (var n = 0; n < rules.length; n++)
-			tmp.push(rules[n].toJSON())
+		for (var key in _rules){
+			tmp[key] = _rules[key].toJSON()
+		}
 
 		return tmp
 	}
-	
-	this.getInfo = function (){
+
+	/**
+	 * Generates a short information of all rules
+	 * 
+	 * @return JSON-array
+	 */
+	this.getInfo = function() {
 		var tmp = {}
-		for(var n =0; n < rules.length; n++){
-			var info = rules[n].getInfo()
-			tmp.push[info.ID] = info
+		for (var key in _rules){
+			var info = _rules[key].getInfo()
+			tmp[info.ID] = info
 		}
 		return tmp
 	}
-	
-}
 
-//function RulesView(controller) {
-//
-//	var _self = this
-//
-//	var _controller = controller
-//
-//	this.display = function(_model) {
-//
-//	}
-//
-//}
+}

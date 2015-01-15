@@ -4,6 +4,7 @@ QUnit.test( "Test VirtualDevice-object (js/classes/objects/VirtualDevice.js) ACT
 	
 	// First test instantiation
 	assert.ok( obj instanceof VirtualDevice, "Instantiation" );
+	assert.equal( obj.getID(), 1, "ID validation" );
 	
 	// Second test instantiation of auto-properties
 	var paramObj = obj.getParamObj()
@@ -29,6 +30,7 @@ QUnit.test( "Test VirtualDevice-object (js/classes/objects/VirtualDevice.js) ACT
 QUnit.test( "Test VirtualDevice-object (js/classes/objects/VirtualDevice.js) ACTORS MODE2", function( assert ) {
 	// Create instance of object which is testing
 	var obj = new VirtualDevice(2, false)
+	assert.equal( obj.getID(), 2, "ID validation" );
 	
 	// First test instantiation
 	assert.ok( obj instanceof VirtualDevice, "Instantiation" );
@@ -58,6 +60,7 @@ QUnit.test( "Test VirtualDevice-object (js/classes/objects/VirtualDevice.js) ACT
 QUnit.test( "Test VirtualDevice-object (js/classes/objects/VirtualDevice.js) REFERENCE MODE", function( assert ) {
 	// Create instance of object which is testing
 	var refObj = new VirtualDevice(11, true)
+	assert.equal( refObj.getID(), 11, "ID validation" );
 	
 	// First test instantiation
 	assert.ok( refObj instanceof VirtualDevice, "Instantiation" );

@@ -1,9 +1,10 @@
 QUnit.test( "Test Actor-object (js/classes/objects/Actor.js)", function( assert ) {
 	// Create instance of object which is testing
-	var obj = new Actor('')
+	var obj = new Actor('2')
 	
 	// First test instantiation
 	assert.ok( obj instanceof Actor, "Instantiation" );
+	assert.equal( obj.getID(), 2, "ID validation" );
 	
 	// Second test instantiation of auto-properties
 	var paramObj = obj.getParamObj()

@@ -23,14 +23,14 @@ QUnit.test( "Test Gather-object (js/classes/objects/Gather.js)", function( asser
 	assert.notEqual(obj.getLogical(), 'NOT', 'getLocical: Test of "NOT"')
 	assert.equal(JSON.stringify(obj.toJSON()), '{"OR":[]}', 'toJSON: proof representation')
 	
-	assert.ok(obj.addConditions(cond1), 'addCondition: add conditon 1')
-	assert.ok(obj.addConditions(cond2), 'addCondition: add conditon 2')
+	assert.ok(obj.addCondition(cond1), 'addCondition: add conditon 1')
+	assert.ok(obj.addCondition(cond2), 'addCondition: add conditon 2')
 	assert.equal(obj.getConditions(obj).length, 2, 'getConditions: validate / proof if condition correct inserted')
 
 	assert.equal(JSON.stringify(obj.toJSON()), '{"OR":[{"SENSOR":"CUL_WS","REF_PARAMS":{"temperature":[">",20]}},{"SENSOR":"CUL_WS2","REF_PARAMS":{"humity":[">",95]}}]}', 'toJSON: proof representation')
 
-	assert.ok(obj.removeConditions('CUL_WS'), 'removeConditions: ID-variant')
+	assert.ok(obj.removeCondition(cond1.SYS_ID), 'removeConditions: ID-variant')
 	assert.equal(JSON.stringify(obj.toJSON()), '{"OR":[{"SENSOR":"CUL_WS2","REF_PARAMS":{"humity":[">",95]}}]}', 'toJSON: proof representation')
-	assert.ok(obj.removeConditions(cond2), 'removeConditions: Object-variant')
+	assert.ok(obj.removeCondition(cond2), 'removeConditions: Object-variant')
 	assert.equal(JSON.stringify(obj.toJSON()), '{"OR":[]}', 'toJSON: proof representation')
 })

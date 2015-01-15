@@ -16,8 +16,8 @@ QUnit.test( "Test Conditions-object (js/classes/objects/Conditions.js)", functio
 	var cond2 = new Condition('CUL_WS2')
 	assert.ok(cond2.getRefParamObj().addRefParam('humity', '>', 95), 'addRefParam: add reference parameter / condition')
 
-	assert.ok(gather.addConditions(cond1), 'addCondition: add conditon 1')
-	assert.ok(gather.addConditions(cond2), 'addCondition: add conditon 2')
+	assert.ok(gather.addCondition(cond1), 'addCondition: add conditon 1')
+	assert.ok(gather.addCondition(cond2), 'addCondition: add conditon 2')
 	assert.equal(gather.getConditions(obj).length, 2, 'getConditions: validate / proof if condition correct inserted')
 
 	// Test Methods	

@@ -35,7 +35,7 @@ var ParamsModel = function(controller) {
 	var _data = {}
 
 	/**
-	 * Add a parameter, when not exists, else calls update function
+	 * Add a parameter, when not exists
 	 * automatically *
 	 * 
 	 * @param parameter
@@ -52,7 +52,7 @@ var ParamsModel = function(controller) {
 	}
 
 	/**
-	 * Update a parameter, when exists, else calls add function automatically
+	 * Update a parameter, when exists
 	 * 
 	 * @param parameter
 	 * @param value
@@ -71,7 +71,7 @@ var ParamsModel = function(controller) {
 	 * This is a forcing set up of parameters - olds are deleting
 	 * 
 	 * @param -
-	 *            Params object
+	 *            Set of parameters as key-value object
 	 * @return boolean - true if success
 	 */
 	this.setParameter = function(data) {
@@ -102,7 +102,7 @@ var ParamsModel = function(controller) {
 	 *            parameter
 	 * @return boolean - true if success
 	 */
-	this.deleteParam = function(param) {
+	this.removeParam = function(param) {
 		if (typeof _data[param] !== 'undefined') {
 			delete _data[param]
 			if (typeof _data[param] === 'undefined')
@@ -116,7 +116,7 @@ var ParamsModel = function(controller) {
 	 * 
 	 * @return getParams
 	 */
-	this.getParams = function() {
+	this.getParameter = function() {
 		return _data
 	}
 

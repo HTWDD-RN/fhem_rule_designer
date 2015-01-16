@@ -16,6 +16,77 @@ var Actor = function(id) {
 		return _view.display(_model)
 	}
 
+	/**
+	 * Integrates a parameter directly, when not exists. It make a tunneling
+	 * call to the addParam function of the including Params object
+	 * 
+	 * @param parameter
+	 * @param value
+	 * @return boolean - true if success
+	 */
+	this.addParam = function(param, value) {
+		return _model.getParamObj().addParam(param, value)
+	}
+	/**
+	 * Update a parameter, when exists. It make a tunneling
+	 * call to the updateParam function of the including Params object
+	 * 
+	 * @param parameter
+	 * @param value
+	 * @return boolean - true if success
+	 */
+	this.updateParam = function(param, value) {
+		return _model.getParamObj().updateParam(param, value)
+	}
+
+	/**
+	 * Returns parameter as key/value-object. In difference to the local
+	 * getParamObj function it make a tunneling call to the getParameter
+	 * function of the including Params object
+	 * 
+	 * @return getParaeter
+	 */
+	this.getParameter = function() {
+		return _model.getParamObj().getParameter()
+	}
+
+	/**
+	 * Returns the value of given Parameter. It make a tunneling call to the
+	 * getParamValue function of the including Params object
+	 * 
+	 * @param string /
+	 *            key
+	 * @return parameter value
+	 */
+	this.getParamValue = function(param) {
+		return _model.getParamObj().getParamValue(param)
+	}
+	
+	/**
+	 * Deletes an parameter if found. It make a tunneling call to the
+	 * removeParam function of the including Params object
+	 * 
+	 * @param key /
+	 *            parameter
+	 * @return boolean - true if success
+	 */
+	this.removeParam = function(param) {
+		return _model.getParamObj().removeParam(param)
+	}
+
+	/**
+	 * This is a forcing set up of parameters - olds are deleting. It make a
+	 * tunneling call to the setParameters function of the including Params
+	 * object
+	 * 
+	 * @param -
+	 *            Params object
+	 * @return boolean - true if success
+	 */
+	this.setParameter = function(data) {
+		return _model.getParamObj().setParameter(data)
+	}
+	
 	// Bind model functions
 //	var keys = Object.keys(_model)
 //	for (var n = 0; n < keys.length; n++) {

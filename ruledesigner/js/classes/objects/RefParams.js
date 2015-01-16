@@ -36,8 +36,7 @@ var RefParamsModel = function(controller) {
 	var _data = {}
 
 	/**
-	 * Add a RefParameter, when not exists, else calls update function
-	 * automatically *
+	 * Add a RefParameter, when not exists
 	 * 
 	 * @param RefParameter
 	 * @param value
@@ -59,7 +58,7 @@ var RefParamsModel = function(controller) {
 	}
 
 	/**
-	 * Update a RefParameter, when exists, else calls add function automatically
+	 * Update a RefParameter, when exists
 	 * 
 	 * @param RefParameter
 	 * @param value
@@ -81,9 +80,10 @@ var RefParamsModel = function(controller) {
 
 	/**
 	 * This is a forcing set up of parameters - olds are deleting
-	 * 
+	 * The value must be an array of [operand as string, value, value ]
 	 * @param -
-	 *            Params object
+	 *            Set of parameters as key-value object	 
+	 * @return boolean - true if success
 	 */
 	this.setRefParameter = function(data) {
 	
@@ -119,7 +119,7 @@ var RefParamsModel = function(controller) {
 	 * 
 	 * @param string
 	 */
-	this.deleteRefParam = function(RefParam) {
+	this.removeRefParam = function(RefParam) {
 		if (typeof _data[RefParam] !== 'undefined') {
 			delete _data[RefParam]
 			if (typeof _data[RefParam] === 'undefined')
@@ -133,7 +133,7 @@ var RefParamsModel = function(controller) {
 	 * 
 	 * @return object
 	 */
-	this.getRefParams = function() {
+	this.getRefParameter = function() {
 		return _data
 	}
 

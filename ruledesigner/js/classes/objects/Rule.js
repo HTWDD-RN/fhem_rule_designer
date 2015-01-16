@@ -26,20 +26,89 @@ var Rule = function(id) {
 	this.display = function() {
 		return _view.display(_model)
 	}
-	
+
+	/**
+	 * Integrates a parameter directly, when not exists. It make a tunneling
+	 * call to the addParam function of the including Params object
+	 * 
+	 * @param parameter
+	 * @param value
+	 * @return boolean - true if success
+	 */
+	this.addParam = function(param, value) {
+		return _model.getParamObj().addParam(param, value)
+	}
+	/**
+	 * Update a parameter, when exists. It make a tunneling
+	 * call to the updateParam function of the including Params object
+	 * 
+	 * @param parameter
+	 * @param value
+	 * @return boolean - true if success
+	 */
+	this.updateParam = function(param, value) {
+		return _model.getParamObj().updateParam(param, value)
+	}
+
+	/**
+	 * Returns parameter as key/value-object. In difference to the local
+	 * getParamObj function it make a tunneling call to the getParameter
+	 * function of the including Params object
+	 * 
+	 * @return getParaeter
+	 */
+	this.getParameter = function() {
+		return _model.getParamObj().getParameter()
+	}
+
+	/**
+	 * Returns the value of given RefParameter
+	 * 
+	 * @param string /
+	 *            key
+	 * @return parameter value
+	 */
+	this.getParamValue = function(param) {
+		return _model.getParamObj().getParamValue(param)
+	}
+
+	/**
+	 * Deletes an parameter if found. It make a tunneling call to the
+	 * removeParam function of the including Params object
+	 * 
+	 * @param key /
+	 *            parameter
+	 * @return boolean - true if success
+	 */
+	this.removeParam = function(param) {
+		return _model.getParamObj().removeParam(param)
+	}
+
+	/**
+	 * This is a forcing set up of parameters - olds are deleting. It make a
+	 * tunneling call to the setParameters function of the including Params
+	 * object
+	 * 
+	 * @param -
+	 *            Params object
+	 * @return boolean - true if success
+	 */
+	this.setParameter = function(data) {
+		return _model.getParamObj().setParameter(data)
+	}
+
 	// Bind model functions
-//	var keys = Object.keys(_model)
-//	for (var n = 0; n < keys.length; n++) {
-//		eval('_self.' + keys[n] + ' = _model.' + keys[n])
-//	}
-	for (var key in _model){
+	// var keys = Object.keys(_model)
+	// for (var n = 0; n < keys.length; n++) {
+	// eval('_self.' + keys[n] + ' = _model.' + keys[n])
+	// }
+	for ( var key in _model) {
 		eval('_self.' + key + ' = _model.' + key)
 	}
 
-
 	if (arguments.length > 1) {
 		if (arguments[1] === 'Params') {
-			_model.getParams.setParameters(arguments[n])
+			_model.getParamObj().setParameters(arguments[n])
 		}
 	}
 
@@ -69,11 +138,11 @@ var RuleModel = function(controller, id) {
 	}
 
 	/**
-	 * Gets parameter object
+	 * Gets parameter object as enclosed object
 	 * 
 	 * @return object
 	 */
-	this.getParams = function() {
+	this.getParamObj = function() {
 		return _params
 	}
 
@@ -128,11 +197,12 @@ var RuleModel = function(controller, id) {
 	/**
 	 * Sets the virtual device object
 	 * 
-	 * @param object of type VirtualDevice
+	 * @param object
+	 *            of type VirtualDevice
 	 * @return boolean - true if success
 	 */
 	this.setVirtualDevice = function(obj) {
-		if (obj instanceof VirtualDevice){
+		if (obj instanceof VirtualDevice) {
 			_virtual_device = obj
 			return true
 		}
@@ -171,7 +241,7 @@ var RuleModel = function(controller, id) {
 
 		var tmp = {}
 
-		tmp["ID"] = (_ID !== undefined ? _ID:'')
+		tmp["ID"] = (_ID !== undefined ? _ID : '')
 		tmp["PARAMS"] = _params.toJSON()
 
 		if (_conditions != null)
@@ -192,7 +262,7 @@ var RuleModel = function(controller, id) {
 	 */
 	this.getInfo = function() {
 		var tmp = {
-			"ID" : (_ID !== undefined ? _ID:''),
+			"ID" : (_ID !== undefined ? _ID : ''),
 			"PARAMS" : _params.toJSON()
 		}
 		return tmp
@@ -209,12 +279,12 @@ var RuleView = function(controller) {
 	 * Function to generate the HTML-Output return HTML-string
 	 */
 	this.display = function(_model) {
-		var condObj = _model.getConditions()
-		var vdevObj = _model.getVirtualDeviceObject()
+		var condObj = _model.getConditionObj()
+		var vdevObj = _model.getVirtualDevice()
 		var actionsObj = _model.getActions()
 
 		var html = '<ul class="obj_rule">' + '<li>'
-				+ (condObj != null ? condObj.display() : 'Placeholder')
+				+ (condObj != null ? condObj.display() : '<span class="placeholder">Placeholder</span>')
 				+ '</li>' + '<li class="vdev">'
 				+ (vdevObj != null ? vdevObj.display() : 'VDEV') + '</li>'
 				+ '<li>' + (actionsObj.display()) + '</li>' + '</ul>'

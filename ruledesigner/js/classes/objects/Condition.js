@@ -15,6 +15,100 @@ var Condition = function(id) {
 	this.display = function() {
 		return _view.display(_model)
 	}
+	
+
+	/**
+	 * Integrates a parameter directly, when not exists. It make a tunneling
+	 * call to the addRefParam function of the including Params object
+	 * 
+	 * @param parameter
+	 * @param operand
+	 * @param value
+	 * @param [optional 1]
+	 * ...
+	 * @param [optional n]
+	 * @return boolean - true if success
+	 */
+	this.addRefParam = function(refParam, op, value) {
+		var args = Array.prototype.slice.call(arguments)
+		// mapping because the number of argumets is variable
+		var cmd = '_model.getRefParamObj().addRefParam(refParam, op, value'
+			for(var n = 3; n<args.length; n++){
+				cmd += ', arguments['+n+']'
+			}			
+			cmd +=')'
+		return eval(cmd)
+	}
+	
+	/**
+	 * Update a parameter, when exists. It make a tunneling
+	 * call to the updateParam function of the including Params object
+	 * 
+	 * @param parameter
+	 * @param operand
+	 * @param value
+	 * @param [optional 1]
+	 * ...
+	 * @param [optional n]	 * 
+	 * @return boolean - true if success
+	 */
+	this.updateRefParam = function(refParam, op, value) {
+		var args = Array.prototype.slice.call(arguments)
+		// mapping because the number of argumets is variable
+		var cmd = '_model.getRefParamObj().updateRefParam(refParam, op, value'
+		for(var n = 3; n<args.length; n++){
+			cmd += ', arguments['+n+']'
+		}			
+		cmd +=')'
+		return eval(cmd)
+	}
+
+	/**
+	 * Returns parameter as key/value-object. In difference to the local
+	 * getParamObj function it make a tunneling call to the getParameter
+	 * function of the including Params object
+	 * 
+	 * @return getRefParameter
+	 */
+	this.getRefParameter = function() {
+		return _model.getRefParamObj().getRefParameter()
+	}
+	
+	/**
+	 * Returns the value of given RefParameter
+	 * 
+	 * @param string /
+	 *            key
+	 * @return parameter value
+	 */
+	this.getRefParamValue = function(refParam) {
+		return _model.getRefParamObj().getRefParamValue(refParam)
+	}
+	
+	/**
+	 * Deletes an parameter if found. It make a tunneling call to the
+	 * removeRefParam function of the including Params object
+	 * 
+	 * @param key /
+	 *            parameter
+	 * @return boolean - true if success
+	 */
+	this.removeRefParam = function(refParam) {
+		return _model.getRefParamObj().removeRefParam(refParam)
+	}
+
+	/**
+	 * This is a forcing set up of parameters - olds are deleting. It make a
+	 * tunneling call to the setRefParameters function of the including Params
+	 * object
+	 * 
+	 * @param -
+	 *            Params object
+	 * @return boolean - true if success
+	 */
+	this.setRefParameter = function(data) {
+		return _model.getRefParamObj().setRefParameter(data)
+	}
 
 	// Bind model functions
 //	var keys = Object.keys(_model)
@@ -97,7 +191,7 @@ var ConditionModel = function(controller, id) {
 	 */
 	this.toJSON = function() {
 		var tmp = {}
-		var s = _ref_params.getRefParams()
+		var s = _ref_params.getRefParameter()
 		if (s) {
 			tmp['SENSOR'] = _id
 			tmp['REF_PARAMS'] = _ref_params.toJSON()

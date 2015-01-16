@@ -6,8 +6,7 @@ $(window)
 				function() {
 
 					var margin = 5;
-					var border_size = 1;
-					var topPadding = 35;
+					var border_size = 0; /* = 0 bei box-sizing = border-box */
 					var topMargin = 2;
 
 					var draggbar_width = 250;
@@ -15,7 +14,7 @@ $(window)
 					var quad_size_of_connectors = 21;
 
 					var width = $(window).width();
-					var height = $(window).height() - 20;
+					var height = $(window).height()-5;
 
 					// AppContainer Resize
 					$(Configuration.GUI.APP_CONTAINER + ' > div').css('margin',
@@ -24,14 +23,12 @@ $(window)
 							'margin-bottom', 0);
 
 					$('#rd_rules > div').css('margin-top', topMargin);
-					$('#rd_rules > div').css('padding-top', topPadding);
 
 					$('#rd_toolbar > li:first').css('width', draggbar_width);
 
 					if (width >= 720) {
 
-						var h = $('#rd_toolbar').height();
-						height -= (h + (2 * border_size + margin));
+						height -= ($('#rd_toolbar').height()+2*margin)
 						width -= draggbar_width;
 
 						$('#rd_draggbar').css('height', height);
@@ -47,9 +44,8 @@ $(window)
 						$('#rd_rules').css('margin-left', 0);
 						$('#rd_rules').css('height', height);
 						$('#rd_rules').css('float', 'right');
-
 						$('#rd_rules > div').css('height',
-								height - topMargin - topPadding - 60);
+								height - topMargin - margin - $('#rd_rules > ul:first').height()-8);
 
 					} else if (width >= 480) {
 
@@ -67,13 +63,13 @@ $(window)
 								.css('width', (draggbar_width - 20));
 
 						$('#rd_rules').css('width',
-								width - topPadding - margin + 8);
+								width - margin + 8);
 						$('#rd_rules').css('margin-left', 0);
 						$('#rd_rules').css('height', height);
 						$('#rd_rules').css('float', 'right');
 
 						$('#rd_rules > div').css('height',
-								height - topMargin - topPadding - 100);
+								height - topMargin - 100);
 
 					} else {
 
@@ -166,6 +162,24 @@ $(window)
 					// }
 					// });
 				});
+				
+$(document).ready(
+function () {	
+	$('#rd_draggbar li').draggable({
+		cursor: "move",
+		scroll: false,
+		helper: "clone",
+		containment: "frame",
+		stop: function(ui, dragevent, ui){
+			console.log(event)
+			console.log(ui)
+		}
+	})
+	
+	$('#rd_toolbar button').button()
+	
+}()
+);
 
 /**
  * Function to build the central view object
@@ -356,22 +370,23 @@ function MainView(_controller) {
 							})
 
 			// Create List Of Rules
-			if (rules === undefined || rules === null)
+			if (Object.keys(rules).length <= 0)
 				return;
 
 			node = document.createElement('ul');
 			node.setAttribute('class', 'objlist-category ui-widget-content');
-			Log(rules.getInfo(), 5)
-			$.each(rules.getInfo(), function(rule, info) {
+		
+			for(rule in rules) {
+				info =rule.getInfo() 
 
 				var e = document.createElement('li');
-				e.id = info._UNIQUE_ID;
-				e.setAttribute('rel', info.getUID());
+				e.id = rule.SYS_ID;
+				e.setAttribute('rel', rule.SYS_ID);
 				e.setAttribute('class', 'objlist-category-head')
 				e.innerHTML = info.Name;
 				$(node).append(e);
-			});
-
+			};
+			
 			$('#' + id).append(node);
 
 			$('#' + id + ' ul').children("li").each(function() {
@@ -419,23 +434,23 @@ function MainView(_controller) {
 			var info = rule.getInfo()
 
 			var div = document.createElement('div');
-			div.id = 'Tab_' + info.ID;
-			div.setAttribute('rel', info.ID);
+			div.id = 'Tab_' + rule.SYS_ID;
+			div.setAttribute('rel', rule.SYS_ID);
 
 			$(div).insertBefore('#' + Preview_ID);
 
 			// Init first display
 			var tmp = rule.display()
 			Log(tmp, 5)
-			$('#Tab_' + info.ID).html(tmp)
+			$('#Tab_' + rule.SYS_ID).html(tmp)
 
 			var li = document.createElement('li');
 			$(li)
 					.html(
 							'<a href="#Tab_'
-									+ info.ID
+									+ rule.ID
 									+ '"><span class="ui-icon ui-icon-close" role="presentation"></span>'
-									+ (info.PARAMS.Name || info.ID) + '</a>');
+									+ (info.PARAMS.Name || rule.SYS_ID) + '</a>');
 			// alert($('li[rel="' + Preview_ID + '"]').html());
 
 			// Add generated tabular
@@ -617,77 +632,7 @@ function MainView(_controller) {
 
 		var _objField = objField.init()
 		$(Configuration.GUI.APP_CONTAINER).append(_objField);
-		$(_objField).droppable({
-			drop : function(event, ui) {
-				$(this)
-				console.log(ui)
-				alert(ui);
-			}
-		});
 
-		$('#btnAddRule').click(function(e) {
-			_controller.addNewRule();
-		});
-
-		$('#btnNew').click(function(e) {
-			$('input[name="txtMakro"]').removeAttr('disabled');
-		});
-
-		$('#inputLoad').click(function(e) {
-			if (_controller.loadRule()) {
-				// TODO -Resetting the GUI
-				$('input[name="txtMakro"]').attr('disabled', 'disabled');
-			}
-		});
-
-		$('#btnLoad').click(function(e) {
-			$("#inputLoad").trigger('click');
-			return false;
-		});
-
-		$('#btnSave').click(function(e) {
-			if (_controller.saveRule()) {
-				$('input[name="txtMakro"]').attr('disabled', 'disabled');
-			}
-		});
-
-		$('#btnSaveAs').click(function(e) {
-			if (_controller.saveAsRule()) {
-				$('input[name="txtMakro"]').attr('disabled', 'disabled');
-			}
-		});
-
-		$("#rd_toolbar a, #rd_toolbar button").button()
-
-		// TODO - Schliesse TABs
-		/*
-		 * $('#rd_rules').delegate( "span.ui-icon-close", "click", function() {
-		 * $(this) var ID = $( this ).closest( "li" ).remove().attr(
-		 * "aria-controls" ); var UNIQUE_ID = $( '#' + ID
-		 * ).remove().attr("rel"); $('rd_rules').tabs( "refresh" ); });
-		 */
-
-		$('#imgTrash').droppable({
-			tolerance : "touch",
-			drop : function(event, ui) {
-				obj = ui.draggable;
-				if (obj.attr("aria-controls") !== undefined) { // Drop Rule Tab
-					var ID = obj.attr("aria-controls");
-					obj._RULE_ID = $('#' + ID).remove().attr("rel");
-				} else if ($(obj).parent().attr("rel") !== undefined) { // Drop
-					// Rule
-					// Elements
-					console.log($(obj));
-					obj._UNIQUE_ID = $(obj).attr("rel");
-					obj._RULE_ID = $(obj).parent().attr("rel");
-				}
-				ui.draggable.remove();
-				_controller.doEventAction("drop.trash", obj, event);
-
-			}
-		});
-		
-		$( document ).tooltip();
 
 	};
 

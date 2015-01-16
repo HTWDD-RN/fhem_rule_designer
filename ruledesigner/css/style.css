@@ -1,124 +1,10 @@
-*, *:before, *:after {
-	/* Set global font family */
-	font-family: Calibri;
-	/* Set a more practicable and natural box model */
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -ms-box-sizing: border-box;
-    -o-box-sizing: border-box;
-    box-sizing: border-box;
-}
+/*
+ * Toolbar
+ */
 
-html, body {
-	padding: 0;
-	margin: 0;
-	height: 100%;
-	overflow: hidden;
-	background-color: #F8F8F8;
-}
-
-div {
-	display: block;
-	padding: 0;
-	margin: 0;
-}
-
-div.appContainer {
-	height: 100%;
-}
-
-#alertContainer {
-	position: absolute;
-	height: 150%;
-	width: 150%;
-	margin: -25% 0 0 -25%;
-	background-color: #333333;
-	opacity: 0.5;
-	filter: Alpha(Opacity = 50);
-	z-index: 1001;
-}
-
-
-button {
-	margin: 3px 5px;
-}
-
-
-#draggedItem {
-	border: 2px dashed #666;
-	text-shadow: 2px;
-	font-weight: bold;
-	padding: 10px;
-	z-index: 65535;
-	cursor: move;
-}
-
-#rd_rules, #rd_draggbar {
-	background-color: #FEFEFE;
-}
-
-#rd_rules>div {
-	overflow: scroll;
-	padding: 18px;
-}
-
-#rd_rules .placeholder {
-	padding: 10px;
-	display: inline-block;
-	border: 1px dashed #e8e8e8;
-	height: 150px;
-	width: 200px;
-	margin: 5px;
-}
-
-#rd_rules ul.obj_rule {
-	position: relative;
-	padding: 0;
-	margin: 0;
-	min-height: 100%;
-	/** TODO **/
-}
-
-#rd_rules ul.obj_rule>li {
-	position: relative;
-	width: 50%;
-}
-
-#rd_rules ul.obj_rule li.vdev {
-	display: block;
-	position: absolute;
-	right: 30px;
-	top: -30px;
-	z-index: 20;
-}
-
-#rd_rules ul.obj_rule>li>span.placeholder {
-	width: 90%;
-}
-
-#rd_rules ul.obj_rule>li.vdev>.placeholder {
-	height: 30px;
-	width: 30px;
-}
-
-#rd_rules ul.obj_rule li {
-	display: inline-block;
-}
-
-#rd_rules li span.ui-icon {
-	display: block;
-	float: right;
-	margin: 0 0 0 0.3em;
-	cursor: pointer;
-}
-
-/**
- * Toolbar settings
- **/ 
 #rd_toolbar {
-	padding: 0;
-	margin: 0;
-	overflow: hidden;
+	overflow-y: hidden;
+	overflow-x: visible;
 }
 
 #rd_toolbar > li {
@@ -140,6 +26,7 @@ button {
 	height: 100%;
 	width: 100%;
 }
+
 
 #imgTrash {
  
@@ -194,73 +81,38 @@ button#btnSaveAs span {
 	float: right;
 }
 
-/**
- * Dragbar settings
+/*
+ * Draggbar
  */
+
 #rd_draggbar {
 	overflow-y: scroll;
 }
 
 #rd_draggbar ul {
 	list-style: none;
-	padding: 0px;
+	padding: 5px 0 2px;
 }
 
 #rd_draggbar li {
-	margin: 2px 0px 0px 5px;
+	margin: 2px 0 0 5px;
+}
+
+#rd_draggbar hr {
+	margin: 5px 0 2px;
+}
+
+
+@media ( min-width : 720px) {
+	#rd_draggbar ul li.ui-objlist-body {
+		display: inline-block;
+	}
 }
 
 /*
- *
+ * Draggbar - Object list
  */
-div.rule-obj-box {
-	position: relative;
-	/* The connectors are located in absolute position to her parent Flag*/
-	font-size: 10px;
-	display: inline-block;
-	width: 150px;
-	min-height: 100px;
-	margin: 10px;
-	z-index: 501;
-}
 
-div.rule-obj-box  span {
-	text-align: center;
-}
-
-div.rule-obj-box  span.title {
-	padding-top: 10px;
-	font-size: 12px;
-	display: block;
-	border-bottom: 3px double #666;
-}
-
-div.rule-obj-box span.connector {
-	position: absolute;
-	background-color: #ddd;
-	z-index: 500;
-}
-
-.ui-draggable:hover {
-	cursor: pointer;
-	background-color: #ccc;
-}
-
-.ui-draggable.ui-draggable-dragging:hover {
-	cursor: move;
-}
-
-/*
-.sprite-document_new{ background-position: 0 0; width: 32px; height: 32px; } 
-.sprite-document_save{ background-position: 0 -68px; width: 32px; height: 32px; } 
-.sprite-document_save_as{ background-position: 0 -136px; width: 32px; height: 32px; } 
-.sprite-edit_clear{ background-position: 0 -204px; width: 32px; height: 32px; } 
-.sprite-emblem_system{ background-position: 0 -272px; width: 32px; height: 32px; } 
-.sprite-folder_drag_accept{ background-position: 0 -340px; width: 32px; height: 32px; } 
-.sprite-help_browser{ background-position: 0 -408px; width: 32px; height: 32px; } 
-.sprite-user_trash_full{ background-position: 0 -476px; width: 32px; height: 32px; } 
-.sprite-view_refresh{ background-position: 0 -544px; width: 32px; height: 32px; } 
-*/
 .ui-objlist li {
 	height: 25px;
 	margin: 3px;
@@ -306,8 +158,54 @@ ul#gathers li.ui-objlist-body {
 	text-align: center;
 }
 
-@media ( min-width : 720px) {
-	#rd_draggbar ul li.ui-objlist-body {
-		display: inline-block;
-	}
+
+/*
+ * Object field
+ */
+
+#rd_rules>div {
+	overflow: scroll;
+	padding: 18px;
+}
+
+#rd_rules li span.ui-icon { /* Tab - Leiste*/
+	display: block;
+	float: right;
+	margin: 0 0 0 0.3em;
+	cursor: pointer;
+}
+
+#rd_rules ul.obj_rule 
+{
+	display: table;
+	height: 100%;:
+	position: relative;
+}
+
+#rd_rules ul.obj_rule > li { /* Inline-Darstellung des Aktoren/Sensoren-Bereich, max. Höhe */
+	display: table-cell;
+	list-style: none;
+	border: 2px dashed #666;
+	width: 50%;
+	height: 100%;
+	overflow: visible;
+	vertical-align: middle;
+	z-index: 1;
+}
+
+#rd_rules ul.obj_rule > li:first-child {
+	text-align: right;
+}
+
+#rd_rules ul.obj_rule > li.vdev { /* Anordnung der zentralen Virtual-Device Box*/
+	display: block;
+	position: absolute;
+	height: 75px;
+	width: 120px;
+	left: 50%;
+	margin-left: -60px;
+	border: 2px dashed #666;
+	background-color: #fff;
+	z-index: 2;
+	text-align: center;
 }

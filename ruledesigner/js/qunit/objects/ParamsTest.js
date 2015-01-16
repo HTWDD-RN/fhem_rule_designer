@@ -25,7 +25,7 @@ QUnit.test( "Test Params-object (js/classes/objects/Params.js)", function( asser
 	assert.ok(obj.updateParam('temperature', 6), 'updateParam: temperature')
 	assert.equal(JSON.stringify(obj.toJSON()), '{"humidty":95,"temperature":6,"wind_speed":5}', 'toJSON: function')
 
-	assert.ok(obj.deleteParam('temperature'), 'deleteParam: temperature')
+	assert.ok(obj.removeParam('temperature'), 'deleteParam: temperature')
 	assert.equal(JSON.stringify(obj.toJSON()), '{"humidty":95,"wind_speed":5}', 'toJSON: function')
 
 	obj.toJSON()

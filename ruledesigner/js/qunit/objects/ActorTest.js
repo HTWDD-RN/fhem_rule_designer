@@ -20,10 +20,19 @@ QUnit.test( "Test Actor-object (js/classes/objects/Actor.js)", function( assert 
 	assert.equal(JSON.stringify(obj.getParamObj().toJSON()), '{"state":"on","dim":"80%"}', 'Test serialize JSON-Output')
 	assert.ok(obj.getParamObj().updateParam('state', 'off'), 'Test Parameter aktualisierbar')
 	assert.equal(JSON.stringify(obj.getParamObj().toJSON()), '{"state":"off","dim":"80%"}', 'Test serializeParams JSON-Output')
-	assert.ok(obj.getParamObj().deleteParam('dim'), 'Test Parameter löschbar')
+	assert.ok(obj.getParamObj().removeParam('dim'), 'Test Parameter löschbar')
 	assert.equal(JSON.stringify(obj.getParamObj().toJSON()), '{"state":"off"}', 'Test serialize JSON-Output')
 	assert.ok(obj.getParamObj().addParam('dim', '75%'), 'Test Parameter hinzufügbar')
 	assert.equal(JSON.stringify(obj.getParamObj().toJSON()), '{"state":"off","dim":"75%"}', 'Test serialize JSON-Output')
 	assert.equal(obj.getParamObj().getParamValue('dim'), '75%', 'Test Parameter löschbar')
+
+	// Test Param object tunneling
+	assert.ok(obj.updateParam('state', 'Rule_2'),'updateParam: state')
+	assert.ok(obj.getParameter(),'getParameter')
+	assert.ok(obj.addParam('Test', 'Rule_1'),'addParam: Test')
+	assert.equal(obj.getParamValue('state'), 'Rule_2','getParamValue')
+	assert.ok(obj.removeParam('state'),'removeParam: state')
+	assert.equal(obj.removeParam('state'),false,'removeParam: fail state')
+	assert.ok(obj.setParameter(JSON.parse(JSON.stringify(test_params))),'setparameter')
 
 })

@@ -111,7 +111,7 @@ var ActorgroupModel = function(controller) {
 			tmp['VDEV'] = _virtual_device.toJSON()
 			tmp['ACTORS'] = _actors.toJSON()
 		}
-		return tmp
+		return {'ACTORGROUP' : tmp}
 	}
 
 }

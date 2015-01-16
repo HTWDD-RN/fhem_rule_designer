@@ -96,10 +96,10 @@ function RulesModel(controller, id) {
 	 * @return JSON-object
 	 */
 	this.toJSON = function() {
-		var tmp = {}
+		var tmp = []
 
 		for (var key in _rules){
-			tmp[key] = _rules[key].toJSON()
+			tmp.push(_rules[key].toJSON())
 		}
 
 		return tmp

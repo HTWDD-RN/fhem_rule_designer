@@ -54,7 +54,7 @@ QUnit.test( "Test RefParams-object (js/classes/objects/RefParams.js)", function(
 	assert.equal(obj.updateRefParam('temperature2', '=', 23), false, 'updateRefParam: temperature2 not exists')
 	assert.equal(JSON.stringify(obj.toJSON()), '{"humidty":[">",95],"temperature_outdoor":[">",12],"temperature_indoor":["between","20",24],"wind_speed":[">",10]}', 'toJSON: function')
 
-	assert.ok(obj.deleteRefParam('humidty'), 'deleteRefParam: temperature')
+	assert.ok(obj.removeRefParam('humidty'), 'deleteRefParam: temperature')
 	assert.equal(JSON.stringify(obj.toJSON()), '{"temperature_outdoor":[">",12],"temperature_indoor":["between","20",24],"wind_speed":[">",10]}', 'toJSON: function')
 
 });

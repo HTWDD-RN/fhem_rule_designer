@@ -51,12 +51,13 @@ QUnit.test( "Test ActionsTest-object (js/classes/objects/Actions.js)", function(
 	
 	assert.ok(obj.addAction(actorgroup), 'addActor: add actorgroup')
 	assert.strictEqual(obj.getAction(actorgroup.SYS_ID), actorgroup, 'getAction: comparing')
-	assert.equal(JSON.stringify(obj.toJSON()), '[{"ACTOR":"L1","PARAMS":{"state":"on"}},{"ACTOR":"L2","PARAMS":{"state":"off"}},{}]', 'toJSON: proof representation, after removing, before add virtual device')
-	
+	assert.equal(JSON.stringify(obj.toJSON()), '[{"ACTOR":"L1","PARAMS":{"state":"on"}},{"ACTOR":"L2","PARAMS":{"state":"off"}},{"ACTORGROUP":{}}]', 'toJSON: proof representation, after removing, before add virtual device')
+
 	assert.ok(actorgroup.setVirtualDevice(vdev), 'setVirtualDevice')
-	assert.equal(JSON.stringify(obj.toJSON()), '[{"ACTOR":"L1","PARAMS":{"state":"on"}},{"ACTOR":"L2","PARAMS":{"state":"off"}},{"VDEV":{"TYPE":"VD_DELAY_TIMER","PARAMS":{}},"ACTORS":[{"ACTOR":"TV","PARAMS":{"state":"on"}},{"ACTOR":"L3","PARAMS":{"state":"off"}}]}]', 'toJSON: proof representation, after removing, before add virtual device')
-	
+	assert.equal(JSON.stringify(obj.toJSON()), '[{"ACTOR":"L1","PARAMS":{"state":"on"}},{"ACTOR":"L2","PARAMS":{"state":"off"}},{"ACTORGROUP":{"VDEV":{"TYPE":"VD_DELAY_TIMER","PARAMS":{}},"ACTORS":[{"ACTOR":"TV","PARAMS":{"state":"on"}},{"ACTOR":"L3","PARAMS":{"state":"off"}}]}}]', 'toJSON: proof representation, after removing, before add virtual device')
+
 	assert.ok(actorgroup.removeVirtualDevice(), 'removetVirtualDevice')
 	assert.ok(obj.removeAction(actor2), 'removeAction2')
-	assert.equal(JSON.stringify(obj.toJSON()), '[{"ACTOR":"L1","PARAMS":{"state":"on"}},{}]', 'toJSON: proof representation, after removing')
+	assert.equal(JSON.stringify(obj.toJSON()), '[{"ACTOR":"L1","PARAMS":{"state":"on"}},{"ACTORGROUP":{}}]', 'toJSON: proof representation, after removing')
+
 })

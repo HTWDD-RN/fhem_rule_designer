@@ -1,3 +1,76 @@
+		$(_objField).droppable({
+			drop : function(event, ui) {
+				$(this)
+				console.log(ui)
+				alert(ui);
+			}
+		});
+
+		$('#btnAddRule').click(function(e) {
+			_controller.addNewRule();
+		});
+
+		$('#btnNew').click(function(e) {
+			$('input[name="txtMakro"]').removeAttr('disabled');
+		});
+
+		$('#inputLoad').click(function(e) {
+			if (_controller.loadRule()) {
+				// TODO -Resetting the GUI
+				$('input[name="txtMakro"]').attr('disabled', 'disabled');
+			}
+		});
+
+		$('#btnLoad').click(function(e) {
+			$("#inputLoad").trigger('click');
+			return false;
+		});
+
+		$('#btnSave').click(function(e) {
+			if (_controller.saveRule()) {
+				$('input[name="txtMakro"]').attr('disabled', 'disabled');
+			}
+		});
+
+		$('#btnSaveAs').click(function(e) {
+			if (_controller.saveAsRule()) {
+				$('input[name="txtMakro"]').attr('disabled', 'disabled');
+			}
+		});
+
+		$("#rd_toolbar a, #rd_toolbar button").button()
+
+		// TODO - Schliesse TABs
+		/*
+		 * $('#rd_rules').delegate( "span.ui-icon-close", "click", function() {
+		 * $(this) var ID = $( this ).closest( "li" ).remove().attr(
+		 * "aria-controls" ); var UNIQUE_ID = $( '#' + ID
+		 * ).remove().attr("rel"); $('rd_rules').tabs( "refresh" ); });
+		 */
+
+		$('#imgTrash').droppable({
+			tolerance : "touch",
+			drop : function(event, ui) {
+				obj = ui.draggable;
+				if (obj.attr("aria-controls") !== undefined) { // Drop Rule Tab
+					var ID = obj.attr("aria-controls");
+					obj._RULE_ID = $('#' + ID).remove().attr("rel");
+				} else if ($(obj).parent().attr("rel") !== undefined) { // Drop
+					// Rule
+					// Elements
+					console.log($(obj));
+					obj._UNIQUE_ID = $(obj).attr("rel");
+					obj._RULE_ID = $(obj).parent().attr("rel");
+				}
+				ui.draggable.remove();
+				_controller.doEventAction("drop.trash", obj, event);
+
+			}
+		});
+		
+		$( document ).tooltip();
+
+
 
 /**
  * Events

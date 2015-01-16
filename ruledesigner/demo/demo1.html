@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <title>Rules-Designer</title>
 
-<link href="../css/style.css" rel="stylesheet" type="text/css" />
 <link href="../css/theme/jquery-ui-1.10.4.custom.css" rel="stylesheet">
 <script src="../js/lib/jquery-1.10.2.js"></script>
 <script src="../js/lib/jquery-ui-1.10.4.js"></script>
 
+<script src="../js/classes/helpers/Counter.js"></script>
 <script src="../js/classes/helpers/Log.js"></script>
 
 <script src="../js/classes/objects/Params.js"></script>
@@ -17,7 +17,6 @@
 <script src="../js/classes/objects/Actor.js"></script>
 <script src="../js/classes/objects/Actors.js"></script>
 <script src="../js/classes/objects/Actorgroup.js"></script>
-<script src="../js/classes/objects/Action.js"></script>
 <script src="../js/classes/objects/Actions.js"></script>
 <script src="../js/classes/objects/Condition.js"></script>
 <script src="../js/classes/objects/Gather.js"></script>
@@ -30,24 +29,98 @@
 </pre>
 <script src="../js/classes/objects/Rules.js"></script>
 <script>
-var demorules = new Rules()
+		// Simulate global config
+		var Configuration = {
+			DEBUG_LEVEL : 4,
+			ID_PREFIX : "RID"
+		}
+		
+		// Simulate ID-Generator
+		// If the representation of all objects on the home
+		// automation server without an ID  an alternative
+		// counter is use to generates ID
+		var cSYS_ID = function() {
 
-var rule1 = demorules.createRule('Demo1');
+			var count = new Counter()
 
-var condObj = new ConditionsObject()
+			return function() {
+				return Configuration.ID_PREFIX + count();
+			}
 
-var ag1 = new Actorgroup()
+		}()
+//
+var rules = new Rules()
 
-var ag2 = new Actorgroup()
+/*
+ *
+ */
+var rule = new Rule('RULE_1_LIGHT_ON')
+var rule_params = {
+	'name': 'Fernsteuerung Einschaltregel',
+	'descr' : 'Einschaltregel zu Fernsteuerung des Lichtes'
+}
 
-rule1.getActionsObject().addAction(ag1)
-rule1.getActionsObject().addAction(ag1)
+rule.getParamObj().setParameter(rule_params)
+rule.getParamObj().addParam('link', 'Demo 1 - Regel 1')
+rule.getParamObj().addParam('Kaptitel', 'X.3 Validierung und Anwendung')
+rule.getParamObj().addParam('Beispiel', 1)
 
-var rule2 = demorules.createRule('Demo2');
+var cond = new Condition('Schalter (S)')
+var ref_params = {
+	'state': ['==', 'on']
+}
+cond.setRefParameter(ref_params)
+rule.setConditionObj(cond)
 
-var result = demorules.serialize();
-var jStr = JSON.stringify(result)
-$('#result').html(jStr); 
+var actor = new Actor('Lampe (L1)')
+var actor_params = {
+	'state' : 'on'
+}
+actor.setParameter(actor_params)
+rule.getActions().addAction(actor)
+
+rules.addRule(rule)
+
+Log(rules.serialize())
+
+Log(rules.getInfo())
+
+/*
+ *
+ */
+var rule = new Rule('RULE_1_LIGHT_OFF')
+var rule_params = {
+	'name': 'Fernsteuerung Ausschaltregel',
+	'descr' : 'Ausschaltregel zu Fernsteuerung des Lichtes'
+}
+
+rule.getParamObj().setParameter(rule_params)
+rule.getParamObj().addParam('link', 'Demo 1 -Regel 2')
+rule.getParamObj().addParam('Kaptitel', 'X.3 Validierung und Anwendung')
+rule.getParamObj().addParam('Beispiel', 1)
+var cond = new Condition('Schalter (S)')
+var ref_params = {
+	'state': ['!=', 'on']
+}
+cond.setRefParameter(ref_params)
+rule.setConditionObj(cond)
+
+var actor = new Actor('Lampe (L1)')
+var actor_params = {
+	'state' : 'off'
+}
+actor.setParameter(actor_params)
+rule.getActions().addAction(actor)
+
+rules.addRule(rule)
+
+
+Log(rules.serialize())
+
+Log(rules.getInfo())
+
+var result = rules.serialize();
+$('#result').html(result); 
 </script>
 </body>
 </html>

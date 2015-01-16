@@ -101,9 +101,11 @@ function __RuleDesigner() {
 	 */
 	this.addNewRule = function() {
 		Log('# RuleDesigner.js # addNewRule', 4)
-		var newRule = _rules.createRule()
+		var newRule = new Rule('')
+		if(_rules.addRule(newRule)){
 		_view.addRuleTab(newRule);
 		// _view.actualize();
+	}
 	}
 
 	/**

@@ -37,5 +37,10 @@ QUnit.test( "Test Actor-object (js/classes/objects/Actor.js)", function( assert 
 			
 	var SYS_ID = obj.SYS_ID
 	assert.strictEqual(obj.search(SYS_ID), obj, 'search: Test own ID')
-
+	
+	assert.equal(JSON.stringify(obj.toJSON()), '{"ACTOR":"2","PARAMS":{"dim":"75%","Test":"Rule_1"}}', 'toJSON: function')	
+	
+	// Test unset
+	assert.ok(obj.unset())
+	assert.equal(JSON.stringify(obj.toJSON()), '{"ACTOR":"2","PARAMS":{}}', 'toJSON: function')
 })

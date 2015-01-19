@@ -30,26 +30,10 @@ var Condition = function(id) {
 	
 	/**
 	 * Removes all recursive includes Elements
-	 * @return true, if success
+	 * @return bool - true, if successful
 	 */
 	this.removeElements = function(){
-		var bool = true
-		
-		var paramRefObj = _model.getRefParamObj()
-		
-		var vdev = _model.getVirtualDevice()
-		if(!vdev.removeElements())
-				bool = false
-		
-		if (bool) {
-			delete vdev
-			delete paramRefObj
-		}
-		
-		if(typeof (_model.getRefParamObj() !== 'undefined')||(typeof _model.getVirtualDevice() !== 'undefined'))
-			return false
-			
-		return bool
+		return _model.unset()
 	}
 	
 	/**
@@ -173,6 +157,21 @@ var ConditionModel = function(controller, id) {
 
 	var _virtual_device = null
 
+	/**
+	 * This function is use to reset the member variables in variable environment
+	 * @return bool - true if successful
+	 */
+	this.unset = function() {
+		_virtual_device = null
+		
+		_ref_params = undefined
+		if (_ref_params === undefined && _virtual_device == null) {
+			_ref_params = new RefParams()
+			return true
+		}
+		return false
+	}
+	
 	/**
 	 * Set a virtual device, e.g. Timer
 	 * 

@@ -41,24 +41,7 @@ var Actorgroup = function() {
 
 		return null
 	}
-	
-	/**
-	 * Removes all recursive includes Elements
-	 * 
-	 * @return true, if success
-	 */
-	this.removeElements = function() {
-		var bool = true
 
-		if (!_model.getVirtualDevice().removeElements())
-			bool = false
-
-		if (!_model.getActors().removeElements())
-			bool = false
-
-		return bool
-	}
-	
 	/**
 	 * Function to generate the HTML-Output return HTML-string
 	 */
@@ -89,6 +72,26 @@ var ActorgroupModel = function(controller) {
 	var _actors = new Actors()
 
 	var _virtual_device = null
+
+	/**
+	 * This function is use to reset the member variables in variable
+	 * environment
+	 * 
+	 * @return bool - true if successful
+	 */
+	this.unset = function() {
+		var bool = true
+
+		if (!_actors.unset())
+			bool = false
+
+		_virtual_device = null
+
+		if (bool && _virtual_device == null)
+			return true
+
+		return false
+	}
 
 	/**
 	 * Set a virtual device, e.g. Timer

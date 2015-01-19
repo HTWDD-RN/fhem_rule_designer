@@ -35,6 +35,23 @@ var ParamsModel = function(controller) {
 	var _data = {}
 
 	/**
+	 * This function is use to reset the member variables in variable environment
+	 * @return bool - true if successful
+	 */
+	this.unset = function() {
+		var bool = true 
+		for(var key in _data){
+			if(!(delete _data[key]))
+				bool=false
+		}
+		
+		if(bool && Object.keys(_data).length == 0)
+			return true
+
+		return false
+	}
+	
+	/**
 	 * Add a parameter, when not exists
 	 * automatically *
 	 * 

@@ -9,6 +9,7 @@
 	<div id="qunit"></div>
 	<div id="qunit-fixture"></div>
 	<script src="lib/qunit-1.16.0.js"></script>
+	<script src="config.js"></script>
 
 	<!-- BIND HELPER CLASSES -->
 	<script src="classes/helpers/Log.js"></script>
@@ -20,12 +21,9 @@
 	<!-- SET UP GLOBAL CONFIG AND ID GENERATOR -->
 	<script type="text/javascript">
 	
-		// Simulate global config
-		var Configuration = {
-			DEBUG_LEVEL : 4,
-			ID_PREFIX : "RID"
-		}
-		
+		// Rewrite DEBUD_LEVEL
+		Configuration.DEBUG_LEVEL = 4
+	
 		// Simulate ID-Generator
 		// If the representation of all objects on the home
 		// automation server without an ID  an alternative

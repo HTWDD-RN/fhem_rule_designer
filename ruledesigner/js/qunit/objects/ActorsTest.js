@@ -26,11 +26,11 @@ QUnit.test( "Test Actors-object (js/classes/objects/Actors.js)", function( asser
 	
 	var actorsObj = obj.getActors()
 	assert.equal(actorsObj.length, 2, 'getActors: proof number of stored actors')
-	while(actorsObj.length)
-		obj.removeActor(actorsObj[0])
+
+	assert.ok(obj.unset())
+	assert.equal(JSON.stringify(obj.toJSON()), '[]', 'toJSON: function')
 	
 	assert.equal(obj.getActors().length, 0, 'getActors: proof number of stored actors')
-	
 			
 	assert.ok(obj.addActor(actor1), 'addActor forth')
 	var SYS_ID = obj.SYS_ID
@@ -40,4 +40,9 @@ QUnit.test( "Test Actors-object (js/classes/objects/Actors.js)", function( asser
 	assert.ok(obj.removeActor(actor1), 'removeActor: '+ actor1.SYS_ID)	
 	assert.strictEqual(obj.search(actor1.SYS_ID), null, 'search: Test not find actor1 strictEqual (null)')
 	assert.ok(obj.search(actor1.SYS_ID) !== actor1, 'search: Test not find actor1')
+	
+	// Test unset
+	assert.ok(obj.unset())
+	assert.equal(JSON.stringify(obj.toJSON()), '[]', 'toJSON: function')
+	Log(JSON.stringify(obj.toJSON()))
 })

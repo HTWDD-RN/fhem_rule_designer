@@ -20,25 +20,6 @@ var Actor = function(id) {
 			return _self
 		}
 	}
-	
-	/**
-	 * Removes all recursive includes Elements
-	 * @return true, if success
-	 */
-	this.removeElements = function(){
-		var bool = true
-		
-		var paramObj = _model.getParamObj()
-		
-		if (bool) {
-			delete paramObj
-		}
-		
-		if(typeof paramObj !== 'undefined')
-			return false
-			
-		return bool
-	}
 		
 	/**
 	 * Function to generate the HTML-Output return HTML-string
@@ -137,7 +118,20 @@ var ActorModel = function(controller, id) {
 	var _id = id
 
 	var _params = new Params()
-
+	
+	/**
+	 * This function is use to reset the member variables in variable environment
+	 * @return bool - true if successful
+	 */
+	this.unset = function() {
+		_params = undefined
+		if (_params === undefined) {
+			_params = new Params()
+			return true
+		}
+		return false
+	}
+	
 	/**
 	 * Return the parameter object of device.
 	 * 
@@ -180,7 +174,6 @@ var ActorView = function(controller) {
 	 * Function to generate the HTML-Output return HTML-string
 	 */
 	this.display = function(model) {
-
 		return '' // TODO:
 	}
 

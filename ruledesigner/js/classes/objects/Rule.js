@@ -60,36 +60,6 @@ var Rule = function(id) {
 	}
 
 	/**
-	 * Removes all recursive includes Elements
-	 * 
-	 * @return true, if success
-	 */
-	this.removeElements = function() {
-
-		var bool = true
-
-		if (!_model.getVirtualDevice().removeElements())
-			bool = false
-
-		if (!_model.getConditionObj().removeElements())
-			bool = false
-
-		if (!_model.getActions().removeElements())
-			bool = false
-
-		if (bool){
-			delete _model.getVirtualDevice()
-			delete _model.getConditionObj()
-			delete _model.getActions()
-		}
-
-		if( (typeof _model.getVirtualDevice() !== 'undefined') || (typeof _model.getConditionObj() !== 'undefined') || (typeof _model.getActions() !== 'undefined'))
-			return false
-
-		return bool
-	}
-
-	/**
 	 * Function to generate the HTML-Output return HTML-string
 	 */
 	this.display = function() {
@@ -197,6 +167,31 @@ var RuleModel = function(controller, id) {
 
 	var _virtual_device = null // Object
 
+	/**
+	 * This function is use to reset the member variables in variable environment
+	 * @return bool - true if successful
+	 */
+	this.unset = function() {
+		var bool = true 
+		
+		if(!_params.unset())
+			bool=false
+			
+		if(!_actions.unset())
+			bool=false
+		
+		if(_conditions != null && !_conditions.unset())
+				bool=false
+				
+		if(_virtual_device != null && !_virtual_device.unset())
+				bool=false
+		
+		if(bool)
+			return true
+
+		return false
+	}
+	
 	/**
 	 * Gets the ID object
 	 * 

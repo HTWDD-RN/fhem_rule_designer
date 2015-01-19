@@ -32,29 +32,6 @@ function Gather(gather) {
 	}
 
 	/**
-	 * Removes all recursive includes Elements
-	 * 
-	 * @return true, if success
-	 */
-	this.removeElements = function() {
-		var bool = true
-		
-		var conds = _model.getConditions()
-		for (var n = 0; n < conds.length; n++) {
-			if (!conds[n].removeElements())
-				bool = false
-		}
-		
-		if (bool)
-			delete _model.getConditions()
-
-		if (typeof _model.getConditions() !== 'undefined')
-			return false
-
-		return true
-	}
-
-	/**
 	 * Function to generate the HTML-Output return HTML-string
 	 */
 	this.display = function() {
@@ -80,6 +57,23 @@ function GatherModel(controller, gather) {
 	var _log_gather = gather
 
 	var _conditions = []
+	
+	/**
+	 * This function is use to reset the member variables in variable environment
+	 * @return bool - true if successful
+	 */
+	this.unset = function() {
+		
+		_log_gather = Configuration.MESSAGES.MESSAGE_NEED_LOG_GATHER_TYPE // Set message as default
+		
+		while(_conditions.length>0)
+			_conditions.splice(0,1)
+			
+		if (_conditions.length == 0)
+			return true
+
+		return false
+	}
 
 	/**
 	 * Adds condition to this conditions object
@@ -166,11 +160,15 @@ function GatherModel(controller, gather) {
 	 * @return JSON-object
 	 */
 	this.toJSON = function() {
+		var tobj = new Object()
+		
+		if(_log_gather == Configuration.MESSAGES.MESSAGE_NEED_LOG_GATHER_TYPE || _log_gather == '')
+			return tobj
+			
 		var tmp = []
 		for (var n = 0; n < _conditions.length; n++) {
 			tmp.push(_conditions[n].toJSON())
 		}
-		var tobj = new Object()
 		tobj[_log_gather] = tmp
 		return tobj
 	}

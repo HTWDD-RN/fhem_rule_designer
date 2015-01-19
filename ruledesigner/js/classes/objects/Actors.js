@@ -31,30 +31,6 @@ var Actors = function(){
 	}
 	
 	/**
-	 * Removes all recursive includes Elements
-	 * 
-	 * @return true, if success
-	 */
-	this.removeElements = function() {
-		var bool = true
-
-		var actors = _model.getActors()
-		
-		for (var n =0 ; n<actors.length; n++){
-			if(!actors[n].removeElements())
-				bool = false
-		}
-		
-		if(bool)
-			delete actors
-		
-		if(typeof _model.getActors !== 'undefined')
-			return false
-
-		return bool
-	}
-	
-	/**
 	 * Function to generate the HTML-Output
 	 * return HTML-string
 	 */
@@ -80,6 +56,20 @@ var ActorsModel = function(controller){
 	var _controller = controller
 	
 	var _actors = []
+	
+	/**
+	 * This function is use to reset the member variables in variable environment
+	 * @return bool - true if successful
+	 */
+	this.unset = function() {
+		while (_actors.length > 0){
+			delete _actors.splice(0,1)
+		}
+		if (_actors.length == 0)
+			return true
+
+		return false
+	}
 
 	/**
 	 * Add actor to helper group

@@ -34,28 +34,7 @@ function Actions() {
 		return null
 	}
 	
-	/**
-	 * Removes all recursive includes Elements
-	 * @return true, if success
-	 */
-	this.removeElements = function(){
-		var bool = true
-	
-		var actions = _model.getActions
-		for ( var key in actions) {	
-			(actions[key].removeElements() !=  true ? bool = false : '')
-			delete actions[key]
-		}
-		
-		if (bool)
-			delete actions
-		
-		if(typeof actions !== 'undefined')
-			return false
-			
-		return bool
-	}
-	
+
 	/**
 	 * Function to generate the HTML-Output return HTML-string
 	 */
@@ -81,7 +60,25 @@ function ActionsModel(controller) {
 	var _controller = controller
 
 	var _actions = {}
+	
+	/**
+	 * This function is use to reset the member variables in variable environment
+	 * @return bool - true if successful
+	 */
+	this.unset = function() {
+		var bool = true 
+		for(var key in _actions){
+			if(!_actions[key].unset())
+				bool=false
+			delete _actions[key]
+		}
+		
+		if(bool && Object.keys(_actions).length == 0)
+			return true
 
+		return false
+	}
+	
 	/**
 	 * Adds an action
 	 * 

@@ -35,4 +35,12 @@ QUnit.test( "Test Actorgroup-object (js/classes/objects/Actorgroup.js)", functio
 	assert.ok(obj.removeVirtualDevice(vdev), 'removeActor: '+ vdev.SYS_ID)	
 	assert.strictEqual(obj.search(vdev.SYS_ID), -1, 'search: Test not find vdev strictEqual (-1)')
 	assert.ok(obj.search(vdev.SYS_ID) !== vdev, 'search: Test not find vdev')
+					
+	assert.ok(obj.setVirtualDevice(vdev), 'setVirtualDevice')	
+	assert.ok(obj.getVirtualDevice(), 'getVirtualDevice: Test if virtual device set')
+	assert.equal( JSON.stringify(obj.toJSON()), '{"ACTORGROUP":{"VDEV":{"TYPE":"VD_DIGITAL_TIMER","PARAMS":{}},"ACTORS":[]}}', 'toJSON: proof representation')
+	
+	// Tst unset
+	assert.ok(obj.unset())
+	assert.equal(JSON.stringify(obj.toJSON()), '{"ACTORGROUP":{}}', 'toJSON: function')
 })

@@ -48,4 +48,9 @@ QUnit.test( "Test Condition-object (js/classes/objects/Condition.js)", function(
 	assert.strictEqual(obj.search(vdev.SYS_ID), vdev, 'search: Test find subcondition')
 	assert.ok(obj.removeVirtualDevice(), 'removeVirtualDevice: if virtual device set')
 	assert.ok(obj.search(vdev.SYS_ID) !== vdev, 'search: Test find subcondition')
+	
+	
+	//Test unset
+	assert.ok(obj.unset())
+	assert.equal(JSON.stringify(obj.toJSON()), '{"SENSOR":"","REF_PARAMS":{}}', 'toJSON: function')
 })

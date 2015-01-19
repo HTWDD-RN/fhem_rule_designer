@@ -8,39 +8,26 @@ var VirtualDevice = function(type) {
 	var asReference = false
 	if (typeof arguments[1] !== 'undefined')
 		asReference = arguments[1] // If flag set the object is handeled as
-									// condition
+		// condition
 
 	var _model = new VirtualDeviceModel(_self, type, asReference)
 
 	var _view = new VirtualDeviceView(_self)
-	
+
 	/**
 	 * This function is looking for an device with SYS_ID
-	 * @param SYS_ID - internal id
+	 * 
+	 * @param SYS_ID -
+	 *            internal id
 	 * @return object if found, else null
 	 */
-	this.search = function(SYS_ID){
+	this.search = function(SYS_ID) {
 		if (this.SYS_ID == SYS_ID) {
 			return _self
 		}
 		return null
 	}
-	
-	/**
-	 * Removes all recursive includes Elements
-	 * @return true, if success
-	 */
-	this.removeElements = function(){
-		
-		var paramObj = _model.getParamObj()
-		delete paramObj
-		
-		if(typeof paramObj !== 'undefined')
-			return false
-			
-		return true
-	}
-	
+
 	/**
 	 * Function to generate the HTML-Output return HTML-string
 	 */
@@ -49,11 +36,11 @@ var VirtualDevice = function(type) {
 	}
 
 	// Bind model functions
-//	var keys = Object.keys(_model)
-//	for (var n = 0; n < keys.length; n++) {
-//		eval('_self.' + keys[n] + ' = _model.' + keys[n])
-//	}
-	for (var key in _model){
+	// var keys = Object.keys(_model)
+	// for (var n = 0; n < keys.length; n++) {
+	// eval('_self.' + keys[n] + ' = _model.' + keys[n])
+	// }
+	for ( var key in _model) {
 		eval('_self.' + key + ' = _model.' + key)
 	}
 }
@@ -68,8 +55,21 @@ var VirtualDeviceModel = function(controller, id, asReference) {
 
 	var _asReference = asReference
 
-	var _params = (asReference ? new RefParams() : _params = new Params())
+	var _params = (asReference ? new RefParams() : new Params())
 
+	/**
+	 * This function is use to reset the member variables in variable environment
+	 * @return bool - true if successful
+	 */
+	this.unset = function() {
+		_params = undefined
+		if (_params === undefined) {
+			_params = (asReference ? new RefParams() : new Params())
+			return true
+		}
+		return false
+	}
+	
 	/**
 	 * Return ID
 	 * 
@@ -78,7 +78,6 @@ var VirtualDeviceModel = function(controller, id, asReference) {
 	this.getID = function() {
 		return _id
 	}
-
 
 	/**
 	 * Returns a flag value if it true the vdev can add to conditions

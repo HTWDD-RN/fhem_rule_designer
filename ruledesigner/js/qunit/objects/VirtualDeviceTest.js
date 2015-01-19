@@ -28,6 +28,10 @@ QUnit.test( "Test VirtualDevice-object (js/classes/objects/VirtualDevice.js) ACT
 	var SYS_ID = obj.SYS_ID
 	assert.strictEqual(obj.search(SYS_ID), obj, 'search: Test own ID')
 	
+	// Test unset
+	assert.ok(obj.unset())
+	assert.equal(JSON.stringify(obj.toJSON()), '{"TYPE":1,"PARAMS":{}}', 'toJSON: function')
+	
 })
 
 QUnit.test( "Test VirtualDevice-object (js/classes/objects/VirtualDevice.js) ACTORS MODE2", function( assert ) {
@@ -61,6 +65,10 @@ QUnit.test( "Test VirtualDevice-object (js/classes/objects/VirtualDevice.js) ACT
 	
 	var SYS_ID = obj.SYS_ID
 	assert.strictEqual(obj.search(SYS_ID), obj, 'search: Test own ID')
+	
+	// Test unset
+	assert.ok(obj.unset())
+		assert.equal(JSON.stringify(obj.toJSON()), '{"TYPE":2,"PARAMS":{}}', 'toJSON: function')
 })
 
 QUnit.test( "Test VirtualDevice-object (js/classes/objects/VirtualDevice.js) REFERENCE MODE", function( assert ) {
@@ -94,4 +102,8 @@ QUnit.test( "Test VirtualDevice-object (js/classes/objects/VirtualDevice.js) REF
 	
 	var SYS_ID = refObj.SYS_ID
 	assert.strictEqual(refObj.search(SYS_ID), refObj, 'search: Test own ID')
+	
+	// Test unset
+	assert.ok(refObj.unset())
+	assert.equal(JSON.stringify(refObj.toJSON()), '{"TYPE":11,"REF_PARAMS":{}}', 'toJSON: function')
 })

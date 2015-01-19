@@ -43,4 +43,12 @@ QUnit.test( "Test Gather-object (js/classes/objects/Gather.js)", function( asser
 	assert.ok(obj.removeCondition(cond2), 'removeCondition: '+ cond2.SYS_ID)	
 	assert.strictEqual(obj.search(cond2.SYS_ID), null, 'search: Test not find subcondition strictEqual (null)')
 	assert.ok(obj.search(cond2.SYS_ID) !== cond2, 'search: Test not find subcondition')
+	
+	assert.ok(obj.addCondition(cond1), 'addObject: add condition1')
+	assert.ok(obj.addCondition(cond2), 'addObject: add condition2')
+	assert.equal(JSON.stringify(obj.toJSON()), '{"OR":[{"SENSOR":"CUL_WS","REF_PARAMS":{"temperature":[">",20]}},{"SENSOR":"CUL_WS2","REF_PARAMS":{"humity":[">",95]}}]}', 'toJSON: function')	
+
+	assert.ok(obj.unset())
+	assert.equal(JSON.stringify(obj.toJSON()), '{}', 'toJSON: function')
+	Log(JSON.stringify(obj.toJSON()))
 })

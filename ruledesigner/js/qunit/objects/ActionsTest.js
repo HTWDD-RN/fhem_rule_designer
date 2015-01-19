@@ -69,4 +69,9 @@ QUnit.test( "Test ActionsTest-object (js/classes/objects/Actions.js)", function(
 	assert.ok(obj.removeAction(actor1), 'removeActor: '+ actor1.SYS_ID)	
 	assert.strictEqual(obj.search(actor1.SYS_ID), -1, 'search: Test not find actor1 strictEqual (-1)')
 	assert.ok(obj.search(actor1.SYS_ID) !== actor1, 'search: Test not find actor1')
+				
+	// Test unset
+	assert.ok(obj.unset())
+	assert.equal(JSON.stringify(obj.toJSON()), '[]', 'toJSON: function')
+	
 })

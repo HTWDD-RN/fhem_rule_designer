@@ -31,27 +31,6 @@ var Conditions = function() {
 	}
 
 	/**
-	 * Removes all recursive includes Elements
-	 * 
-	 * @return true, if success
-	 */
-	this.removeElements = function() {
-
-		var bool = true
-
-		if (!_model.getObject().removeElements())
-			bool = false
-
-		if (bool)
-			delete _model.getObject()
-
-		if (typeof _model.getObject() !== 'undefined')
-			return false
-
-		return bool
-	}
-
-	/**
 	 * Function to generate the HTML-Output return HTML-string
 	 */
 	this.display = function() {
@@ -72,6 +51,16 @@ var Conditions = function() {
 var ConditionsModel = function(controller) {
 
 	var _obj = null
+
+	/**
+	 * This function is use to reset the member variables in variable
+	 * environment
+	 * Here in mapping functionality for removeObject
+	 * @return bool - true if successful
+	 */
+	this.unset = function() {
+		return this.removeObject()
+	}
 
 	/**
 	 * Sets the actions object
@@ -101,7 +90,6 @@ var ConditionsModel = function(controller) {
 	 */
 	this.removeObject = function() {
 		if (_obj != null) {
-			delete _obj
 			_obj = null
 			return true
 		}

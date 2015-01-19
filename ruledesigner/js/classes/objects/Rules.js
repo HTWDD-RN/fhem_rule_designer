@@ -13,6 +13,27 @@ function Rules() {
 	var _model
 
 	/**
+	 * Removes all recursive includes Elements
+	 * 
+	 * @return true, if success
+	 */
+	this.removeElements = function() {
+
+		var bool = true
+
+		var rules = _model.getRules()
+		
+		for(key in rules)
+			if (!rules[key].removeElements())
+				bool = false
+
+		if (!bool || Object.keys(rules).length!=0)
+			return true
+
+		return false
+	}
+	
+	/**
 	 * Return the JSON-Tree of all rules
 	 * 
 	 * @return cleand JSON objects

@@ -33,9 +33,19 @@ QUnit.test( "Test Condition-object (js/classes/objects/Condition.js)", function(
 		// Test Param object tunneling
 	assert.ok(obj.updateRefParam('temperature', '==', 'Rule_2', 6, 'Rule_1'),'updateParam: state')
 	assert.ok(obj.getRefParameter(),'getParameter')
+	assert.equal(obj.updateRefParam('state', '==', 'Rule_1'), false,'updateParam: Test fail')
 	assert.ok(obj.addRefParam('state', '==', 'Rule_1'),'addParam: Test')
+	assert.equal(obj.addRefParam('state', '==', 'Rule_1'), false,'addParam: Test fail')
 	assert.deepEqual(obj.getRefParamValue('temperature'), ['==','Rule_2', 6, 'Rule_1'],'getRefParamValue')
 	assert.ok(obj.removeRefParam('state'),'removeParam: state')
 	assert.equal(obj.removeRefParam('state'),false,'removeParam: fail state')
 	assert.ok(obj.setRefParameter(test_params),'setParameter')
+	
+	// Test search method
+	assert.ok(obj.setVirtualDevice(vdev), 'setVirtualDevice')	
+	var SYS_ID = obj.SYS_ID
+	assert.strictEqual(obj.search(SYS_ID), obj, 'search: Test own ID')
+	assert.strictEqual(obj.search(vdev.SYS_ID), vdev, 'search: Test find subcondition')
+	assert.ok(obj.removeVirtualDevice(), 'removeVirtualDevice: if virtual device set')
+	assert.ok(obj.search(vdev.SYS_ID) !== vdev, 'search: Test find subcondition')
 })

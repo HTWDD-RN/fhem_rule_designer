@@ -16,9 +16,78 @@ var Rule = function(id) {
 	// Generate SYS_ID
 	this.SYS_ID = cSYS_ID()
 
-	var _model = new RuleModel(_self, id)
+	var _model = new RuleModel(_self, (id == 'unknown' ? id += ' ('
+			+ this.SYS_ID + ')' : id))
 
 	var _view = new RuleView(_self)
+
+	/**
+	 * This function is looking for an device with SYS_ID
+	 * 
+	 * @param SYS_ID -
+	 *            internal id
+	 * @return object if found, else null
+	 */
+	this.search = function(SYS_ID) {
+		// Proof this object
+		if (this.SYS_ID == SYS_ID) {
+			return _self
+		}
+
+		// Proof VirtualDevice-object
+		var obj = _model.getVirtualDevice()
+		if (obj != null && obj.search(SYS_ID) != null) { // No more childs
+			return obj
+		}
+
+		// Proof Conditions-Object
+		var obj = _model.getConditionObj()
+		if (obj != null && (obj = obj.search(SYS_ID)) != null) { // Can have
+																	// sub
+																	// childs
+			return obj
+		}
+
+		// Proof Actions-Object
+		var obj = _model.getActions()
+		if (obj != null && (obj = obj.search(SYS_ID)) != null) { // Can have
+																	// sub
+																	// childs
+			return obj
+		}
+
+		return null
+	}
+
+	/**
+	 * Removes all recursive includes Elements
+	 * 
+	 * @return true, if success
+	 */
+	this.removeElements = function() {
+
+		var bool = true
+
+		if (!_model.getVirtualDevice().removeElements())
+			bool = false
+
+		if (!_model.getConditionObj().removeElements())
+			bool = false
+
+		if (!_model.getActions().removeElements())
+			bool = false
+
+		if (bool){
+			delete _model.getVirtualDevice()
+			delete _model.getConditionObj()
+			delete _model.getActions()
+		}
+
+		if( (typeof _model.getVirtualDevice() !== 'undefined') || (typeof _model.getConditionObj() !== 'undefined') || (typeof _model.getActions() !== 'undefined'))
+			return false
+
+		return bool
+	}
 
 	/**
 	 * Function to generate the HTML-Output return HTML-string
@@ -39,8 +108,8 @@ var Rule = function(id) {
 		return _model.getParamObj().addParam(param, value)
 	}
 	/**
-	 * Update a parameter, when exists. It make a tunneling
-	 * call to the updateParam function of the including Params object
+	 * Update a parameter, when exists. It make a tunneling call to the
+	 * updateParam function of the including Params object
 	 * 
 	 * @param parameter
 	 * @param value
@@ -283,8 +352,12 @@ var RuleView = function(controller) {
 		var vdevObj = _model.getVirtualDevice()
 		var actionsObj = _model.getActions()
 
-		var html = '<ul class="obj_rule">' + '<li>'
-				+ (condObj != null ? condObj.display() : '<span class="placeholder">Placeholder</span>')
+		var html = '<ul class="obj_rule" rel="'
+				+ _controller.SYS_ID
+				+ '">'
+				+ '<li>'
+				+ (condObj != null ? condObj.display()
+						: '<span class="placeholder">Placeholder</span>')
 				+ '</li>' + '<li class="vdev">'
 				+ (vdevObj != null ? vdevObj.display() : 'VDEV') + '</li>'
 				+ '<li>' + (actionsObj.display()) + '</li>' + '</ul>'

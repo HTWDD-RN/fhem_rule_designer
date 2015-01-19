@@ -8,6 +8,51 @@ var Actors = function(){
 	var _model = new ActorsModel(_self)
 	
 	var _view = new ActorsView(_self)
+		
+	/**
+	 * This function is looking for an device with SYS_ID
+	 * @param SYS_ID - internal id
+	 * @return object if found, else null
+	 */
+	this.search = function(SYS_ID){
+		// Proof this object
+		if (this.SYS_ID == SYS_ID) {
+			return _self
+		}
+		
+		// Forall sub-objects
+		var obj
+		var actors = _model.getActors()
+		for ( var n =0; n<actors.length ; n++ ) {	
+			if(( obj = actors[n].search(SYS_ID)) != null)
+				return obj
+		}
+		return null
+	}
+	
+	/**
+	 * Removes all recursive includes Elements
+	 * 
+	 * @return true, if success
+	 */
+	this.removeElements = function() {
+		var bool = true
+
+		var actors = _model.getActors()
+		
+		for (var n =0 ; n<actors.length; n++){
+			if(!actors[n].removeElements())
+				bool = false
+		}
+		
+		if(bool)
+			delete actors
+		
+		if(typeof _model.getActors !== 'undefined')
+			return false
+
+		return bool
+	}
 	
 	/**
 	 * Function to generate the HTML-Output

@@ -59,5 +59,14 @@ QUnit.test( "Test ActionsTest-object (js/classes/objects/Actions.js)", function(
 	assert.ok(actorgroup.removeVirtualDevice(), 'removetVirtualDevice')
 	assert.ok(obj.removeAction(actor2), 'removeAction2')
 	assert.equal(JSON.stringify(obj.toJSON()), '[{"ACTOR":"L1","PARAMS":{"state":"on"}},{"ACTORGROUP":{}}]', 'toJSON: proof representation, after removing')
-
+	
+	
+	// Test search method
+	var SYS_ID = obj.SYS_ID
+	assert.strictEqual(obj.search(SYS_ID), obj, 'search: Test own ID')
+	assert.strictEqual(obj.search(actor1.SYS_ID), actor1, 'search: Test find actor1')
+	assert.ok(obj.search(actor1.SYS_ID) === actor1, 'search: Test find actor1')
+	assert.ok(obj.removeAction(actor1), 'removeActor: '+ actor1.SYS_ID)	
+	assert.strictEqual(obj.search(actor1.SYS_ID), -1, 'search: Test not find actor1 strictEqual (-1)')
+	assert.ok(obj.search(actor1.SYS_ID) !== actor1, 'search: Test not find actor1')
 })

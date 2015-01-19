@@ -8,7 +8,7 @@ var Params = function() {
 	var _model = new ParamsModel(_self)
 
 	var _view = new ParamsView(_self)
-
+	
 	/**
 	 * Function to generate the HTML-Output return HTML-string
 	 */

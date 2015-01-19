@@ -1,7 +1,7 @@
 QUnit.test( "Test VirtualDevice-object (js/classes/objects/VirtualDevice.js) ACTORS MODE1", function( assert ) {
 	// Create instance of object which is testing
 	var obj = new VirtualDevice(1)
-	
+		
 	// First test instantiation
 	assert.ok( obj instanceof VirtualDevice, "Instantiation" );
 	assert.equal( obj.getID(), 1, "ID validation" );
@@ -24,6 +24,9 @@ QUnit.test( "Test VirtualDevice-object (js/classes/objects/VirtualDevice.js) ACT
 	assert.ok(obj.getParamObj().addParam('temperature_indoor', '20'), 'Test Parameter hinzufügbar')
 	assert.equal(JSON.stringify(obj.toJSON()), '{"TYPE":1,"PARAMS":{"temperature":6,"temperature_indoor":"20"}}', 'Test serialize JSON-Output')
 	assert.equal(obj.getParamObj().getParamValue('temperature'), '6', 'Test Parameter löschbar')
+	
+	var SYS_ID = obj.SYS_ID
+	assert.strictEqual(obj.search(SYS_ID), obj, 'search: Test own ID')
 	
 })
 
@@ -55,6 +58,9 @@ QUnit.test( "Test VirtualDevice-object (js/classes/objects/VirtualDevice.js) ACT
 	assert.ok(obj.getParamObj().addParam('temperature_indoor', '20'), 'Test Parameter hinzufügbar')
 	assert.equal(JSON.stringify(obj.toJSON()), '{"TYPE":2,"PARAMS":{"temperature":15,"temperature_indoor":"20"}}', 'Test serialize JSON-Output')
 	assert.equal(obj.getParamObj().getParamValue('temperature'), '15', 'Test Parameter löschbar')
+	
+	var SYS_ID = obj.SYS_ID
+	assert.strictEqual(obj.search(SYS_ID), obj, 'search: Test own ID')
 })
 
 QUnit.test( "Test VirtualDevice-object (js/classes/objects/VirtualDevice.js) REFERENCE MODE", function( assert ) {
@@ -85,4 +91,7 @@ QUnit.test( "Test VirtualDevice-object (js/classes/objects/VirtualDevice.js) REF
 	assert.ok(refObj.getParamObj().addRefParam('temperature_outdoor', 'between', 19.5, 20.5), 'Test Parameter hinzufügbar')
 	assert.equal(JSON.stringify(refObj.toJSON()), '{"TYPE":11,"REF_PARAMS":{"humidty":["<",95],"temperature_indoor":["between","20",24],"temperature_outdoor":["between",19.5,20.5]}}', 'Test serialize JSON-Output')
 	assert.deepEqual(refObj.getParamObj().getRefParamValue('humidty'), ["<",95], 'Test Parameter löschbar')
+	
+	var SYS_ID = refObj.SYS_ID
+	assert.strictEqual(refObj.search(SYS_ID), refObj, 'search: Test own ID')
 })

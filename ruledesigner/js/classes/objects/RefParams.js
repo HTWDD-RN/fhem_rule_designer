@@ -8,7 +8,7 @@ var RefParams = function() {
 	var _model = new RefParamsModel(_self)
 
 	var _view = new RefParamsView(_self)
-
+	
 	/**
 	 * Function to generate the HTML-Output return HTML-string
 	 */

@@ -30,4 +30,14 @@ QUnit.test( "Test Actors-object (js/classes/objects/Actors.js)", function( asser
 		obj.removeActor(actorsObj[0])
 	
 	assert.equal(obj.getActors().length, 0, 'getActors: proof number of stored actors')
+	
+			
+	assert.ok(obj.addActor(actor1), 'addActor forth')
+	var SYS_ID = obj.SYS_ID
+	assert.strictEqual(obj.search(SYS_ID), obj, 'search: Test own ID')
+	assert.strictEqual(obj.search(actor1.SYS_ID), actor1, 'search: Test find actor1')
+	assert.ok(obj.search(actor1.SYS_ID) === actor1, 'search: Test find actor1')
+	assert.ok(obj.removeActor(actor1), 'removeActor: '+ actor1.SYS_ID)	
+	assert.strictEqual(obj.search(actor1.SYS_ID), null, 'search: Test not find actor1 strictEqual (null)')
+	assert.ok(obj.search(actor1.SYS_ID) !== actor1, 'search: Test not find actor1')
 })

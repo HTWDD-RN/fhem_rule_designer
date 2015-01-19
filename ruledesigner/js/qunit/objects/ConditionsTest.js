@@ -28,4 +28,12 @@ QUnit.test( "Test Conditions-object (js/classes/objects/Conditions.js)", functio
 	assert.ok(obj.removeObject(), 'removeObject')
 	assert.equal(JSON.stringify(obj.toJSON()), "{}", 'toJSON: proof representation, after removing')
 	
+	assert.ok(obj.addObject(gather), 'addObject: add gather')
+	var SYS_ID = obj.SYS_ID
+	assert.strictEqual(obj.search(SYS_ID), obj, 'search: Test own ID')
+	assert.strictEqual(obj.search(gather.SYS_ID), gather, 'search: Test find gather')
+	assert.ok(obj.search(gather.SYS_ID) === gather, 'search: Test find gather')
+	assert.ok(obj.removeObject(gather), 'removeActor: '+ gather.SYS_ID)	
+	assert.strictEqual(obj.search(gather.SYS_ID), null, 'search: Test not find gather strictEqual (null)')
+	assert.ok(obj.search(gather.SYS_ID) !== gather, 'search: Test not find gather')
 })

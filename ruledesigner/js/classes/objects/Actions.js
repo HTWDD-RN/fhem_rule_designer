@@ -14,6 +14,49 @@ function Actions() {
 	var _view = new ActionsView(_self)
 
 	/**
+	 * This function is looking for an device with SYS_ID
+	 * @param SYS_ID - internal id
+	 * @return object if found, else null
+	 */
+	this.search = function(SYS_ID){
+		// Proof this object
+		if (this.SYS_ID == SYS_ID) {
+			return _self
+		}
+		var obj
+		// Forall action-objects
+		var actions = _model.getActions() 
+		for ( var key in actions) {	
+			if((obj = actions[key].search(SYS_ID)) != null) // Set obj variable, because actorgroup can search on lower tier
+				return obj
+		}		
+		
+		return null
+	}
+	
+	/**
+	 * Removes all recursive includes Elements
+	 * @return true, if success
+	 */
+	this.removeElements = function(){
+		var bool = true
+	
+		var actions = _model.getActions
+		for ( var key in actions) {	
+			(actions[key].removeElements() !=  true ? bool = false : '')
+			delete actions[key]
+		}
+		
+		if (bool)
+			delete actions
+		
+		if(typeof actions !== 'undefined')
+			return false
+			
+		return bool
+	}
+	
+	/**
 	 * Function to generate the HTML-Output return HTML-string
 	 */
 	this.display = function() {

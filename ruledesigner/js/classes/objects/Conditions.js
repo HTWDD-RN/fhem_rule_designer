@@ -10,6 +10,48 @@ var Conditions = function() {
 	var _view = new ConditionsView(_self)
 
 	/**
+	 * This function is looking for an device with SYS_ID
+	 * 
+	 * @param SYS_ID -
+	 *            internal id
+	 * @return object if found, else null
+	 */
+	this.search = function(SYS_ID) {
+		// Proof this object
+		if (this.SYS_ID == SYS_ID) {
+			return _self
+		}
+
+		// Proof sub-object
+		var obj = _model.getObject()
+		if (obj != null && (obj = obj.search(SYS_ID)) != null) {
+			return obj
+		}
+		return null
+	}
+
+	/**
+	 * Removes all recursive includes Elements
+	 * 
+	 * @return true, if success
+	 */
+	this.removeElements = function() {
+
+		var bool = true
+
+		if (!_model.getObject().removeElements())
+			bool = false
+
+		if (bool)
+			delete _model.getObject()
+
+		if (typeof _model.getObject() !== 'undefined')
+			return false
+
+		return bool
+	}
+
+	/**
 	 * Function to generate the HTML-Output return HTML-string
 	 */
 	this.display = function() {
@@ -17,11 +59,11 @@ var Conditions = function() {
 	}
 
 	// Bind model functions
-//	var keys = Object.keys(_model)
-//	for (var n = 0; n < keys.length; n++) {
-//		eval('_self.' + keys[n] + ' = _model.' + keys[n])
-//	}
-	for (var key in _model){
+	// var keys = Object.keys(_model)
+	// for (var n = 0; n < keys.length; n++) {
+	// eval('_self.' + keys[n] + ' = _model.' + keys[n])
+	// }
+	for ( var key in _model) {
 		eval('_self.' + key + ' = _model.' + key)
 	}
 

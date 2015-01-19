@@ -252,3 +252,49 @@
 //	}
 //
 //};
+
+
+					var quad_size_of_connectors = 21;
+					$('div.rule-obj-box')
+							.each(
+									function() {
+
+										var border = 1;
+										var width = $(this).width() + 20 + 2
+												* border;
+										var height = $(this).height() + 10 + 2
+												* border;
+
+										var connector_padding = (quad_size_of_connectors - border)
+												/ 2 + 2 * border;
+
+										$('span.connector').css('width', 20);
+										$('span.connector').css('height', 20);
+
+										$('span.connector').css('border',
+												border + 'px solid #aaa');
+
+										$('span.connector-left', this).css(
+												'left', 0 - connector_padding);
+										$('span.connector-left', this).css(
+												'top',
+												height / 2 - connector_padding);
+										$('span.connector-right', this).css(
+												'right', 0 - connector_padding);
+										$('span.connector-right', this).css(
+												'top',
+												height / 2 - connector_padding);
+										$('span.connector-top', this).css(
+												'top', 0 - connector_padding);
+										$('span.connector-top', this).css(
+												'left',
+												width / 2 - connector_padding);
+										$('span.connector-bottom', this)
+												.css('bottom',
+														0 - connector_padding);
+										$('span.connector-bottom', this).css(
+												'left',
+												width / 2 - connector_padding);
+
+									});
+				});

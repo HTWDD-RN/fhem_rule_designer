@@ -1,26 +1,4 @@
 /**
- * Add Events
- */
-			
-$(document).ready(
-function () {	
-	$('#rd_draggbar li').draggable({
-		cursor: "move",
-		scroll: false,
-		helper: "clone",
-		containment: "frame",
-		stop: function(ui, dragevent, ui){
-			console.log(event)
-			console.log(ui)
-		}
-	})
-	
-	$('#rd_toolbar button').button()
-	
-}()
-);
-
-/**
  * Function to build the central view object
  * 
  * @param controller
@@ -30,22 +8,30 @@ function () {
 function MainView(_controller) {
 
 	var _self = this
+	
+	// set controller link
+	var controller = _controller;
+
+	// bind events on controller and GUI
+	var _events = new Events(_self)
 
 	Log('MainView.js - Create', 3)
 
-	var controller = _controller;
-
+	/**
+	 * Function to generate the toolbar object
+	 */
 	var generateToolbar = function() {
 
 		console.log("MainView.js - generateToolbar - Generiere Toolbar");
 
-		var id = 'rd_toolbar';
+		var ID = '#' + Configuration.GUI.TOOLBAR.ID;
 
 		this.init = function() {
 			var toolbar = document.createElement('ul');
+			toolbar.id = Configuration.GUI.TOOLBAR.ID
+			toolbar.className = Configuration.GUI.TOOLBAR.CLASSES;
 
 			var container = document.createElement('li');
-			toolbar.id = id;
 
 			var ruleNameForm = document.createElement('form');
 
@@ -83,7 +69,7 @@ function MainView(_controller) {
 			btnNew.innerHTML = 'Neu';
 
 			var trash = document.createElement('div');
-			trash.id = 'imgTrash';
+			trash.id = 'trash';
 			trash.innerHTML = '<div><span class="ui-corner-all"></span></div>';
 			$(trash).addClass('ui-corner-all ui-state-default');
 			$(ruleNameForm).addClass('ui-corner-all ui-state-default');
@@ -100,28 +86,31 @@ function MainView(_controller) {
 		};
 
 		this.setSize = function(width, height) {
-			$('#' + id).css('width', width);
-			$('#' + id).css('height', height);
+			$(ID).css('width', width);
+			$(ID).css('height', height);
 		};
 
 		this.getID = function() {
-			return id;
+			return ID;
 		};
 	};
 
+	/**
+	 * Function to generates the draggbar object
+	 */
 	var generateDraggableObjectList = function() {
 
 		Log('MainView.js - generateDraggableObjectList - Generiere ObjectList');
 
-		var id = 'rd_draggbar';
+		var ID = '#' + Configuration.GUI.DRAGBAR.ID;
 
 		this.init = function() {
 
 			Log('MainView.js - generateDraggableObjectList.init');
 
 			var objList = document.createElement('div');
-			objList.id = id;
-			$(objList).addClass(Configuration.GUI.OBJECT_LIST.CLASSES)
+			objList.id = Configuration.GUI.DRAGBAR.ID;
+			$(objList).addClass(Configuration.GUI.DRAGBAR.OBJECT_LIST.CLASSES)
 			objList.innerHTML = 'ObjectList not loaded yet';
 
 			return objList;
@@ -129,7 +118,7 @@ function MainView(_controller) {
 
 		this.actualize = function(blocks, rules) {
 
-			$('#' + id).html('')
+			$(ID).html('')
 
 			Log('MainView.js - generateDraggableObjectList.actualize');
 
@@ -147,9 +136,9 @@ function MainView(_controller) {
 									node
 											.setAttribute(
 													'class',
-													Configuration.GUI.OBJECT_LIST.SEGMENTATION.CLASSES);
+													Configuration.GUI.DRAGBAR.OBJECT_LIST.SEGMENTATION.CLASSES);
 									node.id = key
-									$('#' + id).append(node);
+									$(ID).append(node);
 								}
 								var i = 0;
 								if (i <= 0) {
@@ -158,7 +147,7 @@ function MainView(_controller) {
 									e
 											.setAttribute(
 													'class',
-													Configuration.GUI.OBJECT_LIST.SEGMENTATION.HEAD)
+													Configuration.GUI.DRAGBAR.OBJECT_LIST.SEGMENTATION.HEAD)
 									$(node).append(e);
 									$(node).append('<hr>');
 								}
@@ -177,7 +166,7 @@ function MainView(_controller) {
 														e
 																.setAttribute(
 																		'class',
-																		Configuration.GUI.OBJECT_LIST.SEGMENTATION.BODY)
+																		Configuration.GUI.DRAGBAR.OBJECT_LIST.SEGMENTATION.BODY)
 														var url = (obj.ICON_CLASS != '' ? $(
 																e).addClass(
 																obj.ICON_CLASS)
@@ -226,22 +215,9 @@ function MainView(_controller) {
 				$(node).append(e);
 			};
 			
-			$('#' + id).append(node);
+			$(ID).append(node);
 
-			$('#' + id + ' ul').children("li").each(function() {
-
-				// Enable toolitips
-
-				// Enable Drag&Drop
-				// $(this).draggable({ // TODO:
-				// containment : '#' + id + ' ul',
-				// scroll : false,
-				// revert : true
-				// });
-			});
-			
-
-			
+//			enableDragging(ID)
 
 		};
 
@@ -249,7 +225,7 @@ function MainView(_controller) {
 
 			console.log("MainView.js - generateDraggableObjectList.getID");
 
-			return id;
+			return ID;
 		};
 	};
 
@@ -257,7 +233,7 @@ function MainView(_controller) {
 
 		console.log("MainView.js - generateDropableObjectField");
 
-		var ID = 'rd_rules';
+		var ID = '#' + Configuration.GUI.EDITOR.ID;
 
 		var Preview_ID = 'rd_rules_preview';
 
@@ -287,9 +263,9 @@ function MainView(_controller) {
 			$(li)
 					.html(
 							'<a href="#Tab_'
-									+ rule.ID
+							+ rule.SYS_ID
 									+ '"><span class="ui-icon ui-icon-close" role="presentation"></span>'
-									+ (info.PARAMS.Name || rule.SYS_ID) + '</a>');
+									+ (info.PARAMS.Name || info.ID || rule.SYS_ID) + '</a>');
 			// alert($('li[rel="' + Preview_ID + '"]').html());
 
 			// Add generated tabular
@@ -298,19 +274,21 @@ function MainView(_controller) {
 			// Make it draggable (for trashing)
 			$(li).draggable({
 				opacity : 0.5,
-				revert : true
+				revert : true,
+				containment: 'trash'
 			});
 
 			// Refresh tabs
-			$('#' + ID).tabs("refresh");
+			$(ID).tabs("refresh");
 
 			// Refresch window - set the correct calculate size attributes to
 			// the div tags
 			$(window).trigger('resize');
 
 			// Make new tab active
-			$('#' + ID).tabs('option', 'active',
-					$('#' + ID + ' > div ').length - 2);
+			$(ID).tabs('option', 'active',
+					$(ID + ' > div ').length - 2);
+			
 
 		};
 
@@ -322,7 +300,7 @@ function MainView(_controller) {
 			console.log('MainView.js - generateDropableObjectField.init');
 
 			var e = document.createElement('div');
-			e.id = ID;
+			e.id = Configuration.GUI.EDITOR.ID;
 
 			var ul_tab = document.createElement('ul');
 
@@ -350,10 +328,8 @@ function MainView(_controller) {
 			});
 			$(li_addRule).hover(function() {
 				$(this).addClass("ui-state-hover");
-				$(this).css('cursor', 'pointer');
 			}, function() {
 				$(this).removeClass("ui-state-hover");
-				$(this).css('cursor', '');
 			});
 
 			var li_preview = document.createElement('li');
@@ -395,7 +371,7 @@ function MainView(_controller) {
 		 */
 		this.getID = function() {
 			console.log('MainView.js - generateDropableObjectField.getID')
-			return id;
+			return ID;
 		};
 
 		/**
@@ -459,53 +435,28 @@ function MainView(_controller) {
 	var objList = new generateDraggableObjectList;
 	var objField = new generateDropableObjectField;
 
-	this.init = function() {
-
-		console.log("RuleDesignerView.init");
-
-		var _toolbar = toolbar.init()
-		$(Configuration.GUI.APP_CONTAINER).append(_toolbar);
-
-		var _objList = objList.init()
-		$(Configuration.GUI.APP_CONTAINER).append(_objList);
-
-		var _objField = objField.init()
-		$(Configuration.GUI.APP_CONTAINER).append(_objField);
-
-
+	this.addRule = function() {
+//		_events.disableItemDragging()  // Disable draggbar events
+		if((_rule = _controller.addNewRule()) != null){
+			objField.addRuleTab(_rule);	  // Add rule tab
+		}
 	};
-
-	this.addRuleTab = function(_rule) {
-		objField.addRuleTab(_rule);
-	};
+	
+	/**
+	 * This initialize the removing of the element with the SYS_ID.
+	 * Normally the function gets the SYS_ID from HTML-rel-attribute
+	 * @param SYS_ID
+	 * @return true, if succeed
+	 */
+	this.removeElement = function(SYS_ID){
+		
+	}
 
 	this.reset = function() {
 		$(objList).children().remove();
 		$(objField).children().remove();
 		$('input[name=txtMakro]').val('');
 	};
-
-	this.actualize = function() {
-		var rules = _controller.getRules();
-		var blocks = _controller.getDevicesByType();
-		console.log(blocks);
-		objList.actualize(blocks, rules);
-		// objField.actualize(Rules);
-
-		$('span.connector, div[rel$=".sensor"], div[rel$=".actor"]').droppable(
-				{
-					tolerance : "touch",
-					drop : function(event, ui) {
-						_controller.doEventAction('drop.ruleTarget',
-								ui.draggable, event);
-					}
-				});
-
-		$(window).trigger('resize');
-
-	};
-
-	this.init();
 
 	this.actualizeObjectList = function(obj, vdev) {
 		Log('MainView.js: actualizeObjectList', obj, 4)
@@ -537,6 +488,40 @@ function MainView(_controller) {
 
 		objList.actualize(blocks, rules);
 		
+		$(window).resize();
+		
 	}
+	
+	this.actualize = function(){
+		
+		$(window).resize();
+	}
+	
+	/**
+	 * Initialize MainView 
+	 */
+	var init = function() {
+
+		console.log("RuleDesignerView.init");
+
+		// Generates toolbar and add it to the view
+		var _toolbar = toolbar.init();
+		$(Configuration.GUI.APP_CONTAINER).append(_toolbar);
+		_events.enableButtonEvents();
+		_events.enableTrash()
+
+		// Generates draggable and add it to the view
+		var _objList = objList.init();
+		$(Configuration.GUI.APP_CONTAINER).append(_objList);		
+		_events.enableItemDragging(objField.getID());
+	//	_events.disableItemDragging();
+
+		// Generates droppable field and add it to the view
+		var _objField = objField.init();
+		$(Configuration.GUI.APP_CONTAINER).append(_objField);
+		_events.enableAddButton()
+		
+		$(window).resize();
+	}();
 
 };

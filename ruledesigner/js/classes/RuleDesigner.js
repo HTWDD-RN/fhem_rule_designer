@@ -36,14 +36,15 @@ function __RuleDesigner() {
 	var _rules = new Rules()
 
 	/**
-	 * This function used to initialize the wrapper
-	 * Includes the call of cbBindWrapperData.
+	 * This function used to initialize the wrapper Includes the call of
+	 * cbBindWrapperData.
 	 */
 	var cbInitWrapper = function() {
 		Log('# RuleDesigner.js # cbInitWrapper', 4)
 		_wrapper.init(cbBindWrapperData)
+		stepsCounter()
 	}
-	
+
 	/**
 	 * This function used to bind wrapper data
 	 */
@@ -55,42 +56,21 @@ function __RuleDesigner() {
 		if ($(tmp).length > 0) {
 			$.map(_wrapper.getAvailableSegmations.getVirtualDevices(),
 					function(val) {
-						val.TYPE = 'SYS_'+val.ID+'_'+val.NAME
+						val.TYPE = 'SYS_' + val.ID + '_' + val.NAME
 						VIRTUAL_DEVICES.push(val);
 					})
 		}
+		stepsCounter()
+		
 		_view.actualizeObjectList(_wrapper.getAvailableSegmations,
 				VIRTUAL_DEVICES)
-		_self.addNewRule()
+		stepsCounter()
+		
+		if(_self.addNewRule() != null)
+			_view.actualize()
+
+		Log('NUM OF INIT STEPS : ' + (stepsCounter() - 1))
 	}
-
-	// Step 1 - Load GUI-Ressource
-	Helpers.loadGUIContainer(function() {
-		stepsCounter()
-
-		// Step 2 - Initialize/Build WildCard - GUI
-		_view = new MainView(_self);
-		stepsCounter()
-
-		// Step 3 - LoadWrapper
-		Helpers.loadWrapper(Configuration.WRAPPER, function() {
-			_wrapper = new Wrapper();
-			cbInitWrapper()
-		})
-
-		// Step 4 - Initialize other windows
-
-		// Step 5 - Resize window
-		$(window).resize();
-		stepsCounter()
-	})
-
-	this.init = function(data) {
-		Log('# RuleDesigner.js # Init-function', 4)
-		_view.actualize();
-		$(window).resize();
-
-	};
 
 	/* END INITS */
 
@@ -98,14 +78,18 @@ function __RuleDesigner() {
 
 	/**
 	 * Function to create a new rule and adding to the interface
+	 * 
+	 * @param SYS_ID
+	 *            as Rule id [optional]
 	 */
 	this.addNewRule = function() {
 		Log('# RuleDesigner.js # addNewRule', 4)
-		var newRule = new Rule('')
-		if(_rules.addRule(newRule)){
-		_view.addRuleTab(newRule);
-		// _view.actualize();
-	}
+		var newRule = new Rule(
+				(arguments.length > 0 ? arguments[0] : 'unknown'))
+		if (_rules.addRule(newRule)) {
+			return newRule
+		}
+		return null
 	}
 
 	/**
@@ -136,11 +120,8 @@ function __RuleDesigner() {
 		return _GatherList;
 	}
 
-	/* END SERVICES */
-
 	/**
-	 * LoadRule
-	 * TODO: implements interface
+	 * LoadRule TODO: implements interface
 	 */
 	this.loadRule = function() {
 		alert("loadRule");
@@ -148,8 +129,7 @@ function __RuleDesigner() {
 	};
 
 	/**
-	 * Save rule
-	 * TODO: implements interface
+	 * Save rule TODO: implements interface
 	 */
 	this.saveRule = function() {
 		alert("saveRule");
@@ -158,8 +138,7 @@ function __RuleDesigner() {
 	};
 
 	/**
-	 * SaveAs rule
-	 * TODO: implements interface
+	 * SaveAs rule TODO: implements interface
 	 */
 	this.saveAsRule = function() {
 		alert("saveAsRule");
@@ -169,10 +148,33 @@ function __RuleDesigner() {
 
 	/**
 	 * Generates JSON-string information for displaying
+	 * 
 	 * @return JSON-string
 	 */
 	this.generateJSONString = function() {
 		return _rules.serialize();
 	};
+	/* END SERVICES */
+
+	// Initialize RuleDesigner
+	var init = function() {
+		Log('# RuleDesigner.js # Init-function', 4)
+
+		// Step 1 - Load GUI-Ressource
+		Helpers.loadGUIContainer(function() {
+			stepsCounter()
+
+			// Step 2 - Initialize/Build WildCard - GUI
+			_view = new MainView(_self);
+			stepsCounter()
+
+			// Step 3 - LoadWrapper
+			Helpers.loadWrapper(Configuration.WRAPPER, function() {
+				_wrapper = new Wrapper();
+				cbInitWrapper()
+			})
+
+		})
+	}()
 
 };

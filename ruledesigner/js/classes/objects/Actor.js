@@ -8,7 +8,38 @@ var Actor = function(id) {
 	var _model = new ActorModel(_self, id)
 
 	var _view = new ActorView(_self)
-
+	
+	/**
+	 * This function is looking for an device with SYS_ID
+	 * @param SYS_ID - internal id
+	 * @return object if found, else null
+	 */
+	this.search = function(SYS_ID){
+		// Proof this object
+		if (this.SYS_ID == SYS_ID) {
+			return _self
+		}
+	}
+	
+	/**
+	 * Removes all recursive includes Elements
+	 * @return true, if success
+	 */
+	this.removeElements = function(){
+		var bool = true
+		
+		var paramObj = _model.getParamObj()
+		
+		if (bool) {
+			delete paramObj
+		}
+		
+		if(typeof paramObj !== 'undefined')
+			return false
+			
+		return bool
+	}
+		
 	/**
 	 * Function to generate the HTML-Output return HTML-string
 	 */

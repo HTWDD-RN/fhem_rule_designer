@@ -1,49 +1,48 @@
 /*
  * Toolbar
  */
-
 #rd_toolbar {
 	overflow-y: hidden;
 	overflow-x: visible;
+	display: block;
 }
 
-#rd_toolbar > li {
+#rd_toolbar>li {
 	padding: 0;
 	margin: 0;
 	padding: 5px 3px 5px 5px;
 	width: 120px;
-	height: 75px;
-	display: inline-table;
+	height: 50px;
 	vertical-align: top;
 	overflow: hidden;
+	display: inline-block;
 }
 
-#rd_toolbar > li > * {
+#rd_toolbar>li>* {
 	padding: 0;
 	margin: 0;
-	display: table-cell;
+	display: block;
 	vertical-align: middle;
 	height: 100%;
 	width: 100%;
 }
 
-
-#imgTrash {
- 
+#rd_toolbar>li>*.ui-state-default {
+	border-color: #AAAAAA;
 }
 
 #rd_toolbar label {
 	margin-right: 5px;
 }
 
-#rd_toolbar button span{
+#rd_toolbar button span {
 	padding-left: 50px;
 	font-weight: bold;
-    vertical-align: middle;
-	padding:10px 5px 10px 45px;
+	vertical-align: middle;
+	padding: 10px 5px 10px 45px;
 }
 
-#rd_toolbar button span, #imgTrash.ui-droppable div {
+#rd_toolbar button span, #trash div {
 	background: url(../images/sprite.png) no-repeat top left;
 }
 
@@ -51,7 +50,7 @@ button#btnNew span {
 	background-position: 6px 1px;
 }
 
-button#btnLoad span{
+button#btnLoad span {
 	background-position: 6px -339px;
 }
 
@@ -60,23 +59,23 @@ button#btnSave span {
 }
 
 button#btnSaveAs span {
-	background-position: 6px -129px;
+	background-position: 6px -133px;
 }
 
-#imgTrash.ui-droppable div {
+#trash div {
 	padding: 2px 0;
 	height: 100%;
 	width: 100%;
-	background-position: 6px -194px;
+	background-position: 6px -201px;
 }
 
-#imgTrash.ui-droppable span {
+#trash span {
 	background-color: #FEFEFE;
 	border: 2px dotted #ddd;
 	height: 100%;
 	width: 65px;
 	margin-right: 5px;
-	display:block;
+	display: block;
 	padding: 5px;
 	float: right;
 }
@@ -84,7 +83,6 @@ button#btnSaveAs span {
 /*
  * Draggbar
  */
-
 #rd_draggbar {
 	overflow-y: scroll;
 }
@@ -96,23 +94,16 @@ button#btnSaveAs span {
 
 #rd_draggbar li {
 	margin: 2px 0 0 5px;
+	display: inline-block;
 }
 
 #rd_draggbar hr {
 	margin: 5px 0 2px;
 }
 
-
-@media ( min-width : 720px) {
-	#rd_draggbar ul li.ui-objlist-body {
-		display: inline-block;
-	}
-}
-
 /*
  * Draggbar - Object list
  */
-
 .ui-objlist li {
 	height: 25px;
 	margin: 3px;
@@ -154,35 +145,32 @@ ul#gathers li.ui-objlist-body {
 
 .ui-objlist li.ui-objlist-head {
 	background-color: #e8e8e8;
-	font-size: 1.5em;
 	text-align: center;
 }
-
 
 /*
  * Object field
  */
-
 #rd_rules>div {
 	overflow: scroll;
 	padding: 18px;
 }
 
-#rd_rules li span.ui-icon { /* Tab - Leiste*/
+#rd_rules li span.ui-icon {
 	display: block;
 	float: right;
 	margin: 0 0 0 0.3em;
-	cursor: pointer;
 }
 
-#rd_rules ul.obj_rule 
-{
+#rd_rules ul.obj_rule {
 	display: table;
-	height: 100%;:
+	height: 100%;
+	width: 100%;
 	position: relative;
 }
 
-#rd_rules ul.obj_rule > li { /* Inline-Darstellung des Aktoren/Sensoren-Bereich, max. Höhe */
+#rd_rules ul.obj_rule>li {
+	/* Inline-Darstellung des Aktoren/Sensoren-Bereich, max. Hoehe */
 	display: table-cell;
 	list-style: none;
 	border: 2px dashed #666;
@@ -193,18 +181,18 @@ ul#gathers li.ui-objlist-body {
 	z-index: 1;
 }
 
-#rd_rules ul.obj_rule > li:first-child {
+#rd_rules ul.obj_rule>li:first-child {
 	text-align: right;
 }
 
-#rd_rules ul.obj_rule > li.vdev { /* Anordnung der zentralen Virtual-Device Box*/
+#rd_rules ul.obj_rule>li.vdev {
+	/* Anordnung der zentralen Virtual-Device Box*/
 	display: block;
 	position: absolute;
 	height: 75px;
-	width: 120px;
+	width: 180px;
 	left: 50%;
-	margin-left: -72px;
-	border: 2px dashed #666;
+	margin-left: -90px;
 	background-color: #fff;
 	z-index: 2;
 	text-align: center;

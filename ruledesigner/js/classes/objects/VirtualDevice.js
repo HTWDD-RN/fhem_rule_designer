@@ -13,7 +13,34 @@ var VirtualDevice = function(type) {
 	var _model = new VirtualDeviceModel(_self, type, asReference)
 
 	var _view = new VirtualDeviceView(_self)
-
+	
+	/**
+	 * This function is looking for an device with SYS_ID
+	 * @param SYS_ID - internal id
+	 * @return object if found, else null
+	 */
+	this.search = function(SYS_ID){
+		if (this.SYS_ID == SYS_ID) {
+			return _self
+		}
+		return null
+	}
+	
+	/**
+	 * Removes all recursive includes Elements
+	 * @return true, if success
+	 */
+	this.removeElements = function(){
+		
+		var paramObj = _model.getParamObj()
+		delete paramObj
+		
+		if(typeof paramObj !== 'undefined')
+			return false
+			
+		return true
+	}
+	
 	/**
 	 * Function to generate the HTML-Output return HTML-string
 	 */
@@ -51,6 +78,7 @@ var VirtualDeviceModel = function(controller, id, asReference) {
 	this.getID = function() {
 		return _id
 	}
+
 
 	/**
 	 * Returns a flag value if it true the vdev can add to conditions

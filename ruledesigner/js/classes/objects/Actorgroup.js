@@ -14,6 +14,52 @@ var Actorgroup = function() {
 	var _view = new ActorgroupView(_self)
 
 	/**
+	 * This function is looking for an device with SYS_ID
+	 * 
+	 * @param SYS_ID -
+	 *            internal id
+	 * @return object if found, else null
+	 */
+	this.search = function(SYS_ID) {
+		// Proof this object
+		if (this.SYS_ID == SYS_ID) {
+			return _self
+		}
+
+		// Proof VirtualDevice-object
+		var obj = _model.getVirtualDevice()
+		if (obj != null && obj.search(SYS_ID) != null) {
+			return obj
+		}
+
+		// Forall actors-objects
+		var actors = _model.getActors()
+		for ( var key in actors) {
+			if ((obj = actors[key].search(SYS_ID)) != null)
+				return obj
+		}
+
+		return null
+	}
+	
+	/**
+	 * Removes all recursive includes Elements
+	 * 
+	 * @return true, if success
+	 */
+	this.removeElements = function() {
+		var bool = true
+
+		if (!_model.getVirtualDevice().removeElements())
+			bool = false
+
+		if (!_model.getActors().removeElements())
+			bool = false
+
+		return bool
+	}
+	
+	/**
 	 * Function to generate the HTML-Output return HTML-string
 	 */
 	this.display = function() {
@@ -25,7 +71,7 @@ var Actorgroup = function() {
 	// for (var n = 0; n < keys.length; n++) {
 	// eval('_self.' + keys[n] + ' = _model.' + keys[n])
 	// }
-	for (var key in _model) {
+	for ( var key in _model) {
 		eval('_self.' + key + ' = _model.' + key)
 	}
 
@@ -111,7 +157,9 @@ var ActorgroupModel = function(controller) {
 			tmp['VDEV'] = _virtual_device.toJSON()
 			tmp['ACTORS'] = _actors.toJSON()
 		}
-		return {'ACTORGROUP' : tmp}
+		return {
+			'ACTORGROUP' : tmp
+		}
 	}
 
 }

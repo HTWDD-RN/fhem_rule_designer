@@ -34,5 +34,8 @@ QUnit.test( "Test Actor-object (js/classes/objects/Actor.js)", function( assert 
 	assert.ok(obj.removeParam('state'),'removeParam: state')
 	assert.equal(obj.removeParam('state'),false,'removeParam: fail state')
 	assert.ok(obj.setParameter(JSON.parse(JSON.stringify(test_params))),'setparameter')
+			
+	var SYS_ID = obj.SYS_ID
+	assert.strictEqual(obj.search(SYS_ID), obj, 'search: Test own ID')
 
 })

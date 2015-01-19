@@ -10,6 +10,49 @@ var Condition = function(id) {
 	var _view = new ConditionView(_self)
 
 	/**
+	 * This function is looking for an device with SYS_ID
+	 * @param SYS_ID - internal id
+	 * @return object if found, else null
+	 */
+	this.search = function(SYS_ID){
+		// Proof this object
+		if (this.SYS_ID == SYS_ID) {
+			return _self
+		}
+		
+		// Proof VirtualDevice-object
+		var obj =_model.getVirtualDevice()
+		if(obj != null && obj.search(SYS_ID) != null){
+				return obj
+		}
+		return null
+	}
+	
+	/**
+	 * Removes all recursive includes Elements
+	 * @return true, if success
+	 */
+	this.removeElements = function(){
+		var bool = true
+		
+		var paramRefObj = _model.getRefParamObj()
+		
+		var vdev = _model.getVirtualDevice()
+		if(!vdev.removeElements())
+				bool = false
+		
+		if (bool) {
+			delete vdev
+			delete paramRefObj
+		}
+		
+		if(typeof (_model.getRefParamObj() !== 'undefined')||(typeof _model.getVirtualDevice() !== 'undefined'))
+			return false
+			
+		return bool
+	}
+	
+	/**
 	 * Function to generate the HTML-Output return HTML-string
 	 */
 	this.display = function() {

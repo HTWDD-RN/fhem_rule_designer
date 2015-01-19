@@ -104,12 +104,30 @@ function __RuleDesigner() {
 	/**
 	 * Function to removes a rule object
 	 */
-	this.deleteRule = function(SYS_ID) {
+	this.removeRule = function(SYS_ID) {
 		Log('# RuleDesigner.js # deleteRule (SYS_ID: ' + SYS_ID + ')', 4)
 		// TODO - Verknuepfungen in anderen Objekten loeschen
-		_rules.deleteRule(SYS_ID)
-		view.actualize(); // actualize view ...
+		if(_rules.removeRule(SYS_ID)){
+				_view.actualize(); // actualize view ...
+				return true
+		}
+		return false
 	};
+	
+	/**
+	 * 
+	 */
+	this.removeElement = function(){
+		var obj = rules.search(SYS_ID)
+		if (obj != null){
+			obj.unset()
+			delete obj // Use for deleting keys, global und local environment vars
+			if(obj != undefined) // Use for deleting vars from variable environment
+				obj = undefined
+			return true
+		}
+		return false
+	}
 
 	/**
 	 * @deprecated Function to commit the information about the available

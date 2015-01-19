@@ -449,7 +449,9 @@ function MainView(_controller) {
 	 * @return true, if succeed
 	 */
 	this.removeElement = function(SYS_ID){
-		
+		if(!_controller.removeRule(SYS_ID)) {// If SYS_ID not a rule
+			_controller.removeElement(SYS_ID)
+		}
 	}
 
 	this.reset = function() {

@@ -21,6 +21,24 @@ function Rules() {
 		return  JSON.stringify(_model.toJSON(), null, 3)
 	}
 
+	/**
+	 * This function is looking for an device with SYS_ID
+	 * 
+	 * @param SYS_ID -
+	 *            internal id
+	 * @return object if found, else null
+	 */
+	this.search = function(SYS_ID) {
+		var obj = null
+		var rules = _model.getRules()
+		for (var key in rules){
+			obj = rules[key].search(SYS_ID)
+			if(obj != null)
+				break
+		}
+		return obj
+	}
+	
 	return function() {
 		if (_instance === undefined || _instance == null) {
 			_instance = _self // not this!!! - it returns the rule designer
@@ -91,9 +109,11 @@ function RulesModel(controller, id) {
 	 */
 	this.removeRule = function(SYS_ID) {
 		if ((SYS_ID instanceof Rule) && SYS_ID.SYS_ID in _rules) {
+			_rules[SYS_ID.SYS_ID].unset()
 			delete _rules[SYS_ID.SYS_ID]
 			return true
 		} else if (SYS_ID in _rules) {
+			_rules[SYS_ID].unset()
 			delete _rules[SYS_ID]
 			return true
 		}

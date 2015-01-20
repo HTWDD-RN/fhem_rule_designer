@@ -1,5 +1,5 @@
 function printListOfSensors() {
-	var url = "http://localhost:8083/fhem?cmd=jsonlist2&XHR=1";
+	var url = FHEM_URL+"?cmd=jsonlist2&XHR=1";
 	$.getJSON( url, function( data ) {
 		$.each( data.Results, function( i, item ) {
 			var cnt = $.map(item.Readings, function(n, i) { return i; }).length;
@@ -16,7 +16,7 @@ function printListOfSensors() {
 
 function printSensor() {
 	var device = $( "#input_sensors option:selected" ).attr("Name");
-	var url = 'http://localhost:8083/fhem?cmd=jsonlist2%20'+device+'&XHR=1';
+	var url = FHEM_URL+'?cmd=jsonlist2%20'+device+'&XHR=1';
 
 	$.getJSON( url, function( data ) {
 		var device = data.Results[0];
@@ -59,7 +59,7 @@ function printSensor() {
 }
 
 function printListOfActors() {
-	var url = "http://localhost:8083/fhem?cmd=jsonlist2&XHR=1";
+	var url = FHEM_URL+"?cmd=jsonlist2&XHR=1";
 	$.getJSON( url, function( data ) {
 		$.each( data.Results, function( i, item ) {
 			var cnt = item.PossibleSets.split(" ").length;
@@ -77,7 +77,7 @@ function printListOfActors() {
 
 function printActor() {
 	var device = $( "#input_actors option:selected" ).attr("Name");
-	var url = 'http://localhost:8083/fhem?cmd=jsonlist2%20'+device+'&XHR=1';
+	var url = FHEM_URL+'?cmd=jsonlist2%20'+device+'&XHR=1';
 
 	$.getJSON( url, function( data ) {
 		var device = data.Results[0];
@@ -119,10 +119,86 @@ function printRule() {
 }
 
 function postRule(rule) {
-	var url = "http://localhost:8083/fhem/ruledesigner?q=define";
+	var url = CGI_RUL+"?q=define";
 	var data = "json="+encodeURIComponent(rule);
 	
 	$.post(url, data, function() {
-		$("#rule_text").text(rule);
+		//$("#rule_text").text(rule);
+	});
+}
+
+
+
+function refresh() {
+	$('#rulelist').text("");
+	loadRulelist();
+}
+
+function activateRule(ruleID) {
+	var url = CGI_RUL+"?q=activate";
+	var data = "id="+encodeURIComponent(ruleID);
+	
+	$.post(url, data, function() {});
+	
+	refresh();
+}
+
+function deactivateRule(ruleID) {
+	var url = CGI_RUL+"?q=deactivate";
+	var data = "id="+encodeURIComponent(ruleID);
+	
+	$.post(url, data, function() {});
+	
+	refresh();
+}
+
+function deleteRule(ruleID) {
+	var url = CGI_RUL+"?q=delete";
+	var data = "id="+encodeURIComponent(ruleID);
+	
+	$.post(url, data, function() {});
+	
+	refresh();
+}
+
+function loadRulelist() {
+	var url = CGI_RUL+"?q=rulelist";
+	
+	$.getJSON( url, function( data ) {
+		//$("#rulelist").text(data);
+		$.each( data, function( i, item ) {
+				var state;
+				var stateclass;
+			
+				switch(item.STATE) {
+			    case "1":
+			        state = "aktiv";
+			        stateclass = "active";
+			        break;
+			    case "0":
+			    	state = "deaktiviert";
+			    	stateclass = "deactive";
+			        break;
+			    default:
+			    	state = "undefiniert";
+			    	stateclass = "conflict";
+				} 
+			
+				var template = '<div class="rule">';
+				template += '<p class = "rulename '+stateclass+'">'+ item.NAME +' ('+ state +')</p>';
+				template += '<p class = "ruledescription">'+ item.DESCRIPTION +'</p>';
+				template += '<p class = "rulelistmenu">';
+				template += '<span>bearbeiten</span>';
+				
+				if(item.STATE == "1")
+					template += '<span onclick="deactivateRule(\''+ item.NAME +'\')">deaktivieren</span>';
+				
+				if(item.STATE == "0")
+					template += '<span onclick="activateRule(\''+ item.NAME +'\')">aktivieren</span>';
+				
+				template += '<span onclick="deleteRule(\''+ item.NAME +'\')">löschen</span>';
+				template += '</p></div>';
+				$(template).appendTo( "#rulelist" );
+			})
 	});
 }

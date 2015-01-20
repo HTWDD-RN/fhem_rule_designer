@@ -64,6 +64,15 @@ section .hint {
 	padding: 10px;
 }
 
+section select {
+	margin: 10px;
+}
+
+section select option {
+	padding: 10px 20px 10px 20px;
+	min-width: 200px;	
+}
+
 section .label {
 	font-weight: bold;
 	color: #072E97;
@@ -107,4 +116,40 @@ section .label {
 #finish_btn:hover  {
 	background-color: #1A4EDB;
 	border-color: #052375;
+}
+
+div.rule {
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+	border-bottom: 1px solid gray;
+}
+
+p.rulename {
+	font-weight: bold;
+}
+
+p.ruledescription { 
+	margin-bottom: 10px;
+	margin-top: 3px;
+}
+
+p.rulelistmenu span {
+	margin-right: 15px;
+	color: blue;
+}
+
+p.rulelistmenu span:hover {
+	text-decoration: underline;
+}
+
+.active {
+	color: green;
+}
+
+.deactive {
+	color: gray;
+}
+
+.conflict {
+	color: red;
 }

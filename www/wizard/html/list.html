@@ -4,11 +4,10 @@
 	<link rel="stylesheet" type="text/css" href="../css/main.css" />
 	
 	<script src="../lib/jquery-2.1.3.js"></script>
+	<script src="../js/configuration.js"></script>
 	<script src="../js/functions.js"></script>
-	<script src="../js/FormGetter.js"></script>
-	<script src="../js/rule.js"></script>
 </head>
-<body>
+<body onload="loadRulelist()">
 
 	<header>
 		<h1>FHEM Regel Wizard</h1>
@@ -29,14 +28,17 @@
 	</section>
 
 	<section id="rulelist">
-		<script type="text/javascript">
-			var url = "http://localhost:8083/fhem/ruledesigner?q=rulelist";
-			$.getJSON( url, function( data ) {
-				//$("#rulelist").text(data);
-				$.each( data, function( i, item ) {
-					$( "<div>" ).text( item ).appendTo( "#rulelist" );})
-			});
-		</script>
+<!-- 
+			<div class="rule">
+				<p class = "rulename">Rule Name (aktiv)</p>
+				<p class = "ruledescription">Beschreibung der Regel</p>
+				<p class = "rulelistmenu">
+					<span>bearbeiten</span>
+					<span>aktivieren / deaktivieren</span>
+					<span>löschen</span>
+				</p>
+			</div>
+ -->		
 	</section>
 </body>
 </html>

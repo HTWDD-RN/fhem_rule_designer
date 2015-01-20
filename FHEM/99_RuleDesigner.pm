@@ -1,18 +1,37 @@
 ﻿##############################################################################
-#	FHEM Modul zur Erstellung von Regeln, mit Hilfe eines grafischen Editors.
-#	
-#	Dokumentation: http://www2.htw-dresden.de/~wiki_sn/index.php5/FHEM/Regelerstellung#FHEM_Modul
+#	The RuleDesigner Modul
+#	- receives rule description,
+#	- manages this rules within in a local database,
+#	- and compiles the received rule description into FHEM rules.
 #
-#	HTW Dresden
-#	Forschungsseminar Sensornetze 2014-2015
-#	Felix Pistorius
+#	The source code is segmented into the following secitons
+#	- FHEM MODULE FUNCTIONS
+#	- CGI
+#	- RULE REPOSITORY
+#	- RULE COMPILER
+#	
+#	Documentation: http://www2.htw-dresden.de/~wiki_sn/index.php5/FHEM/Regelerstellung#FHEM_Modul
+#
+#		 __    __  ________  __       __        _______   _______  
+#		|  \  |  \|        \|  \  _  |  \      |       \ |       \ 
+#		| $$  | $$ \$$$$$$$$| $$ / \ | $$      | $$$$$$$\| $$$$$$$\
+#		| $$__| $$   | $$   | $$/  $\| $$      | $$  | $$| $$  | $$
+#		| $$    $$   | $$   | $$  $$$\ $$      | $$  | $$| $$  | $$
+#		| $$$$$$$$   | $$   | $$ $$\$$\$$      | $$  | $$| $$  | $$
+#		| $$  | $$   | $$   | $$$$  \$$$$      | $$__/ $$| $$__/ $$
+#		| $$  | $$   | $$   | $$$    \$$$      | $$    $$| $$    $$
+#		 \$$   \$$    \$$    \$$      \$$       \$$$$$$$  \$$$$$$$ 
+#
+#		HTW Dresden
+#		Forschungsseminar Sensornetze 2014-2015
+#		Felix Pistorius
+#
 #﻿#############################################################################
 package main;
 use strict;
 use warnings;
 
 
-#use HttpUtils;
 use DBI;
 use Switch 'Perl5', 'Perl6';
 use Net::Telnet;
@@ -22,17 +41,12 @@ use Data::Dumper;
 use vars qw(%data);
 
 
-# Module-Functions
-#sub RuleDesigner_Initialize($);
-#sub RD_define();
-
-# Functions
-#sub RD_CGI_Definerule($);
-
 # Variables
-my $name = "wizard";#"ruledesigner";
-my $url = "/". $name;
+my $MODULE_NAME = "wizard";#"ruledesigner";
+my $url = "/". $MODULE_NAME;
 my $contenttype = "application/json; charset=UTF-8";
+my $fhemhost = 'localhost';
+my $fhemport = '8083';
 
 
 ################################################################################
@@ -44,8 +58,8 @@ RuleDesigner_Initialize($)
 	my ($hash) = @_;
 	$hash->{DefFn} = "RD_define";
 	
-	$data{FWEXT}{$url}{LINK} = $name ."/index.html";
-	$data{FWEXT}{$url}{NAME} = $name;#"Rule Designer";
+	$data{FWEXT}{$url}{LINK} = $MODULE_NAME."/index.html";
+	$data{FWEXT}{$url}{NAME} = $MODULE_NAME;
 	$data{FWEXT}{$url}{FUNC} = "RD_CGI";
 	
 	RD_Repo_Init();
@@ -54,20 +68,20 @@ RuleDesigner_Initialize($)
 ################################################################################
 # CGI
 ################################################################################
+# handles all cgi requests for the rule designer modul
 sub
 RD_CGI()
 {
 	my ($htmlargs) = @_;
 	my ($json_ret) = "";
 	my $query = "";
-	my $text = "";
 	my %rule;
 	my $regexop = undef;
 	
-	if($htmlargs =~ /ruledesigner\?/) {
+	if($htmlargs =~ /$MODULE_NAME\?/) {
 		# URL contains HTTP GET parameters
 		$regexop = '[^\?]+\?(.*)';
-	} elsif($htmlargs =~ /ruledesigner\&/) {
+	} elsif($htmlargs =~ /$MODULE_NAME\&/) {
 		# URL contains HTTP POST parameters
 		$regexop = '[^\&]+\&(.*)';
 	}
@@ -79,41 +93,83 @@ RD_CGI()
 			given ($k) {
 				when 'q'		{ $query = $a; }
 				when 'json'		{ $rule{'json'} = urlDecode($a); }
+				when 'id'		{ $rule{'id'} = urlDecode($a); }
 			}
 		}
 		
 		given ($query) {
 			when 'devicelist'	{ $json_ret = RD_CGI_Devicelist(); }
 			when 'rulelist'		{ $json_ret = RD_Repo_Rulelist(); }
-			when 'define'		{ 
-				$json_ret = RD_CGI_Definerule(%rule); 
-			}
-			default				{ $json_ret = '{"type": "error", "msg": "unsupported query: '.$query.'"}'; }
+			when 'define'		{ $json_ret = RD_CGI_Definerule(%rule);	}
+			when 'delete'		{ RD_CGI_DeleteRule(%rule) }
+			when 'deactivate'	{ RD_CGI_DeactivateRule(%rule) }
+			when 'activate'		{ RD_CGI_ActivateRule(%rule) }
+			default				{ $json_ret = '{"TYPE": "Error", "Message": "Unsupported query: '.$query.'"}'; }
 		}
 		
 	} else {
-		$json_ret = '{"type": "error", "msg": "query was empty"}';
+		$json_ret = '{"TYPE": "Error", "Message": "Query was empty."}';
 	}
 
 	return ($contenttype, $json_ret);
 }
 
+# handles rule deletion requests
+sub RD_CGI_DeleteRule
+{
+	my %attr = @_;
+	
+	RD_Repo_DeleteRule($attr{'id'});
+	RD_Telnet("delete ".$attr{'id'});
+}
+
+# handles rule deactivation requests
+sub RD_CGI_DeactivateRule
+{
+	my %attr = @_;
+	
+	# state = 0 -> rule deactivated
+	my $state = 0;
+	
+	RD_Repo_SetState($attr{'id'}, $state);
+	RD_Telnet("delete ".$attr{'id'});
+}
+
+# handels rule activation requests
+sub RD_CGI_ActivateRule
+{
+	my %attr = @_;
+	
+	# state = 1 -> rule activated
+	my $state = 1;
+	
+	RD_Repo_SetState($attr{'id'}, $state);
+	
+	my $json = decode_json( RD_Repo_GetRule($attr{'id'}) );
+	my %rule = %{ parseRule($json) };
+
+	RD_Telnet($rule{'RULE'});
+}
+
+# returns a URL for a json list with all FHEM devices as json object.
 sub
 RD_CGI_Devicelist()
 {
-	my $json_ret = '{"type": "url"';
-	# TODO: get real hostname
-	$json_ret .= ', "msg":"localhost:8083/fhem?cmd=jsonlist2&XHR=1"';
+	my $json_ret = '{"TYPE": "URL"';
+	$json_ret .= ', "msg":"'.$fhemhost.':'.$fhemport.'/fhem?cmd=jsonlist2&XHR=1"';
 	$json_ret .= '}';
 	
 	return $json_ret;
 }
 
+# handles a transmitted rule description:
+# - call the rule parser
+# - insert the rule into the rule repository
+# - sned the generated rule to FHEM
 sub
 RD_CGI_Definerule
 {
 	my %attr = @_;
-	my $rule = "";
 
 	if ($attr{'json'}) {
 
@@ -121,167 +177,197 @@ RD_CGI_Definerule
 		my @json = @{$json_ref};
 
 		for (values @json) {
-			$rule = parseRule($_);
-			Log3 $name, 5, 'RD_CGI_Definerule -> $rule: '.$rule;
-			RD_Telnet($rule);
+			my %rule = %{ parseRule($_) };
+			$rule{'JSON'} = encode_json($_);
+			$rule{'STATE'} = 1;
+			
+			Log3($MODULE_NAME, 3, "generated rule: $rule{'RULE'}");
+			
+			RD_Repo_Insert(%rule);
+			RD_Telnet($rule{'RULE'});
 		}
 		
-		return $rule;
-	} else {
-		return "error: no rule";
+		return '{"TYPE":"Info", "Message":"Success."}';
 	}
-	$attr{"rule"} = $rule;
-	
-	my $json_ret = '{"type": "definerule"';
-	$json_ret .= ', "rule": "'.$rule.'"';
-	$json_ret .= '}';
-	
-	#&RD_Repo_Insert(\%attr);
-	RD_Telnet($rule);
-	
-	return $json_ret;
+
+	return '{"TYPE":"Error", "Message":"No rule."}';
 }
 
 ################################################################################
 # RULE REPOSITORY
 ################################################################################
-my $dns = "DBI:SQLite:dbname=/tmp/rulerepository.sqlite.db";
-
+# connect to the database
 sub DBH
 {
+	my $dns = "DBI:SQLite:dbname=./rulerepository.sqlite.db";
+	
 	my $dbh = DBI->connect($dns, "", "", 
 		{	RaiseError => 1,
 			PrintError => 1,
 			AutoCommit => 1
-		}) or die "Oops: $DBI::errstr\n";
+		}) or Log3 $MODULE_NAME, 1, "RuleDesigner can't connect to the database." and return;
 		
 	return $dbh;
 }
 
+# initialised the database with all tables
 sub RD_Repo_Init()
 {
 	my $dbh = DBH();
 	
-	my $create_table_rule = 'CREATE TABLE  IF NOT EXISTS rule (ID INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(20), json VARCHAR(200))';
-	#my $create_table_device = 'CREATE TABLE  IF NOT EXISTS device (ID INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(20))';
-	#my $create_table_devicelist = 'CREATE TABLE  IF NOT EXISTS devicelist (ruleID INTEGER, deviceID INTEGER)';
+	my $create_table_rule = 'CREATE TABLE IF NOT EXISTS rule 
+	(ID INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(20), json VARCHAR(1000), description VARCHAR(500), state INTEGER)';
 
-	$dbh->do($create_table_rule) or die "CAN'T CREATE TABLE 'RULE': " .$dbh->errstr();
-	#$dbh->do($create_table_device) or die "CAN'T CREATE TABLE 'DEVICE': " .$dbh->errstr();
-	#$dbh->do($create_table_devicelist) or die "CAN'T CREATE TABLE 'DEVICELIST': " .$dbh->errstr();
+	$dbh->do($create_table_rule) or Log3($MODULE_NAME, 1, "CAN'T CREATE TABLE 'RULE': $dbh->errstr()");
 	
 	$dbh->disconnect();
 }
 
+# insert a rule into the database
 sub RD_Repo_Insert	
 {
-	#my %attr = %{(shift)};
-	my ($name, $json) = @_;
-	
+	my %rule = @_;
 	my $dbh = DBH();
 	
-	
-#	my $cnt = $dbh->do("SELECT count(*) FROM device WHERE name LIKE \"$attr{'device'}\"");
-	
-#	if ($cnt == 0) {
-#		$dbh->do("INSERT INTO device (name) VALUES (\"$attr{'device'}\")")
-#			or die "RD_Repo_Insert (device): ". $dbh->errstr();
-#	}
-	
-#	$dbh->do("INSERT INTO rule (name, json) VALUES (\"$attr{'name'}\",\"$attr{'rule'}\")") 
-#		or die "RD_Repo_Insert (rule): ". $dbh->errstr();
-
-	$dbh->do("INSERT INTO rule (name, json) VALUES (\"$name\",\"$json\")") 
-		or die "RD_Repo_Insert (rule): ". $dbh->errstr();
+	my $sth = $dbh->prepare("INSERT INTO rule (name, json, description, state) VALUES (?,?,?,?)");
+	$sth->execute($rule{'ID'}, $rule{'JSON'}, $rule{'PARAMS'}{'descr'},$rule{'STATE'});
 	
 	$dbh->disconnect();
 }
 
+# proof if rule id already exists
 sub RD_Repo_IfExists
 {
 	my ($name) = @_;
 	my $dbh = DBH();
 	
 	my $cnt = $dbh->selectrow_array("SELECT count(*) FROM rule WHERE name LIKE \"$name\"") 
-		or die "RD_Repo_IfExists: ". $dbh->errstr();
+		or Log3($MODULE_NAME, 1, "RD_Repo_IfExists: $dbh->errstr()");
 	
 	$dbh->disconnect();
 	
 	return $cnt;
 }
 
+# generates a json object with all managed rule ID's
 sub RD_Repo_Rulelist
 {
 	my $dbh = DBH();
 	
 	my @values;
+	my $r;
 	
-	my $sth = $dbh->prepare("SELECT name FROM rule");
-	$sth->execute() or die "RD_Repo_Rulelist: ". $dbh->errstr();
-	while(my @row = $sth->fetchrow_array()) {
-		push(@values, '"'.$row[0].'"');
+	my $sth = $dbh->prepare("SELECT name, description, state FROM rule");
+	
+	if ($sth->execute()) {
+		
+		while(my @row = $sth->fetchrow_array()) {
+			push(@values, '{"NAME":"'.$row[0].'","DESCRIPTION":"'.$row[1].'","STATE":"'.$row[2].'"}');
+		}
+		
+		$r = "[". join(',', @values) ."]";
+	} else {
+		Log3($MODULE_NAME, 1, "RD_Repo_Rulelist: $dbh->errstr()");
+		$r = '{"TYPE":"Error", "Message":"Database Error (Rulelist)"}';
 	}
 	
 	$dbh->disconnect();
 	
-	return "[". join(',', @values) ."]";
+	return $r;
+}
+
+# update the state of a rule
+# possible states:
+# -1 : not define
+#  0 : deactivated
+#  1 : active
+sub RD_Repo_SetState
+{
+	my ($id, $state) = @_;
+	
+	my $dbh = DBH();
+	my $sth = $dbh->prepare("UPDATE rule SET state = ? WHERE name is ?");
+	
+	$sth->execute($state, $id) or Log3($MODULE_NAME, 1, "RD_Repo_SetState: $dbh->errstr()");
+	
+	$dbh->disconnect();
+}
+
+# delete a record of a rule by the rule name
+sub RD_Repo_DeleteRule
+{
+	my ($id) = @_;
+	my $dbh = DBH();
+	
+	my $sth = $dbh->prepare("DELETE FROM rule WHERE name IS ?");
+	
+	$sth->execute($id) or Log3($MODULE_NAME, 1, "RD_Repo_DeleteRule: $dbh->errstr()");
+	
+	$dbh->disconnect();
+}
+
+# get the json representation of a rule
+sub RD_Repo_GetRule
+{
+	my ($id) = @_;
+	my $dbh = DBH();
+	
+	my $r = "";
+	
+	my $sth = $dbh->prepare("SELECT json FROM rule WHERE name IS ?");
+	
+	if ($sth->execute($id)) {
+		my @row = $sth->fetchrow_array();
+		$r = $row[0];
+	} else {
+		Log3($MODULE_NAME, 1, "RD_Repo_DeleteRule: $dbh->errstr()");
+	}
+	
+	
+	$dbh->disconnect();
+	
+	return $r;
 }
 
 ################################################################################
 # RULE COMPILER
 ################################################################################
+# start function to parse the rule description and to build the FHEM rule
+# returns a hash value with all parsed elements (id, conditions, actions)
+#	and the fhem rule itself.
 sub parseRule
 {
 	my ($ref) = @_;
 	my %rule = %$ref;
-	#return Dumper($rule);
-	my $id		= undef;
-	my $params	= undef;
-	my $cond	= undef;
-	my $action	= undef;
-	my $vdef	= undef;
-	
+	my %res;
+
 	for (keys %rule) {
 		given ($_) {
 			when 'ID' {
-				$id = $rule{$_}; 
+				$res{'ID'} = $rule{$_}; 
 			}
-			#when 'PARAMS' {
-			#	$params = parseParams($v);
-			#}
+			when 'PARAMS' {
+				#$res{'PARAMS'} = parseParams($rule{$_});
+				$res{'PARAMS'} = $rule{$_};
+			}
 			when 'COND'	{
-				$cond = parseCond($rule{$_});
+				$res{'COND'} = parseCond($rule{$_});
 			}
 			when 'ACTION' {
-				$action = parseActionArray($rule{$_});
+				$res{'ACTION'} = parseActorList($rule{$_});
 			}
 			when 'VDEV' {
-				$vdef = undef;
+				# TODO: 
 			}
 		}
 	}
 	
-	my $r = "define ";
-	$r .= $id;
-	$r .= $cond;
-	$r .= $action;
-	$r .= '}';
+	$res{'RULE'} = "define ".$res{"ID"}.$res{'COND'}{'RULE'}.$res{'ACTION'}."}";
 	
-	RD_Repo_Insert($id, "");
-	
-	return $r;
+	return \%res;
 }
 
-#
-# Parse params rule
-# <params> -> <param> (<param>)*
-# <param> -> <PARAM> <VALUE>
-sub parseParams
-{
-	return "";
-}
-
-#
+# Parse rule:
 # <conditions> -> <condition> | <gather>
 sub parseCond
 {
@@ -291,15 +377,16 @@ sub parseCond
 	
 	if($cond{'SENSOR'} && $cond{'PARAMS'}) {
 		%res = %{ parseCondition($ref) };
-		return ' notify ('.$res{'name'}.') { '. $res{'dec'} .' if ('.$res{'params'}.')';
+		$res{'RULE'} = ' notify ('.$res{'name'}.') { '. $res{'dec'} .' if ('.$res{'params'}.')';
+		return \%res;
 	}
 
 	%res = %{parseGather($ref)};
-	
-	return ' notify '.$res{'names'}.' { '. $res{'decs'} .' if ('.$res{'params'}.')';
+	$res{'RULE'} = ' notify '.$res{'names'}.' { '. $res{'decs'} .' if ('.$res{'params'}.')';
+	return \%res;
 }
 
-#
+# Parese rule:
 # <conditions> -> <condition> | <gather>
 sub parseGatherCond
 {
@@ -317,7 +404,7 @@ sub parseGatherCond
 	return \%res;
 }
 
-#
+# Parse rule:
 #	<condition>	->	"SENSOR" : ID, 
 #					"REF_PARAMS" : {<ref_param>(, <ref_param>)?}
 sub parseCondition
@@ -348,7 +435,7 @@ sub parseCondition
 	return \%condition;
 }
 
-#
+# Parse rule:
 #	<LOG_GATHER> : [<conditions>(, <conditions>)?]
 sub parseGather
 {
@@ -388,7 +475,7 @@ sub parseGather
 	return \%res;
 }
 
-#
+# Parse rule:
 #	<ref_param> : [<log_func>, <value>]
 sub parseCondParams
 {
@@ -414,20 +501,23 @@ sub parseCondParams
 	return $ret;
 }
 
-sub parseActionArray
+# Parse rule
+# <actors> -> <actor> (,<actor>)?
+sub parseActorList
 {
 	my ($actions) = @_;
 	
 	my $act = "";
 	
 	while ( my($k, $v) = each $actions) {
-		$act .= parseAction($v);
+		$act .= parseActor($v);
 	}
 	
-	return $act;
+	return "{ $act }";
 }
 
-sub parseAction
+# Parse rule of <actor>
+sub parseActor
 {
 	my ($action) = @_;
 	
@@ -441,6 +531,7 @@ sub parseAction
 			}
 			when 'PARAMS'	{
 				$state = $v;	
+				$state =~ s/%/\\045/g;
 			}
 		}
 	}
@@ -477,9 +568,9 @@ sub createSeperatedString
 	return $res;
 }
 
+# starts a telnet session to send the generated FHEM rule
 sub RD_Telnet
 {
-	print "RD_Telnet";
 	my ($rule) = @_;
 	my $telnet = new Net::Telnet(Timeout=>10, 
 		Errmode=>'die',

@@ -1,3 +1,27 @@
+/*****************************************************************************
+ * Useful functions to generate FHEM rules in a specific language for the 
+ * "Rule Designer" FHEM module. 
+ * 
+ * Grammar rules are defined in 
+ * http://www2.htw-dresden.de/~wiki_sn/index.php5/FHEM/Regelerstellung#FHEM_Modul
+ * 
+ *		 __    __  ________  __       __        _______   _______  
+ *		|  \  |  \|        \|  \  _  |  \      |       \ |       \ 
+ *		| $$  | $$ \$$$$$$$$| $$ / \ | $$      | $$$$$$$\| $$$$$$$\
+ *		| $$__| $$   | $$   | $$/  $\| $$      | $$  | $$| $$  | $$
+ *		| $$    $$   | $$   | $$  $$$\ $$      | $$  | $$| $$  | $$
+ *		| $$$$$$$$   | $$   | $$ $$\$$\$$      | $$  | $$| $$  | $$
+ *		| $$  | $$   | $$   | $$$$  \$$$$      | $$__/ $$| $$__/ $$
+ *		| $$  | $$   | $$   | $$$    \$$$      | $$    $$| $$    $$
+ *		 \$$   \$$    \$$    \$$      \$$       \$$$$$$$  \$$$$$$$ 
+ *		 
+ * 
+ * 		HTW Dresden 
+ * 		Forschungsseminar Sensornetze 2014-2015
+ * 		Felix Pistorius
+ *****************************************************************************/
+
+
 function generateRule() {
 	var rule = '[{';
 	

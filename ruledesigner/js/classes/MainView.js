@@ -138,33 +138,32 @@ $(window)
 						'text-align' : 'center'
 					});
 
-					// var remember = ''
-					// $('.rule-obj-box').draggable({
-					// helper: function(){ // get cloned object
-					// return $('<div
-					// id="draggedItem">'+$(this).html()+'</div>');
-					// },
-					// start: function(e, ui) {
-					// remember = $(this).html();
-					// $(this).addClass('dragged'); // add class dragged if
-					// dragging start
-					// },
-					// stop: function(e, ui) {
-					// $(this).removeClass('dragged'); // remove class dragged
-					// if dragging start
-					// }
-					// });
+//					 var remember = ''
+//					 $('.rule-obj-box').draggable({
+//						 helper: function(){ // get cloned object
+//							 return $('<divid="draggedItem">'+$(this).html()+'</div>');
+//						 },
+//						 start: function(e, ui) {
+//							 remember = $(this).html();
+//							 $(this).addClass('dragged'); // add class dragged if dragging start
+//						 },
+//						 stop: function(e, ui) {
+//							 $(this).draggable('option', 'zIndex', 999);
+//							 $(this).draggable('option', 'revert', 'invalid');
+//							 $(this).removeClass('dragged'); // remove class dragged if dragging start
+//						 }
+//					 });
 
-					// $("ul li").draggable({
-					// helper: 'clone',
-					// start: function(e, ui) {
-					// remember = $(this);
-					// $(this).html("<div>"+remember.html()+"</div>");
-					// },
-					// stop: function(e, ui) {
-					// $(this).html(remember.html());
-					// }
-					// });
+//					 $("ul li").draggable({
+//						 helper: 'clone',
+//						 start: function(e, ui) {
+//							 remember = $(this);
+//							 $(this).html("<div>"+remember.html()+"</div>");
+//						 },
+//						 stop: function(e, ui) {
+//							 $(this).html(remember.html());
+//						 }
+//					 });
 				});
 
 /**
@@ -376,14 +375,26 @@ function MainView(_controller) {
 
 			$('#' + id + ' ul').children("li").each(function() {
 
-				// Enable toolitips
-
-				// Enable Drag&Drop
-				// $(this).draggable({ // TODO:
-				// containment : '#' + id + ' ul',
-				// scroll : false,
-				// revert : true
-				// });
+//				// Enable toolitips
+//
+//				// Enable Drag&Drop
+//				 $(this).draggable({ // TODO:
+//				 //containment : '#' + id + ' ul',
+//				 //scroll : false,
+//				 //revert : true
+//				 
+//					// scroll: true,
+//					// revert : true
+//					// TODO proof
+//					revert: false,
+//					helper: function(){
+//							$copy = $(this).clone();
+//							return $copy;
+//					},
+//					appendTo: 'body',
+//					scroll: false,
+//					zIndex: 999
+//				 });
 			});
 			
 

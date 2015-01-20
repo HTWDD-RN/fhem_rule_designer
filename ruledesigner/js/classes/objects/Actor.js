@@ -1,8 +1,8 @@
-var Actor = function(){
+var Actor = function(id){
 
 	var _self = this
 		
-	var _model = new ActorModel(_self)
+	var _model = new ActorModel(_self, id)
 	
 	var _view = new ActorView(_self)
 	
@@ -21,9 +21,27 @@ var ActorModel = function(controller, id){
 
 	var _self = this
 	
+	var _controller = controller
+	
 	var _id = id
 	
 	var _params = new Params()
+	
+	/**
+	 * Return the parameter object of device.
+		 * @return parameter object 
+	 */
+	this.getParamObj = function(){
+		return _params
+	}
+	
+	/**
+	 * Return ID
+	 * @return ID 
+	 */
+	this.getID = function(){
+		return _id
+	}
 	
 	/**
 	 * Build JSON tree

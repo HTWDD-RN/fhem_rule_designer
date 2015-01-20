@@ -1,10 +1,20 @@
 /**
- * 
+ * This classes is used for group actors and allow to add an virtual elements (e.g. delay timer)
  */
 var Actorgroup = function(){
 
 	var _self = this
 		
+	var _id = cSYS_ID()
+	
+	/**
+	 * Return ID
+	 * @return ID 
+	 */
+	this.getID = function(){
+		return _id
+	}
+	
 	var _model = new ActorgroupModel(_self)
 	
 	var _view = new ActorgroupView(_self)
@@ -24,11 +34,11 @@ var Actorgroup = function(){
 /**
  * 
  */
-var ActorgroupModel = function(controller, id){
+var ActorgroupModel = function(controller){
 
 	var _self = this
 	
-	var _id = id
+	var _controller = controller
 	
 	var _actors = new Actors()
 	
@@ -39,16 +49,47 @@ var ActorgroupModel = function(controller, id){
 	 * @param device object
 	 */
 	this.setVirtualDevice = function(obj){
-		// TODO: Prüfung - Object types
+		if(obj instanceof VirtualDevice){
 		_virtual_device = obj
+		return true
+		}
+		return false
 	}
 	
 	/**
 	 * Removes virtual device
 	 */
 	this.removeVirtualDevice = function(){
-		delete _virtual_device
-		_virtual_device = null
+		if(_virtual_device != null){
+			delete _virtual_device
+			_virtual_device = null
+			return true
+		}
+		return false
+	}
+	
+	/**
+	 * Get virtual device object
+	 * @return device of type "VirtualDevice"
+	 */
+	this.getVirtualDevice = function(){
+		return _virtual_device
+	}
+	
+	/**
+	 * This function return the actors object
+	 * @return object from type 'Actors'
+	 */
+	this.getActors = function(){
+		return _actors
+	}
+	
+	/**
+	 * Return the parameter object of device.
+		 * @return parameter object 
+	 */
+	this.getParamObj = function(){
+		return _params
 	}
 	
 	/**
@@ -56,12 +97,11 @@ var ActorgroupModel = function(controller, id){
 	 * @return JSON object
 	 */
 	this.toJSON = function (){
-		if(_virual_device == null)
-			throw 'Undefined virtual device'
-		
 		var tmp = {}
-		tmp['VDEV'] = _virtual_device.toJSON()
-		tmp['ACTORS'] = _actors.toJSON()
+		if(_virtual_device != null){
+			tmp['VDEV'] = _virtual_device.toJSON()
+			tmp['ACTORS'] = _actors.toJSON()
+		}
 		return tmp
 	}
 

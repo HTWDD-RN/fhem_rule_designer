@@ -1,6 +1,16 @@
 var Conditions = function(){
 
 	var _self = this
+	
+	var _id = cSYS_ID()
+	
+	/**
+	 * Return ID
+	 * @return ID 
+	 */
+	this.getID = function(){
+		return _id
+	}
 		
 	var _model = new ConditionsModel(_self)
 	
@@ -18,25 +28,20 @@ var Conditions = function(){
 	
 }
 
-var ConditionsModel = function(controller, id){
+var ConditionsModel = function(controller){
 	
 	var _obj = null
-	
-	var _type = null
-	
+		
 	/**
 	 * Sets the actions object
 	 * @param object
 	 */	
-	this.addObject = function(obj){
-		
-		if(obj instanceof Gather)
-			type = "Gather"
-			else if(obj instanceof Condition)
-				type = "Condition"
-				else throw "Unknown type of condionsexception"
-				
-		_obj = obj
+	this.addObject = function(obj){		
+		if(obj instanceof Gather || obj instanceof Condition){
+			_obj = obj
+			return true
+		}
+		return false
 	}
 	
 	/**
@@ -47,11 +52,25 @@ var ConditionsModel = function(controller, id){
 	}
 	
 	/**
+	 * Remove conditions object from helper group
+	 * @param ID
+	 * @return true if success
+	 */
+	this.removeObject = function(){
+		if( _obj != null ){
+			delete _obj
+			_obj = null
+			return true
+		}
+		return false
+	}
+	
+	/**
 	 * Build JSON tree
 	 * @return JSON object
 	 */
 	this.toJSON = function (){
-		return (_obj != null ? _obj.toJSON() : _obj)
+		return (_obj != null ? _obj.toJSON() : {})
 	}
 
 }

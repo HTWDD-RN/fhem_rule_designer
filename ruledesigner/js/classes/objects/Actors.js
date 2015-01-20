@@ -1,7 +1,17 @@
 var Actors = function(){
 
 	var _self = this
-		
+	
+	var _id = cSYS_ID()
+	
+	/**
+	 * Return ID
+	 * @return ID 
+	 */
+	this.getID = function(){
+		return _id
+	}
+	
 	var _model = new ActorsModel(_self)
 	
 	var _view = new ActorsView(_self)
@@ -17,20 +27,47 @@ var Actors = function(){
 	}
 	
 }
-var ActorsModel = function(controller, id){
+
+var ActorsModel = function(controller){
 
 	var _self = this
 	
+	var _controller = controller
+	
 	var _actors = []
 
+	/**
+	 * Add actor to helper group
+	 * @param obj
+	 * @return true if success
+	 */
 	this.addActor = function(obj){
-		_actors.push(obj)
+		if( obj instanceof Actor){
+			_actors.push(obj)
+			return true
+		}
+		return false
 	}
 	
+	/**
+	 * Remove actor from helper group
+	 * @param actor object or ID
+	 * @return true if success
+	 */
 	this.removeActor = function(SYS_ID){
-		// TODO: Actors.js - remove
+		for(var n = 0; n < _actors.length; n++) {
+			if( _actors[n].getID() == SYS_ID || (SYS_ID instanceof Actor && SYS_ID === _actors[n]) ){
+				_actors.splice(n, 1)
+				return true
+			}
+		}
+		return false
 	}
 	
+	/**
+	 * Return actors
+	 * @return _actors
+	 */
 	this.getActors = function(){
 		return _actors
 	}
@@ -41,8 +78,9 @@ var ActorsModel = function(controller, id){
 	 */
 	this.toJSON = function (){
 		var tmp = []
-		for(n = 0; n < _actors.length; n++)
-			tmp.push = _actors[n].toJSON()
+		for(var n = 0; n < _actors.length; n++){
+			tmp.push(_actors[n].toJSON())
+		}
 		return tmp
 	}
 

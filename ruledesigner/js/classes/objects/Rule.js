@@ -42,6 +42,8 @@ var Rule = function(id) {
 var RuleModel = function(controller, id) {
 
 	var _ID = id
+	
+	var _controller = controller
 
 	var _params = new Params() // Array
 

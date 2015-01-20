@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>QUnit Library Test Page</title>
+<link rel="stylesheet" href="../css/qunit/qunit-1.16.0.css">
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+	<script src="lib/qunit-1.16.0.js"></script>
+
+	<!-- BIND HELPER CLASSES -->
+	<script src="classes/helpers/Log.js"></script>
+	<script src="classes/helpers/Counter.js"></script>
+
+	<!-- TEST COUNTER CLASSES -->
+	<script src="qunit/helpers/CounterTest.js"></script>
+
+	<!-- SET UP GLOBAL CONFIG AND ID GENERATOR -->
+	<script type="text/javascript">
+	
+		// Simulate global config
+		var Configuration = {
+			DEBUG_LEVEL : 4,
+			ID_PREFIX : "RID"
+		}
+		
+		// Simulate ID-Generator
+		// If the representation of all objects on the home
+		// automation server without an ID  an alternative
+		// counter is use to generates ID
+		var cSYS_ID = function() {
+
+			var count = new Counter()
+
+			return function() {
+				return Configuration.ID_PREFIX + count();
+			}
+
+		}()
+	</script>
+
+	<!-- TEST OTHER HELPER CLASSES -->
+	<script src="qunit/helpers/GlobalCounterTest.js"></script>
+	<script src="qunit/helpers/LogTest.js"></script>
+	
+	<!-- BIND OBJECT CLASSES -->
+	<script src="classes/objects/Params.js"></script>
+	<script src="classes/objects/RefParams.js"></script>
+	<script src="classes/objects/VirtualDevice.js"></script>
+	<script src="classes/objects/Actor.js"></script>
+	<script src="classes/objects/Actors.js"></script>
+	<script src="classes/objects/Actorgroup.js"></script>
+	<script src="classes/objects/Actions.js"></script>
+	<script src="classes/objects/Condition.js"></script>
+	<script src="classes/objects/Gather.js"></script>
+	<script src="classes/objects/Conditions.js"></script>
+	<script src="classes/objects/Rule.js"></script>
+	<script src="classes/objects/Rules.js"></script>
+
+	<!-- TEST OBJECT CLASSES -->
+	<script src="qunit/objects/ParamsTest.js"></script>
+	<script src="qunit/objects/RefParamsTest.js"></script>
+	<script src="qunit/objects/VirtualDeviceTest.js"></script>
+	<script src="qunit/objects/ActorTest.js"></script>
+	<script src="qunit/objects/ActorsTest.js"></script>
+	<script src="qunit/objects/ActorgroupTest.js"></script>
+	<script src="qunit/objects/ActionsTest.js"></script>
+	<script src="qunit/objects/ConditionTest.js"></script>
+	<script src="qunit/objects/GatherTest.js"></script>
+	<script src="qunit/objects/ConditionsTest.js"></script>
+
+	<!--
+	<script src="qunit/objects/RuleTest.js"></script>
+	<script src="qunit/objects/RulesTest.js"></script>
+-->
+</body>
+</html>

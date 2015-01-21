@@ -1,10 +1,9 @@
 ﻿// In debug mode the script is bind statically by index.html
 // So that is bind before the rule designer main script and all others
 // TODO: A possible result is to take the configuration in his own script
-if( typeof Configuration != 'undefined' && Configuration != null){
+if (typeof Configuration != 'undefined' && Configuration != null) {
 	Log("Load Wrapper for FHEM", 3)
 }
-
 
 /**
  * This is a wrapper script for import FHEM data. FHEM is an home automation
@@ -21,7 +20,8 @@ function Wrapper() {
 	var callback
 
 	// This device aren't supported now. Please update if is need
-	var unsupported_protocols = [ 'global', 'RESIDENTS', 'ROOMMATE', 'CUL', 'GUEST' ]
+	var unsupported_protocols = [ 'global', 'RESIDENTS', 'ROOMMATE', 'CUL',
+			'GUEST' ]
 
 	// A default list of supported protocols, when the connection is in
 	// trouble. The program is remain to try taking the connection up.
@@ -78,14 +78,16 @@ function Wrapper() {
 			'weco', 'WOL' ]
 
 	// The following helper modules should map as devices
-	var dev_helper_modules = [ ]
+	var dev_helper_modules = []
 
-	// Auto-enabling following modules in DEBUG MODE (Configuration.DEBUG_LEVEL = 5)
-	if(Configuration.DEBUG_LEVEL >= 5) {
+	// Auto-enabling following modules in DEBUG MODE (Configuration.DEBUG_LEVEL
+	// = 5)
+	if (Configuration.DEBUG_LEVEL >= 5) {
 		dev_helper_modules.push('dummy')
 	}
 
-	// The following helper modules should mas as virtual devices (e.g. timer like devices)
+	// The following helper modules should mas as virtual devices (e.g. timer
+	// like devices)
 	var vdev_helper_modules = [ 'at', 'SUNRISE_EL' ]
 
 	// A placeholder for the returned data of the FHEM list command
@@ -201,30 +203,30 @@ function Wrapper() {
 		Log('Load wrapper - STEP 4 - Load and filter list of devices', 4)
 		var returnObj = {}
 		Helpers.loadUrl(Configuration.HA_SVR_URL, 'cmd=jsonlist2&XHR=1',
-			function(data) { // success
-				// devices = data
-				Log('Devices', data, 5)
-				step5(data)
-			}, function(data) { // error
-				Log('No devices list load', 1)
-				// TODO - Kritischer Fehler
-				// Geräteliste nicht geladen
-			}, function(data) { // filter data
-				var tmp = $.parseJSON(data)
-				if (tmp.Results !== undefined)
-					if ($(tmp.Results).size() > 0) {
-						return tmp.Results
-					}
-				return null
-			})
+				function(data) { // success
+					// devices = data
+					Log('Devices', data, 5)
+					step5(data)
+				}, function(data) { // error
+					Log('No devices list load', 1)
+					// TODO - Kritischer Fehler
+					// Geräteliste nicht geladen
+				}, function(data) { // filter data
+					var tmp = $.parseJSON(data)
+					if (tmp.Results !== undefined)
+						if ($(tmp.Results).size() > 0) {
+							return tmp.Results
+						}
+					return null
+				})
 	};
-	
+
 	/**
 	 * INIT: Identify Rooms / Prepare and filter devices arguments
 	 */
 	var step5 = function(data) {
 		Log(
-			'Load wrapper - STEP 5 - Identify Rooms / Prepare and filter devices arguments',
+				'Load wrapper - STEP 5 - Identify Rooms / Prepare and filter devices arguments',
 				4)
 		$
 				.grep(
@@ -232,12 +234,14 @@ function Wrapper() {
 						function(elem, i) {
 
 							if (elem.Internals.TYPE !== undefined
-									&& 
-($.inArray(elem.Internals.TYPE,	supported_protocols) > -1) || ( 
-($.inArray(elem.Internals.TYPE, dev_helper_modules) > -1 || $.inArray(elem.Internals.TYPE, vdev_helper_modules) > -1)
-&& 
-$.inArray(elem.Internals.TYPE,	loaded_components) > -1
-)) {
+									&& ($.inArray(elem.Internals.TYPE,
+											supported_protocols) > -1)
+									|| (($.inArray(elem.Internals.TYPE,
+											dev_helper_modules) > -1 || $
+											.inArray(elem.Internals.TYPE,
+													vdev_helper_modules) > -1) && $
+											.inArray(elem.Internals.TYPE,
+													loaded_components) > -1)) {
 
 								// Store the location when it isn't in array yet
 								if (elem.Attributes.room !== undefined
@@ -249,7 +253,7 @@ $.inArray(elem.Internals.TYPE,	loaded_components) > -1
 								var tmp = {
 									ID : elem.Internals.NR,
 									TYPE : elem.Internals.TYPE,
-									NAME: (elem.Name || elem.Internals.NAME),
+									NAME : (elem.Name || elem.Internals.NAME),
 									ALT : (elem.Attributes.alias || elem.Name || elem.Internals.NAME),
 									SETS : // Prepare sets
 									$.grep(elem.PossibleSets.split(" "),
@@ -290,8 +294,9 @@ $.inArray(elem.Internals.TYPE,	loaded_components) > -1
 	 * 
 	 */
 	// This methods are calling by creating the drag menu
-	this.getAvailableSegmations = {
-		defaultFunc : 'get' + (Configuration.WRAPPER_DEFAULT_SEGMENTATION || 'Location' )
+	this.getAvailableSegmentations = {
+		defaultFunc : 'get'
+				+ (Configuration.WRAPPER_DEFAULT_SEGMENTATION || 'Location')
 	};
 
 	/**
@@ -299,8 +304,8 @@ $.inArray(elem.Internals.TYPE,	loaded_components) > -1
 	 * 
 	 * @return list of devices sorted by location
 	 */
-	this.getAvailableSegmations.getLocation = function() {
-		Log('FHEM:  getAvailableSegmations.getLocation', 4)
+	this.getAvailableSegmentations.getLocation = function() {
+		Log('FHEM:  getAvailableSegmentations.getLocation', 4)
 		var cat = {}
 		for (var n = 0; n < locations.length; n++) {
 			cat[locations[n]] = $.grep(devices, function(elem, i) {
@@ -318,8 +323,8 @@ $.inArray(elem.Internals.TYPE,	loaded_components) > -1
 	 * 
 	 * @return list of devices sorted by protocols
 	 */
-	this.getAvailableSegmations.getProtocolTypes = function() {
-		Log('FHEM:  getAvailableSegmations.getProtocolTypes', 4)
+	this.getAvailableSegmentations.getProtocolTypes = function() {
+		Log('FHEM:  getAvailableSegmentations.getProtocolTypes', 4)
 		var cat = {}
 		for (var n = 0; n < supported_protocols.length; n++) {
 			cat[supported_protocols[n]] = $.grep(devices, function(elem, i) {
@@ -342,18 +347,18 @@ $.inArray(elem.Internals.TYPE,	loaded_components) > -1
 	/**
 	 * 
 	 */
-	this.getAvailableSegmations.getClassic = function() {
-		Log('FHEM:  getAvailableSegmations.getClassic', 4)
+	this.getAvailableSegmentations.getClassic = function() {
+		Log('FHEM:  getAvailableSegmentations.getClassic', 4)
 		var cat = {}
 		cat.actors = $.grep(devices, function(elem, i) {
-			if($.inArray(elem.TYPE, vdev_helper_modules) > -1)
+			if ($.inArray(elem.TYPE, vdev_helper_modules) > -1)
 				return null
-			if (elem.READINGS.length > 0 )
+			if (elem.READINGS.length > 0)
 				return elem
 			return null
 		})
 		cat.sensors = $.grep(devices, function(elem, i) {
-			if($.inArray(elem.TYPE, vdev_helper_modules) > -1)
+			if ($.inArray(elem.TYPE, vdev_helper_modules) > -1)
 				return null
 			if (elem.SETS.length > 0)
 				return elem
@@ -368,12 +373,12 @@ $.inArray(elem.Internals.TYPE,	loaded_components) > -1
 	 * 
 	 * @return list of virtual devices
 	 */
-	this.getAvailableSegmations.getVirtualDevices = function() {
-		Log('FHEM: getAvailableSegmations.getVirtualDevices', 4)
+	this.getAvailableSegmentations.getVirtualDevices = function() {
+		Log('FHEM: getAvailableSegmentations.getVirtualDevices', 4)
 		var vdev = {}
 		vdev = $.grep(devices, function(elem, i) {
-			if($.inArray(elem.TYPE, vdev_helper_modules) > -1){
-				return elem	
+			if ($.inArray(elem.TYPE, vdev_helper_modules) > -1) {
+				return elem
 			}
 			return null
 		})
@@ -381,7 +386,7 @@ $.inArray(elem.Internals.TYPE,	loaded_components) > -1
 		Log('FILTERED_DEVICES', vdev, 5)
 		return vdev
 	};
-	
+
 	/**
 	 * Initialization function
 	 * 

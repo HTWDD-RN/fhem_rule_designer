@@ -52,9 +52,9 @@ function __RuleDesigner() {
 		Log('# RuleDesigner.js # cbBindWrapperData', 4)
 		Log('SuccessCallback', 5)
 
-		var tmp = _wrapper.getAvailableSegmations.getVirtualDevices();
+		var tmp = _wrapper.getAvailableSegmentations.getVirtualDevices();
 		if ($(tmp).length > 0) {
-			$.map(_wrapper.getAvailableSegmations.getVirtualDevices(),
+			$.map(_wrapper.getAvailableSegmentations.getVirtualDevices(),
 					function(val) {
 						val.TYPE = 'SYS_' + val.ID + '_' + val.NAME
 						VIRTUAL_DEVICES.push(val);
@@ -62,10 +62,8 @@ function __RuleDesigner() {
 		}
 		stepsCounter()
 		
-		_view.actualizeObjectList(_wrapper.getAvailableSegmations,
-				VIRTUAL_DEVICES)
+		_view.actualize();
 		stepsCounter()
-		
 		Log('NUM OF INIT STEPS : ' + (stepsCounter() - 1))
 	}
 
@@ -99,40 +97,80 @@ function __RuleDesigner() {
 	};
 
 	/**
-	 * Function to removes a rule object
-	 */
-	this.removeRule = function(SYS_ID) {
-		Log('# RuleDesigner.js # deleteRule (SYS_ID: ' + SYS_ID + ')', 4)
-		// TODO - Verknuepfungen in anderen Objekten loeschen
-		if(_rules.removeRule(SYS_ID)){
-				_view.actualize(); // actualize view ...
-				return true
-		}
-		return false
-	};
-	
-	/**
-	 * 
-	 */
-	this.removeElement = function(){
-		var obj = rules.search(SYS_ID)
-		if (obj != null){
-			obj.unset()
-			delete obj // Use for deleting keys, global und local environment vars
-			if(obj != undefined) // Use for deleting vars from variable environment
-				obj = undefined
-			return true
-		}
-		return false
-	}
-
-	/**
 	 * @deprecated Function to commit the information about the available
 	 *             gathers to the view
 	 */
 	this.getGatherList = function() {
 		Log('# RuleDesigner.js # getGatherList', 4)
 		return _GatherList;
+	}
+
+	/**
+	 * Returns the item categorized by segmentation The available segmentations
+	 * for a specific wrapper / Home Automation System can asked by calling
+	 * _wrapper.getAvailableSegmentations
+	 * 
+	 * @param segmentation
+	 * @returns JSON-object with object informations
+	 */
+	this.getItems = function(segmentation) {
+		var func ='_wrapper.getAvailableSegmentations.get' + segmentation+'()'
+		return eval(func)
+	}
+
+	/**
+	 * Return the available seqmentation of the loaded wrapper. This function
+	 * used to allow filtering the draggable items
+	 * 
+	 * @return object of function
+	 */
+	this.getAvailableSegmentation = function() {
+		return _wrapper.getAvailableSegmentations
+	}
+
+	/**
+	 * Returns the initiated list of virtual devices. TODO: Replaced with an
+	 * Hot-Plug-able function for actualization Now, the VirtualDevice's are
+	 * parsed on load. The disadvantage of this method is that you must reload
+	 * the pages if virtual devices added.
+	 * 
+	 * @return JSON-Object
+	 */
+	this.getVirtualDevices = function() {
+		return VIRTUAL_DEVICES
+	}
+
+	/**
+	 * Function to removes a rule object
+	 */
+	this.removeRule = function(SYS_ID) {
+		Log('# RuleDesigner.js # deleteRule (SYS_ID: ' + SYS_ID + ')', 4)
+		// TODO - Verknuepfungen in anderen Objekten loeschen
+		if (_rules.removeRule(SYS_ID)) {
+			_view.actualize(); // actualize view ...
+			return true
+		}
+		return false
+	};
+
+	/**
+	 * This function is searching and removing rules or items from the model by an ID. In
+	 * this system the ID is called SYS_ID.
+	 * @param SYS_ID
+	 * @return boolean - true if removing successful
+	 */
+	this.removeElement = function(SYS_ID) {
+		var obj = rules.search(SYS_ID)
+		if (obj != null) {
+			obj.unset()
+			delete obj // Use for deleting keys, global und local environment
+			// vars
+			if (obj != undefined) // Use for deleting vars from variable
+				// environment
+				obj = undefined
+			return true
+		}
+		return false
 	}
 
 	/**
@@ -190,6 +228,7 @@ function __RuleDesigner() {
 			Helpers.loadWrapper(Configuration.WRAPPER, function() {
 				_wrapper = new Wrapper();
 				cbInitWrapper()
+
 			})
 
 		})

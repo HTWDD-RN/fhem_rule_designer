@@ -22,7 +22,7 @@ function MainView(_controller) {
 	 */
 	var generateToolbar = function() {
 
-		console.log("MainView.js - generateToolbar - Generiere Toolbar");
+		Log("MainView.js - generateToolbar - Generiere Toolbar");
 
 		var ID = '#' + Configuration.GUI.TOOLBAR.ID;
 
@@ -32,14 +32,14 @@ function MainView(_controller) {
 			toolbar.className = Configuration.GUI.TOOLBAR.CLASSES;
 
 			var container = document.createElement('li');
-			
+
 			var menuopen = document.createElement('a');
 			menuopen.id = 'menu-open';
 			menuopen.innerHTML = '<span class="ui-icon ui-icon-menu"></span>';
-			
+
 			var menu = document.createElement('ul')
 			menu.id = 'menu'
-			
+
 			var ruleNameForm = document.createElement('form');
 
 			var ruleNameField = document.createElement('input');
@@ -79,20 +79,14 @@ function MainView(_controller) {
 			$(ruleNameForm).addClass('ui-corner-all ui-state-default');
 
 			$(menuopen).addClass('ui-corner-all ui-state-default');
-			
+
 			$(menu).append(
-					[ 		
-					  		$(container).clone().html(btnNew),
+					[ $(container).clone().html(btnNew),
 							$(container).clone().html(btnLoad),
 							$(container).clone().html(btnSave),
-							$(container).clone().html(btnSaveAs)
-							]);
-			$(toolbar).append([ menuopen,
-							  	inputLoad,
-								menu,
-								trash,
-								ruleNameForm
-								]);
+							$(container).clone().html(btnSaveAs) ]);
+			$(toolbar).append(
+					[ menuopen, inputLoad, menu, trash, ruleNameForm ]);
 			return toolbar;
 		};
 
@@ -111,13 +105,16 @@ function MainView(_controller) {
 	 */
 	var generateDraggableObjectList = function() {
 
-		Log('MainView.js - generateDraggableObjectList - Generiere ObjectList');
+		Log('MainView.js - generateDraggableObjectList - Generiere ObjectList',
+				4);
 
 		var ID = '#' + Configuration.GUI.DRAGBAR.ID;
 
+		var flagSegmentation = 'Classic'
+
 		this.init = function() {
 
-			Log('MainView.js - generateDraggableObjectList.init');
+			Log('MainView.js - generateDraggableObjectList.init', 4);
 
 			var objList = document.createElement('div');
 			objList.id = Configuration.GUI.DRAGBAR.ID;
@@ -127,127 +124,98 @@ function MainView(_controller) {
 			return objList;
 		};
 
-		this.actualize = function(blocks, rules) {
+		this.actualize = function() {
 
 			$(ID).html('')
 
-			Log('MainView.js - generateDraggableObjectList.actualize');
+			Log('MainView.js - generateDraggableObjectList.actualize', 4);
+			
+			var categories = _controller.getItems(flagSegmentation)
+			
+			var vdevs = $.map(_controller.getVirtualDevices(),
+					function(elem, i) {
+						Log('elem', elem, 5)
+						var tmp = elem
+						tmp.ID = tmp.TYPE
+						return tmp
+					})
+			categories['virtual_devices'] = vdevs
 
-			if (blocks === undefined || blocks === null)
+			var gathers = $.map(_controller.getGatherList(), function(elem, i) {
+				Log('elem', elem, 5)
+				var tmp = {}
+				tmp.ID = elem[0]
+				tmp.NAME = tmp.ID
+				tmp.ICON_CLASS = ('RD_ICON_' + tmp.ID).toLowerCase()
+				return tmp
+			})
+			categories['gathers'] = gathers
+
+			var rules = $.map(_controller.getRules(), function(rule, i) {
+				var info = rule.getInfo()
+				rule.ID = rule.SYS_ID
+				rule.NAME = (info.PARAMS.Name || info.ID || rule.ID)
+				return rule
+			})
+
+			categories['rules'] = rules
+
+			if (categories === undefined || categories === null)
 				return;
 
 			var node;
-			$
-					.each(
-							blocks,
-							function(key, value) {
-								if ($('#' + key).size() <= 0) {
-									// Create List Of Devices
-									node = document.createElement('ul');
-									node
-											.setAttribute(
-													'class',
-													Configuration.GUI.DRAGBAR.OBJECT_LIST.SEGMENTATION.CLASSES);
-									node.id = key
-									$(ID).append(node);
-								}
-								var i = 0;
-								if (i <= 0) {
-									var e = document.createElement('li');
-									e.innerHTML = key
-									e
-											.setAttribute(
-													'class',
-													Configuration.GUI.DRAGBAR.OBJECT_LIST.SEGMENTATION.HEAD)
-									$(node).append(e);
-									$(node).append('<hr>');
-								}
-								i++;
-								$
-										.each(
-												value,
-												function(index, obj) {
-													var e = document
-															.createElement('li');
-													if (key != 'gather'
-															&& obj.ID !== undefined) {
-														e.id = obj.ID;
-														e.setAttribute('rel',obj.ID);
-														e.setAttribute('class', Configuration.GUI.DRAGBAR.OBJECT_LIST.SEGMENTATION.BODY)
-														var url = (obj.ICON_CLASS != '' ? $(e).addClass(obj.ICON_CLASS)	: '')
 
-														e.innerHTML = obj.NAME;
+			for (cat in categories) {
+				var blocks = categories[cat]
 
-														// TODO: Tooltip
-														// if (obj.ALT) {
-														// $(e).attr('title',
-														// obj.ALT);
-														// } else {
-														// $(e).attr('title',
-														// obj.NAME);
-														// }
+				if ($(blocks).size() > 0) {
+					node = document.createElement('ul');
+					node
+							.setAttribute(
+									'class',
+									Configuration.GUI.DRAGBAR.OBJECT_LIST.SEGMENTATION.CLASSES);
+					node.id = cat
+					$(ID).append(node);
 
-													} else {
-														e.id = obj[0]
-														e.innerHTML = obj[0]
-													}
-													// e.setAttribute('draggable',
-													// 'true');
-													// e.setAttribute('ondrag',
-													// 'drag(event)');
+					var i = 0;
+					if (i <= 0) {
+						var e = document.createElement('li');
+						e.innerHTML = cat
+						e
+								.setAttribute(
+										'class',
+										Configuration.GUI.DRAGBAR.OBJECT_LIST.SEGMENTATION.HEAD)
+						$(node).append(e);
+						$(node).append('<hr>');
+					}
+					i++;
 
-													$(node).append(e);
-												});
+					for (key in blocks) {
+						var e = document.createElement('li');
+						e.id = blocks[key].ID;
+						e.setAttribute('rel', blocks[key].ID);
+						e
+								.setAttribute(
+										'class',
+										Configuration.GUI.DRAGBAR.OBJECT_LIST.SEGMENTATION.BODY)
+						var url = (blocks[key].ICON_CLASS != '' ? $(e)
+								.addClass(blocks[key].ICON_CLASS) : '')
+						e.innerHTML = blocks[key].NAME;
+						$(node).append(e);
+					}
+					;
 
-							})
+					_events.enableItemDragging();
+				}
 
-			// Create List Of Rules
-			if (Object.keys(rules).length > 0) {
-
-				node = document.createElement('ul');
-				node
-				.setAttribute(
-						'class',
-						Configuration.GUI.DRAGBAR.OBJECT_LIST.SEGMENTATION.CLASSES);
-		node.id = 'rules'
-		$(ID).append(node);
-		var e = document.createElement('li');
-		e.innerHTML = 'rules'
-		e
-				.setAttribute(
-						'class',
-						Configuration.GUI.DRAGBAR.OBJECT_LIST.SEGMENTATION.HEAD)
-		$(node).append(e);
-		$(node).append('<hr>');
-				for (rule in rules) {
-					info = rules[rule].getInfo()
-
-					var e = document.createElement('li');
-					e.id = rules[rule].SYS_ID;
-					e.setAttribute('rel', rules[rule].SYS_ID);
-					e.setAttribute('class', Configuration.GUI.DRAGBAR.OBJECT_LIST.SEGMENTATION.BODY)
-					e.innerHTML = (info.Name||info.ID);
-					$(node).append(e);
-				};
-
-				$(ID).append(node);
 			}
-
-			_events.enableItemDragging();
+			;
 
 		};
-
-		this.getID = function() {
-
-			console.log("MainView.js - generateDraggableObjectList.getID");
-
-			return ID;
-		};
-	};
-
+	}
 	var generateDropableObjectField = function() {
 
-		console.log("MainView.js - generateDropableObjectField");
+		Log("MainView.js - generateDropableObjectField");
 
 		var ID = '#' + Configuration.GUI.EDITOR.ID;
 
@@ -312,7 +280,7 @@ function MainView(_controller) {
 		 */
 		this.init = function() {
 
-			console.log('MainView.js - generateDropableObjectField.init');
+			Log('MainView.js - generateDropableObjectField.init');
 
 			var e = document.createElement('div');
 			e.id = Configuration.GUI.EDITOR.ID;
@@ -374,7 +342,7 @@ function MainView(_controller) {
 		 */
 		this.setSize = function(height, width) {
 
-			console.log('MainView.js - generateDropableObjectField.setSize');
+			Log('MainView.js - generateDropableObjectField.setSize');
 
 			toolbar.innerwidth = width;
 			toolbar.innerheight = height;
@@ -386,7 +354,7 @@ function MainView(_controller) {
 		 * @return ID
 		 */
 		this.getID = function() {
-			console.log('MainView.js - generateDropableObjectField.getID')
+			Log('MainView.js - generateDropableObjectField.getID')
 			return ID;
 		};
 
@@ -396,39 +364,12 @@ function MainView(_controller) {
 		 * @param objects
 		 * @see /classes/objects/Rules.js
 		 */
-		var actualizeRules = function(_rules) {
-			Log('MainView.js - generateDropableObjectField.actualizeRules',4)
-			$.each(_rules, function(_key, _rule) {
-//
-//				$('#Tab_' + _key).html("");
-//
-//				if (_rule.getSensorList().getRootItem() == null) {
-//					$('#Tab_' + _key).append(buildPlaceholder(false, _key));
-//
-//				} else {
-//					$.each(_rule.getSensorList().getObjectsAsList(), function(
-//							_UNIQUE_ID, _obj) {
-//						$('#Tab_' + _key)
-//								.append(
-//										buildBox(_obj.getItem()._UNIQUE_ID,
-//												_obj, _key));
-//					});
-//				}
-//				if (_rule.getActorList().getRootItem() == null) {
-//					$('#Tab_' + _key).append(buildPlaceholder(true, _key));
-//				} else {
-//
-//					$.each(_rule.getActorList().getObjectsAsList(), function(
-//							_UNIQUE_ID, _obj) {
-//						$('#Tab_' + _key)
-//								.append(
-//										buildBox(_obj.getItem()._UNIQUE_ID,
-//												_obj, _key));
-//					});
-//				}
-//				// $('#Tab_' + _key).append(ret);
-
-			});
+		var rebuildRules = function(_rules) {
+			Log('MainView.js - generateDropableObjectField.actualizeRules', 4)
+			for (key in rules) {
+				$('Tab_' + key).html(rules[key].display())
+			}
+			;
 		};
 
 		/**
@@ -439,7 +380,6 @@ function MainView(_controller) {
 		 */
 		this.actualize = function() {
 			Log('MainView.js - generateDropableObjectField.actualize', 4);
-	//		actualizeRules(_controller.getRules());
 			$('#rd_rules_preview').html(
 					"<pre>" + _controller.generateJSONString() + "</pre>");
 		};
@@ -457,7 +397,7 @@ function MainView(_controller) {
 			_self.actualize()
 		}
 	};
-	
+
 	this.loadRule = function() {
 		// _events.disableItemDragging() // Disable draggbar events
 		if ((_rule = _controller.loadRule()) != null) {
@@ -465,7 +405,7 @@ function MainView(_controller) {
 			_self.actualize()
 		}
 	};
-	
+
 	/**
 	 * This initialize the removing of the element with the SYS_ID. Normally the
 	 * function gets the SYS_ID from HTML-rel-attribute
@@ -475,7 +415,8 @@ function MainView(_controller) {
 	 */
 	this.removeElement = function(SYS_ID) {
 		if (!_controller.removeRule(SYS_ID)) {// If SYS_ID not a rule
-			return _controller.removeElement(SYS_ID) // search and remove element
+			return _controller.removeElement(SYS_ID) // search and remove
+			// element
 		}
 		return true
 	}
@@ -486,42 +427,9 @@ function MainView(_controller) {
 		$('input[name=txtMakro]').val('');
 	};
 
-	this.actualizeObjectList = function(obj, vdev) {
-		Log('MainView.js: actualizeObjectList', obj, 4)
-		var blocks = eval('obj.' + obj.defaultFunc + '()')
-		Log(blocks, 5)
-		var rules = _controller.getRules();
-
-		var vdevs = $.map(vdev, function(elem, i) {
-			Log('elem', elem, 5)
-			var tmp = elem
-			tmp.ID = tmp.TYPE
-			return tmp
-		})
-
-		var gather = _controller.getGatherList();
-		Log('Gather', gather, 5)
-		var gathers = $.map(gather, function(elem, i) {
-			Log('elem', elem, 5)
-			var tmp = {}
-			tmp.ID = elem[0]
-			tmp.NAME = tmp.ID
-			tmp.ICON_CLASS = ('RD_ICON_' + tmp.ID).toLowerCase()
-			return tmp
-		})
-
-		blocks['virtual_devices'] = vdevs
-
-		blocks['gathers'] = gathers
-
-		objList.actualize(blocks, rules);
-
-		$(window).resize();
-
-	}
-
 	this.actualize = function() {
-		
+
+		objList.actualize();
 		objField.actualize();
 
 		$(window).resize();
@@ -532,7 +440,7 @@ function MainView(_controller) {
 	 */
 	var init = function() {
 
-		console.log("RuleDesignerView.init");
+		Log("RuleDesignerView.init");
 
 		// Generates toolbar and add it to the view
 		var _toolbar = toolbar.init();
@@ -544,19 +452,18 @@ function MainView(_controller) {
 		var _objField = objField.init();
 		$(Configuration.GUI.APP_CONTAINER).append(_objField);
 		_events.enableAddButton()
-		
+
 		// Add predefined rules
 		var _rules = _controller.getRules()
-		for (var key in _rules){
+		for ( var key in _rules) {
 			objField.addRuleTab(_rules[key])
 		}
-				
+
 		// Generates draggable and add it to the view
 		var _objList = objList.init();
 		$(Configuration.GUI.APP_CONTAINER).append(_objList);
 
-		
-		_self.actualize()
+		$(window).resize()
 	}();
 
 };

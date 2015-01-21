@@ -206,17 +206,27 @@ function MainView(_controller) {
 
 				node = document.createElement('ul');
 				node
-						.setAttribute('class',
-								'objlist-category ui-widget-content');
-
+				.setAttribute(
+						'class',
+						Configuration.GUI.DRAGBAR.OBJECT_LIST.SEGMENTATION.CLASSES);
+		node.id = 'rules'
+		$(ID).append(node);
+		var e = document.createElement('li');
+		e.innerHTML = 'rules'
+		e
+				.setAttribute(
+						'class',
+						Configuration.GUI.DRAGBAR.OBJECT_LIST.SEGMENTATION.HEAD)
+		$(node).append(e);
+		$(node).append('<hr>');
 				for (rule in rules) {
 					info = rules[rule].getInfo()
 
 					var e = document.createElement('li');
-					e.id = rule.SYS_ID;
-					e.setAttribute('rel', rule.SYS_ID);
-					e.setAttribute('class', 'objlist-category-head')
-					e.innerHTML = info.Name;
+					e.id = rules[rule].SYS_ID;
+					e.setAttribute('rel', rules[rule].SYS_ID);
+					e.setAttribute('class', Configuration.GUI.DRAGBAR.OBJECT_LIST.SEGMENTATION.BODY)
+					e.innerHTML = (info.Name||info.ID);
 					$(node).append(e);
 				};
 

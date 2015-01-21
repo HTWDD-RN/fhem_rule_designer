@@ -22,6 +22,8 @@
 <script src="../js/classes/objects/Gather.js"></script>
 <script src="../js/classes/objects/Conditions.js"></script>
 <script src="../js/classes/objects/Rule.js"></script>
+
+<script src="../js/config.js"></script>
 </head>
 <body>
 <pre id="result">
@@ -30,10 +32,8 @@
 <script src="../js/classes/objects/Rules.js"></script>
 <script>
 		// Simulate global config
-		var Configuration = {
-			DEBUG_LEVEL : 4,
-			ID_PREFIX : "RID"
-		}
+		Configuration.DEBUG_LEVEL = 4,
+		Configuration.ID_PREFIX = "RID"
 		
 		// Simulate ID-Generator
 		// If the representation of all objects on the home

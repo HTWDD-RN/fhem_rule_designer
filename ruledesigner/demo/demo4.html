@@ -35,7 +35,6 @@
 		Configuration.DEBUG_LEVEL = 4,
 		Configuration.ID_PREFIX = "RID"
 		
-		
 		// Simulate ID-Generator
 		// If the representation of all objects on the home
 		// automation server without an ID  an alternative
@@ -55,37 +54,48 @@ var rules = new Rules()
 /*
  *
  */
-var rule = new Rule('RULE_2_VAR_A')
+var rule = new Rule('RULE_4')
 var rule_params = {
-	'name': 'Heizungssteuerung',
-	'descr' : 'Regel zur Heizungssteuerung',
-	'Bemerkung' : 'Variante 1 - Zeitbegrenzung als Bedingung interpretiert'
+	'name': 'Produktionskette',
+	'descr' : 'Regel zum Anfahren von Produktionsanlagen'
 }
 
 rule.setParameter(rule_params)
-rule.addParam('link', 'Demo 2.1')
+rule.addParam('link', 'Demo 4')
 rule.addParam('Kaptitel', 'X.3 Validierung und Anwendung')
-rule.addParam('Beispiel', 2.1)
+rule.addParam('Beispiel', 4)
 
-var vdev = new VirtualDevice('TIMER')
-vdev.getParamObj().setParameter({'BeginTime': 5,'EndTime':22})
+var vdev = new VirtualDevice('ACTIVATION_TIMER')
+vdev.getParamObj().setParameter({'weekdays': '37', 'InitTime': 20})
+rule.setVirtualDevice(vdev)
 
-var sensor1 = new Condition('Thermometer (T)')
-sensor1.setRefParameter({'temperature':['<', 20.5]})
+var actorM1 = new Actor('Anlage (M1)')
+actorM1.setParameter({'state':'on'})
+var actorM2 = new Actor('Anlage (M2)')
+actorM2.setParameter({'state':'on'})
+var actorM3 = new Actor('Anlage (M3)')
+actorM3.setParameter({'state':'on'})
+var actorM4 = new Actor('Anlage (M4)')
+actorM4.setParameter({'state':'on'})
 
-var sensor2 = new Condition('Heizung (H)')
-sensor2.setRefParameter({'state':['=', 'off']})
-sensor2.setVirtualDevice(vdev)
+var actorgroup1 = new Actorgroup()
+actorgroup1.getActors().addActor(actorM3)
+actorgroup1.getActors().addActor(actorM3)
 
-var actor = new Actor('Heizung (H)')
-actor.setParameter({'state':'on','temperature':21.7})
+var vdev = new VirtualDevice('DELAY_TIMER')
+vdev.getParamObj().addParam('delay','1200') 
+actorgroup1.setVirtualDevice(vdev)
 
-var gather = new Gather('AND')
-gather.addCondition(sensor1)
-gather.addCondition(sensor2)
+var actorgroup2 = new Actorgroup()
+actorgroup2.getActors().addActor(actorM4)
 
-rule.setConditionObj(gather)
-rule.getActions().addAction(actor)
+var vdev = new VirtualDevice('DELAY_TIMER')
+vdev.getParamObj().addParam('delay','1200') 
+actorgroup2.setVirtualDevice(vdev)
+
+rule.getActions().addAction(actorM1)
+rule.getActions().addAction(actorgroup1)
+rule.getActions().addAction(actorgroup2)
 
 rules.addRule(rule)
 

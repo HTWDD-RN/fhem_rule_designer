@@ -1,0 +1,70 @@
+[
+   {
+      "ID": "RULE_4",
+      "PARAMS": {
+         "name": "Produktionskette",
+         "descr": "Regel zum Anfahren von Produktionsanlagen",
+         "link": "Demo 4",
+         "Kaptitel": "X.3 Validierung und Anwendung",
+         "Beispiel": 4
+      },
+      "ACTIONS": [
+         {
+            "ACTOR": "Anlage (M1)",
+            "PARAMS": {
+               "state": "on"
+            }
+         },
+         {
+            "ACTORGROUP": {
+               "VDEV": {
+                  "TYPE": "DELAY_TIMER",
+                  "PARAMS": {
+                     "delay": "1200"
+                  }
+               },
+               "ACTORS": [
+                  {
+                     "ACTOR": "Anlage (M3)",
+                     "PARAMS": {
+                        "state": "on"
+                     }
+                  },
+                  {
+                     "ACTOR": "Anlage (M3)",
+                     "PARAMS": {
+                        "state": "on"
+                     }
+                  }
+               ]
+            }
+         },
+         {
+            "ACTORGROUP": {
+               "VDEV": {
+                  "TYPE": "DELAY_TIMER",
+                  "PARAMS": {
+                     "delay": "1200"
+                  }
+               },
+               "ACTORS": [
+                  {
+                     "ACTOR": "Anlage (M4)",
+                     "PARAMS": {
+                        "state": "on"
+                     }
+                  }
+               ]
+            }
+         }
+      ],
+      "VDEV": {
+         "TYPE": "ACTIVATION_TIMER",
+         "PARAMS": {
+            "weekdays": "37",
+            "InitTime": 20
+         }
+      }
+   }
+]
+

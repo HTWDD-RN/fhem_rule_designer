@@ -1,0 +1,40 @@
+[
+   {
+      "ID": "RULE_5",
+      "PARAMS": {
+         "name": "Klimaanlage",
+         "descr": "Regel zur Inbetriebnahme im Sommer",
+         "link": "Demo 5",
+         "Kaptitel": "X.3 Validierung und Anwendung",
+         "Beispiel": 5
+      },
+      "ACTIONS": [
+         {
+            "ACTOR": "Fenster (A1)",
+            "PARAMS": {
+               "state": "close"
+            }
+         },
+         {
+            "ACTOR": "Fenster (A2)",
+            "PARAMS": {
+               "state": "close"
+            }
+         },
+         {
+            "ACTOR": "Klimaanlage (A3)",
+            "PARAMS": {
+               "state": "on",
+               "temperature": 20.5
+            }
+         }
+      ],
+      "VDEV": {
+         "TYPE": "ACTIVATION_TIMER",
+         "PARAMS": {
+            "weekdays": "37",
+            "InitTime": 20
+         }
+      }
+   }
+]

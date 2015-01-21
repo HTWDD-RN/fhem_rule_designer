@@ -1,0 +1,44 @@
+[
+   {
+      "ID": "RULE_2_VAR_A",
+      "PARAMS": {
+         "name": "Heizungssteuerung",
+         "descr": "Regel zur Heizungssteuerung",
+         "Bemerkung": "Variante 1 - Zeitbegrenzung als Bedingung interpretiert",
+         "link": "Demo 2.1",
+         "Kaptitel": "X.3 Validierung und Anwendung",
+         "Beispiel": 2.1
+      },
+      "COND": {
+         "AND": [
+            {
+               "SENSOR": "Thermometer (T)",
+               "REF_PARAMS": {
+                  "temperature": [
+                     "<",
+                     20.5
+                  ]
+               }
+            },
+            {
+               "SENSOR": "Heizung (H)",
+               "REF_PARAMS": {
+                  "state": [
+                     "=",
+                     "off"
+                  ]
+               }
+            }
+         ]
+      },
+      "ACTIONS": [
+         {
+            "ACTOR": "Heizung (H)",
+            "PARAMS": {
+               "state": "on",
+               "temperature": 21.7
+            }
+         }
+      ]
+   }
+]

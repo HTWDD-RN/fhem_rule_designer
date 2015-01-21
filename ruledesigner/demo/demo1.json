@@ -1,0 +1,56 @@
+[
+   {
+      "ID": "RULE_1_LIGHT_ON",
+      "PARAMS": {
+         "name": "Fernsteuerung Einschaltregel",
+         "descr": "Einschaltregel zu Fernsteuerung des Lichtes",
+         "link": "Demo 1 - Regel 1",
+         "Kaptitel": "X.3 Validierung und Anwendung",
+         "Beispiel": 1
+      },
+      "COND": {
+         "SENSOR": "Schalter (S)",
+         "REF_PARAMS": {
+            "state": [
+               "==",
+               "on"
+            ]
+         }
+      },
+      "ACTIONS": [
+         {
+            "ACTOR": "Lampe (L1)",
+            "PARAMS": {
+               "state": "on"
+            }
+         }
+      ]
+   },
+   {
+      "ID": "RULE_1_LIGHT_OFF",
+      "PARAMS": {
+         "name": "Fernsteuerung Ausschaltregel",
+         "descr": "Ausschaltregel zu Fernsteuerung des Lichtes",
+         "link": "Demo 1 -Regel 2",
+         "Kaptitel": "X.3 Validierung und Anwendung",
+         "Beispiel": 1
+      },
+      "COND": {
+         "SENSOR": "Schalter (S)",
+         "REF_PARAMS": {
+            "state": [
+               "!=",
+               "on"
+            ]
+         }
+      },
+      "ACTIONS": [
+         {
+            "ACTOR": "Lampe (L1)",
+            "PARAMS": {
+               "state": "off"
+            }
+         }
+      ]
+   }
+]

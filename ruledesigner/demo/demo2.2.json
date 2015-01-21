@@ -1,0 +1,51 @@
+[
+   {
+      "ID": "RULE_2_VAR_B",
+      "PARAMS": {
+         "name": "Heizungssteuerung",
+         "descr": "Regel zur Heizungssteuerung",
+         "Bemerkung": "Variante 2 - Zeitbegrenzung als Ablehnungskriterium interpretiert",
+         "link": "Demo 2.2",
+         "Kaptitel": "X.3 Validierung und Anwendung",
+         "Beispiel": 2.2
+      },
+      "COND": {
+         "AND": [
+            {
+               "SENSOR": "Thermometer (T)",
+               "REF_PARAMS": {
+                  "temperature": [
+                     "<",
+                     20.5
+                  ]
+               }
+            },
+            {
+               "SENSOR": "Heizung (H)",
+               "REF_PARAMS": {
+                  "state": [
+                     "=",
+                     "off"
+                  ]
+               }
+            }
+         ]
+      },
+      "ACTIONS": [
+         {
+            "ACTOR": "Heizung (H)",
+            "PARAMS": {
+               "state": "on",
+               "temperature": 21.7
+            }
+         }
+      ],
+      "VDEV": {
+         "TYPE": "TIMER",
+         "PARAMS": {
+            "BeginTime": 5,
+            "EndTime": 22
+         }
+      }
+   }
+]

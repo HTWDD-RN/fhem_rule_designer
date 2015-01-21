@@ -1,0 +1,57 @@
+[
+   {
+      "ID": "RULE_2_VAR_C",
+      "PARAMS": {
+         "name": "Heizungssteuerung",
+         "descr": "Regel zur Heizungssteuerung",
+         "Bemerkung": "Variante 3 - Zeitbegrenzung als Ausführungsbeschränkung interpretiert",
+         "link": "Demo 2.3",
+         "Kaptitel": "X.3 Validierung und Anwendung",
+         "Beispiel": 2.3
+      },
+      "COND": {
+         "AND": [
+            {
+               "SENSOR": "Thermometer (T)",
+               "REF_PARAMS": {
+                  "temperature": [
+                     "<",
+                     20.5
+                  ]
+               }
+            },
+            {
+               "SENSOR": "Heizung (H)",
+               "REF_PARAMS": {
+                  "state": [
+                     "=",
+                     "off"
+                  ]
+               }
+            }
+         ]
+      },
+      "ACTIONS": [
+         {
+            "ACTORGROUP": {
+               "VDEV": {
+                  "TYPE": "TIMER",
+                  "PARAMS": {
+                     "BeginTime": 5,
+                     "EndTime": 22
+                  }
+               },
+               "ACTORS": [
+                  {
+                     "ACTOR": "Heizung (H)",
+                     "PARAMS": {
+                        "state": "on",
+                        "temperature": 21.7
+                     }
+                  }
+               ]
+            }
+         }
+      ]
+   }
+]

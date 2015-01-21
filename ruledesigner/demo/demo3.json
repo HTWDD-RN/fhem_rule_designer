@@ -1,0 +1,151 @@
+[
+   {
+      "ID": "RULE_3",
+      "PARAMS": {
+         "name": "Treppenhaus / Langer Gang",
+         "descr": "Regel zur zeitverzögerten Fernsteuerung des Lichtes",
+         "Bemerkung": "Unreales Beispiel - benötigt um die Möglichkeiten der Grammatik aufzuzeigen",
+         "link": "Demo 3",
+         "Kaptitel": "X.3 Validierung und Anwendung",
+         "Beispiel": 3
+      },
+      "COND": {
+         "OR": [
+            {
+               "SENSOR": "Taster (S1)",
+               "REF_PARAMS": {
+                  "event": [
+                     "=",
+                     "click"
+                  ]
+               }
+            },
+            {
+               "SENSOR": "Taster (S2)",
+               "REF_PARAMS": {
+                  "event": [
+                     "=",
+                     "click"
+                  ]
+               }
+            },
+            {
+               "SENSOR": "...",
+               "REF_PARAMS": {
+                  "event": [
+                     "=",
+                     "click"
+                  ]
+               }
+            },
+            {
+               "SENSOR": "Taster (SN)",
+               "REF_PARAMS": {
+                  "event": [
+                     "=",
+                     "click"
+                  ]
+               }
+            }
+         ]
+      },
+      "ACTIONS": [
+         {
+            "ACTOR": "Lampe (L_1)",
+            "PARAMS": {
+               "state": "on"
+            }
+         },
+         {
+            "ACTOR": "Lampe (L_2)",
+            "PARAMS": {
+               "state": "on"
+            }
+         },
+         {
+            "ACTOR": "...",
+            "PARAMS": {
+               "state": "on"
+            }
+         },
+         {
+            "ACTOR": "Lampe (L_I)",
+            "PARAMS": {
+               "state": "on"
+            }
+         },
+         {
+            "ACTORGROUP": {
+               "VDEV": {
+                  "TYPE": "DELAY_TIMER",
+                  "PARAMS": {
+                     "delay": "2000000"
+                  }
+               },
+               "ACTORS": [
+                  {
+                     "ACTOR": "Lampe (L_I1)",
+                     "PARAMS": {
+                        "state": "on"
+                     }
+                  },
+                  {
+                     "ACTOR": "Lampe (L_I2)",
+                     "PARAMS": {
+                        "state": "on"
+                     }
+                  },
+                  {
+                     "ACTOR": "...",
+                     "PARAMS": {
+                        "state": "on"
+                     }
+                  },
+                  {
+                     "ACTOR": "Lampe (L_J)",
+                     "PARAMS": {
+                        "state": "on"
+                     }
+                  }
+               ]
+            }
+         },
+         {
+            "ACTORGROUP": {
+               "VDEV": {
+                  "TYPE": "DELAY_TIMER",
+                  "PARAMS": {
+                     "delay": "4000000"
+                  }
+               },
+               "ACTORS": [
+                  {
+                     "ACTOR": "Lampe (L_J1)",
+                     "PARAMS": {
+                        "state": "on"
+                     }
+                  },
+                  {
+                     "ACTOR": "Lampe (L_J2)",
+                     "PARAMS": {
+                        "state": "on"
+                     }
+                  },
+                  {
+                     "ACTOR": "...",
+                     "PARAMS": {
+                        "state": "on"
+                     }
+                  },
+                  {
+                     "ACTOR": "Lampe (L_N)",
+                     "PARAMS": {
+                        "state": "on"
+                     }
+                  }
+               ]
+            }
+         }
+      ]
+   }
+]

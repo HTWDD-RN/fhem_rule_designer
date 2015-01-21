@@ -85,13 +85,19 @@ $(window).resize(
 				events.enableMenuButton()
 				
 				$(ID.DRAGBAR).css('width', '');
-				$(ID.DRAGBAR).css('height', '');
+				$(ID.DRAGBAR).css('height', '200');
 				$(ID.DRAGBAR).css('float', 'none');
+				
+				height -= ($(ID.TOOLBAR).height() + 3 * margin + 200)
 
 				$(ID.EDITOR).css('margin-left', margin);
+				$(ID.EDITOR).css('margin-right', margin);
 				$(ID.EDITOR).css('width', '');
 				$(ID.EDITOR).css('height', height);
 				$(ID.EDITOR).css('float', 'none');
+				
+				$(ID.EDITOR + ' > div').css(
+						'height', height - $(ID.EDITOR + ' > ul:first').height()- topMargin - margin- 8)
 
 			}
 		})

@@ -172,16 +172,9 @@ function MainView(_controller) {
 													if (key != 'gather'
 															&& obj.ID !== undefined) {
 														e.id = obj.ID;
-														e.setAttribute('rel',
-																obj.ID);
-														e
-																.setAttribute(
-																		'class',
-																		Configuration.GUI.DRAGBAR.OBJECT_LIST.SEGMENTATION.BODY)
-														var url = (obj.ICON_CLASS != '' ? $(
-																e).addClass(
-																obj.ICON_CLASS)
-																: '')
+														e.setAttribute('rel',obj.ID);
+														e.setAttribute('class', Configuration.GUI.DRAGBAR.OBJECT_LIST.SEGMENTATION.BODY)
+														var url = (obj.ICON_CLASS != '' ? $(e).addClass(obj.ICON_CLASS)	: '')
 
 														e.innerHTML = obj.NAME;
 

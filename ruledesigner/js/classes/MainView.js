@@ -8,7 +8,7 @@
 function MainView(_controller) {
 
 	var _self = this
-	
+
 	// set controller link
 	var controller = _controller;
 
@@ -27,12 +27,19 @@ function MainView(_controller) {
 		var ID = '#' + Configuration.GUI.TOOLBAR.ID;
 
 		this.init = function() {
-			var toolbar = document.createElement('ul');
+			var toolbar = document.createElement('div');
 			toolbar.id = Configuration.GUI.TOOLBAR.ID
 			toolbar.className = Configuration.GUI.TOOLBAR.CLASSES;
 
 			var container = document.createElement('li');
-
+			
+			var menuopen = document.createElement('a');
+			menuopen.id = 'menu-open';
+			menuopen.innerHTML = '<span class="ui-icon ui-icon-menu"></span>';
+			
+			var menu = document.createElement('ul')
+			menu.id = 'menu'
+			
 			var ruleNameForm = document.createElement('form');
 
 			var ruleNameField = document.createElement('input');
@@ -48,40 +55,44 @@ function MainView(_controller) {
 			inputLoad.type = 'file';
 			inputLoad.id = 'inputLoad';
 
-			var btnLoad = document.createElement('button');
+			var btnLoad = document.createElement('a');
 			btnLoad.id = 'btnLoad';
-			btnLoad.innerHTML = 'Laden';
+			btnLoad.innerHTML = '<span class="ui-icon ui-icon-load"></span><b>Laden</b>';
 
-			$(inputLoad).css({
-				"display" : "none"
-			});
-
-			var btnSave = document.createElement('button');
+			var btnSave = document.createElement('a');
 			btnSave.id = 'btnSave';
-			btnSave.innerHTML = 'Speichern';
+			btnSave.innerHTML = '<span class="ui-icon ui-icon-store"></span><b>Speichern</b>';
 
-			var btnSaveAs = document.createElement('button');
+			var btnSaveAs = document.createElement('a');
 			btnSaveAs.id = 'btnSaveAs';
-			btnSaveAs.innerHTML = 'Speichern unter';
+			btnSaveAs.innerHTML = '<span class="ui-icon ui-icon-storeas"></span><b>Speichern unter</b>';
 
-			var btnNew = document.createElement('button');
+			var btnNew = document.createElement('a');
 			btnNew.id = 'btnNew';
-			btnNew.innerHTML = 'Neu';
+			btnNew.innerHTML = '<span class="ui-icon ui-icon-new"></span><b>Neu</b>';
 
 			var trash = document.createElement('div');
 			trash.id = 'trash';
-			trash.innerHTML = '<div><span class="ui-corner-all"></span></div>';
+			trash.innerHTML = '<span class="ui-icon ui-icon-trash ui-corner-all"></span><b>Papierkorb</b>';
+
 			$(trash).addClass('ui-corner-all ui-state-default');
 			$(ruleNameForm).addClass('ui-corner-all ui-state-default');
-			$(toolbar).append(
-					[ $(container).clone().html(ruleNameForm),
-							$(container).clone().html(btnNew),
-							$(container).clone().html(inputLoad),
+
+			$(menuopen).addClass('ui-corner-all ui-state-default');
+			
+			$(menu).append(
+					[ 		
+					  		$(container).clone().html(btnNew),
 							$(container).clone().html(btnLoad),
 							$(container).clone().html(btnSave),
-							$(container).clone().html(btnSaveAs),
-							$(container).clone().html(trash) ]);
-
+							$(container).clone().html(btnSaveAs)
+							]);
+			$(toolbar).append([ menuopen,
+							  	inputLoad,
+								menu,
+								trash,
+								ruleNameForm
+								]);
 			return toolbar;
 		};
 
@@ -175,13 +186,13 @@ function MainView(_controller) {
 														e.innerHTML = obj.NAME;
 
 														// TODO: Tooltip
-														if (obj.ALT) {
-															$(e).attr('title',
-																	obj.ALT);
-														} else {
-															$(e).attr('title',
-																	obj.NAME);
-														}
+														// if (obj.ALT) {
+														// $(e).attr('title',
+														// obj.ALT);
+														// } else {
+														// $(e).attr('title',
+														// obj.NAME);
+														// }
 
 													} else {
 														e.id = obj[0]
@@ -198,26 +209,28 @@ function MainView(_controller) {
 							})
 
 			// Create List Of Rules
-			if (Object.keys(rules).length <= 0)
-				return;
+			if (Object.keys(rules).length > 0) {
 
-			node = document.createElement('ul');
-			node.setAttribute('class', 'objlist-category ui-widget-content');
-		
-			for(rule in rules) {
-				info =rule.getInfo() 
+				node = document.createElement('ul');
+				node
+						.setAttribute('class',
+								'objlist-category ui-widget-content');
 
-				var e = document.createElement('li');
-				e.id = rule.SYS_ID;
-				e.setAttribute('rel', rule.SYS_ID);
-				e.setAttribute('class', 'objlist-category-head')
-				e.innerHTML = info.Name;
-				$(node).append(e);
-			};
-			
-			$(ID).append(node);
+				for (rule in rules) {
+					info = rule.getInfo()
 
-//			enableDragging(ID)
+					var e = document.createElement('li');
+					e.id = rule.SYS_ID;
+					e.setAttribute('rel', rule.SYS_ID);
+					e.setAttribute('class', 'objlist-category-head')
+					e.innerHTML = info.Name;
+					$(node).append(e);
+				};
+
+				$(ID).append(node);
+			}
+
+			_events.enableItemDragging();
 
 		};
 
@@ -263,9 +276,10 @@ function MainView(_controller) {
 			$(li)
 					.html(
 							'<a href="#Tab_'
-							+ rule.SYS_ID
+									+ rule.SYS_ID
 									+ '"><span class="ui-icon ui-icon-close" role="presentation"></span>'
-									+ (info.PARAMS.Name || info.ID || rule.SYS_ID) + '</a>');
+									+ (info.PARAMS.Name || info.ID || rule.SYS_ID)
+									+ '</a>');
 			// alert($('li[rel="' + Preview_ID + '"]').html());
 
 			// Add generated tabular
@@ -275,7 +289,7 @@ function MainView(_controller) {
 			$(li).draggable({
 				opacity : 0.5,
 				revert : true,
-				containment: 'trash'
+				containment : 'trash'
 			});
 
 			// Refresh tabs
@@ -286,9 +300,7 @@ function MainView(_controller) {
 			$(window).trigger('resize');
 
 			// Make new tab active
-			$(ID).tabs('option', 'active',
-					$(ID + ' > div ').length - 2);
-			
+			$(ID).tabs('option', 'active', $(ID + ' > div ').length - 2);
 
 		};
 
@@ -381,37 +393,36 @@ function MainView(_controller) {
 		 * @see /classes/objects/Rules.js
 		 */
 		var actualizeRules = function(_rules) {
-			console
-					.log('MainView.js - generateDropableObjectField.actualizeRules')
+			Log('MainView.js - generateDropableObjectField.actualizeRules',4)
 			$.each(_rules, function(_key, _rule) {
-
-				$('#Tab_' + _key).html("");
-
-				if (_rule.getSensorList().getRootItem() == null) {
-					$('#Tab_' + _key).append(buildPlaceholder(false, _key));
-
-				} else {
-					$.each(_rule.getSensorList().getObjectsAsList(), function(
-							_UNIQUE_ID, _obj) {
-						$('#Tab_' + _key)
-								.append(
-										buildBox(_obj.getItem()._UNIQUE_ID,
-												_obj, _key));
-					});
-				}
-				if (_rule.getActorList().getRootItem() == null) {
-					$('#Tab_' + _key).append(buildPlaceholder(true, _key));
-				} else {
-
-					$.each(_rule.getActorList().getObjectsAsList(), function(
-							_UNIQUE_ID, _obj) {
-						$('#Tab_' + _key)
-								.append(
-										buildBox(_obj.getItem()._UNIQUE_ID,
-												_obj, _key));
-					});
-				}
-				// $('#Tab_' + _key).append(ret);
+//
+//				$('#Tab_' + _key).html("");
+//
+//				if (_rule.getSensorList().getRootItem() == null) {
+//					$('#Tab_' + _key).append(buildPlaceholder(false, _key));
+//
+//				} else {
+//					$.each(_rule.getSensorList().getObjectsAsList(), function(
+//							_UNIQUE_ID, _obj) {
+//						$('#Tab_' + _key)
+//								.append(
+//										buildBox(_obj.getItem()._UNIQUE_ID,
+//												_obj, _key));
+//					});
+//				}
+//				if (_rule.getActorList().getRootItem() == null) {
+//					$('#Tab_' + _key).append(buildPlaceholder(true, _key));
+//				} else {
+//
+//					$.each(_rule.getActorList().getObjectsAsList(), function(
+//							_UNIQUE_ID, _obj) {
+//						$('#Tab_' + _key)
+//								.append(
+//										buildBox(_obj.getItem()._UNIQUE_ID,
+//												_obj, _key));
+//					});
+//				}
+//				// $('#Tab_' + _key).append(ret);
 
 			});
 		};
@@ -422,9 +433,9 @@ function MainView(_controller) {
 		 * @param objects
 		 * @see /classes/objects/Rules.js
 		 */
-		this.actualize = function(_rules) {
+		this.actualize = function() {
 			Log('MainView.js - generateDropableObjectField.actualize', 4);
-			actualizeRules(_rules);
+	//		actualizeRules(_controller.getRules());
 			$('#rd_rules_preview').html(
 					"<pre>" + _controller.generateJSONString() + "</pre>");
 		};
@@ -436,20 +447,21 @@ function MainView(_controller) {
 	var objField = new generateDropableObjectField;
 
 	this.addRule = function() {
-//		_events.disableItemDragging()  // Disable draggbar events
-		if((_rule = _controller.addNewRule()) != null){
-			objField.addRuleTab(_rule);	  // Add rule tab
+		// _events.disableItemDragging() // Disable draggbar events
+		if ((_rule = _controller.addNewRule()) != null) {
+			objField.addRuleTab(_rule); // Add rule tab
 		}
 	};
-	
+
 	/**
-	 * This initialize the removing of the element with the SYS_ID.
-	 * Normally the function gets the SYS_ID from HTML-rel-attribute
+	 * This initialize the removing of the element with the SYS_ID. Normally the
+	 * function gets the SYS_ID from HTML-rel-attribute
+	 * 
 	 * @param SYS_ID
 	 * @return true, if succeed
 	 */
-	this.removeElement = function(SYS_ID){
-		if(!_controller.removeRule(SYS_ID)) {// If SYS_ID not a rule
+	this.removeElement = function(SYS_ID) {
+		if (!_controller.removeRule(SYS_ID)) {// If SYS_ID not a rule
 			_controller.removeElement(SYS_ID)
 		}
 	}
@@ -489,18 +501,20 @@ function MainView(_controller) {
 		blocks['gathers'] = gathers
 
 		objList.actualize(blocks, rules);
-		
+
 		$(window).resize();
-		
+
 	}
-	
-	this.actualize = function(){
+
+	this.actualize = function() {
 		
+		objField.actualize();
+
 		$(window).resize();
 	}
-	
+
 	/**
-	 * Initialize MainView 
+	 * Initialize MainView
 	 */
 	var init = function() {
 
@@ -512,18 +526,16 @@ function MainView(_controller) {
 		_events.enableButtonEvents();
 		_events.enableTrash()
 
-		// Generates draggable and add it to the view
-		var _objList = objList.init();
-		$(Configuration.GUI.APP_CONTAINER).append(_objList);		
-		_events.enableItemDragging(objField.getID());
-	//	_events.disableItemDragging();
-
 		// Generates droppable field and add it to the view
 		var _objField = objField.init();
 		$(Configuration.GUI.APP_CONTAINER).append(_objField);
 		_events.enableAddButton()
 		
-		$(window).resize();
+		// Generates draggable and add it to the view
+		var _objList = objList.init();
+		$(Configuration.GUI.APP_CONTAINER).append(_objList);
+		
+		_self.actualize()
 	}();
 
 };

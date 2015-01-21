@@ -2,81 +2,70 @@
  * Toolbar
  */
 #rd_toolbar {
-	overflow-y: hidden;
-	overflow-x: visible;
 	display: block;
+	box-sizing: border-box;
+	z-index: 2;
+	padding: 4px;
 }
 
-#rd_toolbar>li {
-	padding: 0;
-	margin: 0;
-	padding: 5px 3px 5px 5px;
-	width: 120px;
-	height: 50px;
-	vertical-align: top;
-	overflow: hidden;
+#rd_toolbar>* {
 	display: inline-block;
+	vertical-align: top;
 }
 
-#rd_toolbar>li>* {
+#rd_toolbar>a  span.ui-button-text {
+	padding: 0;
+}
+
+#rd_toolbar>a,
+#rd_toolbar>form {
+	border: 1px solid #999;
+}
+#rd_toolbar #menu-open, #rd_toolbar #inputLoad {
+	display: none;
+}
+
+#rd_toolbar>ul li>* {
+	border: 1px solid #222;
 	padding: 0;
 	margin: 0;
 	display: block;
-	vertical-align: middle;
 	height: 100%;
-	width: 100%;
+	background-color: #FEFEFE;
+	border-radius: 5px;
 }
 
-#rd_toolbar>li>*.ui-state-default {
-	border-color: #AAAAAA;
-}
-
-#rd_toolbar label {
+#rd_toolbar form label {
 	margin-right: 5px;
 }
-
-#rd_toolbar button span {
-	padding-left: 50px;
-	font-weight: bold;
-	vertical-align: middle;
-	padding: 10px 5px 10px 45px;
+#rd_toolbar form input {
+	border-radius: 5px;
 }
 
-#rd_toolbar button span, #trash div {
-	background: url(../images/sprite.png) no-repeat top left;
+#rd_toolbar span.ui-icon {
+	background: url(../images/sprite.png) no-repeat center center;
 }
 
-button#btnNew span {
-	background-position: 6px 1px;
+#rd_toolbar *.ui-state-default {
+	border: 1px solid #999;
 }
 
-button#btnLoad span {
-	background-position: 6px -339px;
-}
-
-button#btnSave span {
-	background-position: 6px -67px;
-}
-
-button#btnSaveAs span {
-	background-position: 6px -133px;
+#trash {
+	height: 100%;
+	width: 120px;
+	background-position: 6px -201px;
+	display: inline-block;
+	float: right;
+	padding: 5px;
+	border: 1px solid #999;
 }
 
 #trash div {
-	padding: 2px 0;
-	height: 100%;
-	width: 100%;
-	background-position: 6px -201px;
-}
-
-#trash span {
 	background-color: #FEFEFE;
 	border: 2px dotted #ddd;
 	height: 100%;
-	width: 65px;
 	margin-right: 5px;
 	display: block;
-	padding: 5px;
 	float: right;
 }
 

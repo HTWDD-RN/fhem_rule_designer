@@ -352,7 +352,7 @@ var RuleView = function(controller) {
 				+ '">'
 				+ '<li>'
 				+ (condObj != null ? condObj.display()
-						: _events.enableDropElement('<span class="placeholder">Placeholder</span>','.gather, .sensor'))
+						: '<span class="placeholder">Placeholder</span>')
 				+ '</li>' + '<li class="vdev">'
 				+ (vdevObj != null ? vdevObj.display() : 'VDEV') + '</li>'
 				+ '<li>' + (actionsObj.display()) + '</li>' + '</ul>'

@@ -100,7 +100,7 @@ var Events = function(view) {
 	this.enableTrash = function() {
 		$('#trash').droppable(
 				{
-					// accept : accept,
+					accept : '.ui-tabs-active',
 					drop : function(event, ui) {
 						var hash = $('a',$(ui.draggable)).attr('href')
 								.replace('#', '') // get url
@@ -127,8 +127,8 @@ var Events = function(view) {
 	/**
 	 * Function to enables dragging
 	 */
-	this.enableItemDragging = function() {
-		Log($(ID.DRAGBAR + ' li').size())
+	this.enableItemDragging = function(elem) {
+//		Log($(ID.DRAGBAR + ' li').size())
 
 		var enableTrigger = false
 
@@ -144,7 +144,7 @@ var Events = function(view) {
 			start : function(event, ui) {
 				Log('Drg start', ui, 5)
 				$(ID.DRAGBAR).css({
-					overflow : 'hidden'
+					overflow : 'visible'
 				})
 				if (Configuration.DEBUG_LEVEL >= 5)
 					enableTrigger = true
@@ -161,18 +161,17 @@ var Events = function(view) {
 			appendTo : 'body',
 			// containment: 'window',
 			scroll : false,
-			zIndex : 9999,
-		// helper: 'clone'
-		// zIndex: 9000,
+			zIndex : 9999
 		}
-		$(ID.DRAGBAR + ' li').draggable(setup)
+//		$(ID.DRAGBAR + ' li').draggable(setup)
+		$(elem).draggable(setup)
 	}
 
 	/**
 	 * Function to disables dragging
 	 */
-	this.disableItemDragging = function() {
-		$(ID.DRAGBAR + ' li').draggable('disable')
+	this.disableItemDragging = function(elem) {
+		$(elem).draggable('disable')
 	}
 	
 	/**
@@ -180,21 +179,21 @@ var Events = function(view) {
 	 * @param ui
 	 * @param accepts
 	 */
-	this.enableDropElement = function(obj, accepts) {
+	this.enableDropElement = function(elem, accepts) {
 		var setup = {
 			drop : function(event, ui) {
 						Log($(ui.draggable), $(ui.draggable).context, 5)
 						// Get drag info
 
 						// Destroy if drop successful and valid
-						$(obj).droppable('destroy')
+						$(elem).droppable('destroy')
 						$(ui.draggable).draggable('destroy')
 					},
 			accept :// Setup accept classes/id/elements
 						(!accepts ? '' : accepts)
 		}
 		// Make it droppable
-		$(obj).droppable(setup)
+		$(elem).droppable(setup)
 	}
 	
 }

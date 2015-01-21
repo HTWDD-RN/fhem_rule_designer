@@ -129,14 +129,26 @@ function MainView(_controller) {
 			$(ID).html('')
 
 			Log('MainView.js - generateDraggableObjectList.actualize', 4);
-			
+
 			var categories = _controller.getItems(flagSegmentation)
-			
+
+			for (key in categories) {
+				categories[key] = $.map(categories[key], function(elem, i) {
+					elem.DRAG_CLASS = [
+							(elem.READINGS.length > 0 ? 'drag-sensor' : ''),
+							(elem.SETS.length > 0 ? 'drag-actor' : '') ]
+					return elem
+				})
+			}
+
 			var vdevs = $.map(_controller.getVirtualDevices(),
 					function(elem, i) {
 						Log('elem', elem, 5)
 						var tmp = elem
 						tmp.ID = tmp.TYPE
+						tmp.DRAG_CLASS = [ (tmp.IS_VDEV ? 'drag-vdev' : ''),
+								(tmp.IS_ACTOR ? 'drag-vdev-actor' : ''),
+								(tmp.IS_SENSOR ? 'drag-vdev-sensor' : '') ]
 						return tmp
 					})
 			categories['virtual_devices'] = vdevs
@@ -147,6 +159,7 @@ function MainView(_controller) {
 				tmp.ID = elem[0]
 				tmp.NAME = tmp.ID
 				tmp.ICON_CLASS = ('RD_ICON_' + tmp.ID).toLowerCase()
+				tmp.DRAG_CLASS = [ 'drag-gather' ]
 				return tmp
 			})
 			categories['gathers'] = gathers
@@ -155,9 +168,9 @@ function MainView(_controller) {
 				var info = rule.getInfo()
 				rule.ID = rule.SYS_ID
 				rule.NAME = (info.PARAMS.Name || info.ID || rule.ID)
+				rule.DRAG_CLASS = [ 'drag-rule-actor' ]
 				return rule
 			})
-
 			categories['rules'] = rules
 
 			if (categories === undefined || categories === null)
@@ -170,10 +183,9 @@ function MainView(_controller) {
 
 				if ($(blocks).size() > 0) {
 					node = document.createElement('ul');
-					node
-							.setAttribute(
-									'class',
-									Configuration.GUI.DRAGBAR.OBJECT_LIST.SEGMENTATION.CLASSES);
+					$(node)
+							.addClass(
+									Configuration.GUI.DRAGBAR.OBJECT_LIST.SEGMENTATION.CLASSES)
 					node.id = cat
 					$(ID).append(node);
 
@@ -181,9 +193,8 @@ function MainView(_controller) {
 					if (i <= 0) {
 						var e = document.createElement('li');
 						e.innerHTML = cat
-						e
-								.setAttribute(
-										'class',
+						$(e)
+								.addClass(
 										Configuration.GUI.DRAGBAR.OBJECT_LIST.SEGMENTATION.HEAD)
 						$(node).append(e);
 						$(node).append('<hr>');
@@ -193,19 +204,19 @@ function MainView(_controller) {
 					for (key in blocks) {
 						var e = document.createElement('li');
 						e.id = blocks[key].ID;
-						e.setAttribute('rel', blocks[key].ID);
-						e
-								.setAttribute(
-										'class',
-										Configuration.GUI.DRAGBAR.OBJECT_LIST.SEGMENTATION.BODY)
+						e.setAttribute('rel', blocks[key].ID)
+						$(e)
+								.addClass(
+										Configuration.GUI.DRAGBAR.OBJECT_LIST.SEGMENTATION.BODY);
+						$(e).addClass((blocks[key].DRAG_CLASS).join(' '))
 						var url = (blocks[key].ICON_CLASS != '' ? $(e)
 								.addClass(blocks[key].ICON_CLASS) : '')
 						e.innerHTML = blocks[key].NAME;
 						$(node).append(e);
+						_events.enableItemDragging($(e));
 					}
 					;
 
-					_events.enableItemDragging();
 				}
 
 			}

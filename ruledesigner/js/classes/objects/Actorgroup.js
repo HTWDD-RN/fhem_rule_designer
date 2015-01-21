@@ -45,8 +45,8 @@ var Actorgroup = function() {
 	/**
 	 * Function to generate the HTML-Output return HTML-string
 	 */
-	this.display = function() {
-		return _view.display(_model)
+	this.display = function(_events) {
+		return _view.display(_model, _events)
 	}
 
 	// Bind model functions

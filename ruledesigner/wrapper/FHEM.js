@@ -112,11 +112,11 @@ function Wrapper() {
 					var uls = $('ul:first ul', $(data).filter('#body'))
 					// console.log($(uls))
 					supported_protocols = $('a', uls[1]).map(function() {
-						return this.innerText
+						return (this.innerText || this.textContent)
 					}).toArray()
 					// console.log(supported_protocols)
 					helper_modules = $('a', uls[2]).map(function() {
-						return this.innerText
+						return (this.innerText || this.textContent)
 					}).toArray()
 					// console.log(helper_modules)
 					step2()

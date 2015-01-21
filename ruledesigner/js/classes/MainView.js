@@ -217,7 +217,7 @@ function MainView(_controller) {
 								'objlist-category ui-widget-content');
 
 				for (rule in rules) {
-					info = rule.getInfo()
+					info = rules[rule].getInfo()
 
 					var e = document.createElement('li');
 					e.id = rule.SYS_ID;
@@ -268,7 +268,7 @@ function MainView(_controller) {
 			$(div).insertBefore('#' + Preview_ID);
 
 			// Init first display
-			var tmp = rule.display()
+			var tmp = rule.display(_events)
 			Log(tmp, 5)
 			$('#Tab_' + rule.SYS_ID).html(tmp)
 
@@ -319,6 +319,7 @@ function MainView(_controller) {
 			var div_preview = document.createElement('div');
 			div_preview.id = Preview_ID;
 
+			/* Create AddRule Tab-button */
 			var li_addRule = document.createElement('li');
 
 			var a = document.createElement('a');
@@ -450,9 +451,18 @@ function MainView(_controller) {
 		// _events.disableItemDragging() // Disable draggbar events
 		if ((_rule = _controller.addNewRule()) != null) {
 			objField.addRuleTab(_rule); // Add rule tab
+			_self.actualize()
 		}
 	};
-
+	
+	this.loadRule = function() {
+		// _events.disableItemDragging() // Disable draggbar events
+		if ((_rule = _controller.loadRule()) != null) {
+			objField.addRuleTab(_rule); // Add rule tab
+			_self.actualize()
+		}
+	};
+	
 	/**
 	 * This initialize the removing of the element with the SYS_ID. Normally the
 	 * function gets the SYS_ID from HTML-rel-attribute
@@ -462,8 +472,9 @@ function MainView(_controller) {
 	 */
 	this.removeElement = function(SYS_ID) {
 		if (!_controller.removeRule(SYS_ID)) {// If SYS_ID not a rule
-			_controller.removeElement(SYS_ID)
+			return _controller.removeElement(SYS_ID) // search and remove element
 		}
+		return true
 	}
 
 	this.reset = function() {
@@ -531,9 +542,16 @@ function MainView(_controller) {
 		$(Configuration.GUI.APP_CONTAINER).append(_objField);
 		_events.enableAddButton()
 		
+		// Add predefined rules
+		var _rules = _controller.getRules()
+		for (var key in _rules){
+			objField.addRuleTab(_rules[key])
+		}
+				
 		// Generates draggable and add it to the view
 		var _objList = objList.init();
 		$(Configuration.GUI.APP_CONTAINER).append(_objList);
+
 		
 		_self.actualize()
 	}();

@@ -1,0 +1,77 @@
+@media ( min-width : 720px) {
+	/*
+ * Toolbar
+ */
+	#rd_toolbar {
+		height: 80px;
+	}
+	#rd_toolbar #trash {
+		position: relative;
+		height: 70px;
+		padding: 0
+	}
+	#rd_toolbar>ul li span.ui-button-text {
+		padding: 0;
+	}
+	
+	#rd_toolbar>ul li span.ui-icon {
+		position: absolute;
+		height: 75%;
+		bottom: 3px;
+		width: 100%;		
+	}
+	#rd_toolbar #trash span.ui-icon {
+		position: absolute;		
+		height: 65%;
+		left: 50%;
+		margin-left:-40%;
+		bottom: 3px;
+		width: 80%;		
+		background-color: #FEFEFE;
+		border: 2px dotted #ddd;
+		background-position: center -198px;
+		z-index: 5;
+	}
+	#rd_toolbar li a#btnNew span.ui-icon {
+		background-position: center 17px;
+	}
+	#rd_toolbar li a#btnLoad span.ui-icon {
+		background-position: center -323px;
+	}
+	#rd_toolbar li a#btnSave span.ui-icon {
+		background-position: center -52px;
+	}
+	#rd_toolbar li a#btnSaveAs span.ui-icon {
+		background-position: center -120px;
+	}
+	#rd_toolbar>ul li {
+		margin: 0 5px 0 0;
+		overflow: hidden;
+		display: inline-block;
+		width: auto;
+		height: 70px;
+	}
+	#rd_toolbar>ul li span b, #trash b {
+	z-index:10;
+		padding: 3px 10px;
+	font-size: 12px;
+	display: block;
+	text-align: center;
+	
+	}
+	#rd_toolbar>form {
+		padding:3px 10px;
+		width: 300px;
+		height: 70px;
+		text-align: center;
+	}
+	#rd_toolbar>form label {
+		font-size:12px;
+		font-weight: bold;
+	}
+	#rd_toolbar>form input {
+	margin-top: 5px;
+		padding:3px 5px;
+		width: 100%;
+	}
+}

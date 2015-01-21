@@ -1,0 +1,44 @@
+*, *:before, *:after {
+	/* Set global font family */
+/*	font-family: Calibri; */
+	/* Set a more practicable and natural box model */
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+}
+
+html, body {
+	height: 100%;
+	overflow: hidden;
+	background-color: #F8F8F8;
+}
+
+/**
+ * Set cursor option
+ * @overwrite JQuery defaults
+ */ 
+ .ui-draggable,
+.ui-tabs .ui-tabs-nav li.ui-tabs-active .ui-tabs-anchor,
+.ui-tabs .ui-tabs-nav li.ui-state-disabled .ui-tabs-anchor,
+.ui-tabs .ui-tabs-nav li.ui-tabs-loading .ui-tabs-anchor {
+	cursor: pointer;
+}
+#rd_rules ul li.ui-draggable-dragging {
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border: 1px solid #AAAAAA;
+}
+.ui-draggable-dragging,
+#rd_rules ul li.ui-draggable-dragging,
+#rd_rules ul li.ui-draggable-dragging * {
+	cursor: move;
+
+}
+
+.appContainer {
+	overflow: hidden;
+}

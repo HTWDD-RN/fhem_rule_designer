@@ -66,9 +66,6 @@ function __RuleDesigner() {
 				VIRTUAL_DEVICES)
 		stepsCounter()
 		
-		if(_self.addNewRule() != null)
-			_view.actualize()
-
 		Log('NUM OF INIT STEPS : ' + (stepsCounter() - 1))
 	}
 
@@ -182,11 +179,14 @@ function __RuleDesigner() {
 		Helpers.loadGUIContainer(function() {
 			stepsCounter()
 
-			// Step 2 - Initialize/Build WildCard - GUI
+			// Step 2 Initialize a new rule
+			_self.addNewRule()
+
+			// Step 3 - Initialize/Build WildCard - GUI
 			_view = new MainView(_self);
 			stepsCounter()
 
-			// Step 3 - LoadWrapper
+			// Step 4 - LoadWrapper
 			Helpers.loadWrapper(Configuration.WRAPPER, function() {
 				_wrapper = new Wrapper();
 				cbInitWrapper()

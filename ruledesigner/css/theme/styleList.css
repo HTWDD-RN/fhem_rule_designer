@@ -1,0 +1,67 @@
+@media ( max-width : 479.99999px) {
+	.appContainer{
+	z-index: 1
+	}
+	#rd_toolbar {
+		position: relative;
+		height: 50px;
+		padding: 0;
+	}
+	#rd_toolbar form {
+		display: block;
+		padding: 0 5px ;
+		margin: 5px 50px;
+		height: 40px;
+	}
+	#menu-open, #trash {
+		display: block;
+		width: 40px;
+		height: 40px;
+		margin: 5px;
+		z-index: 3
+	}
+	
+	#trash {
+		padding: 3px;
+	}
+	
+	#trash span.ui-icon {
+		background-color: #FEFEFE;
+		border: 2px dotted #ddd;
+		width: 32px;
+		height: 31px;
+		display: block;
+		background-size: 70%;
+		background-position: 6px -117px;
+	}
+	#trash div {
+		display: none;
+	}
+	
+	#trash b {
+		display: none;
+	}
+	
+	#rd_toolbar #menu-open {
+		display: block;
+		float: left;
+	}
+	.ui-menu {
+		width: 125px;
+		position: absolute;
+		top: 50px;
+		z-index: 1000;
+	}
+	
+	#rd_toolbar>form {
+		height: 40px;
+		text-align: center;
+	}
+	#rd_toolbar>form label {
+		font-size: 8px;
+		font-weight: bold;
+	}
+	#rd_toolbar>form input {
+		width: 100%;
+	}
+}

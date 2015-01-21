@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Rules-Designer</title>
+
+<link href="../css/theme/jquery-ui-1.10.4.custom.css" rel="stylesheet">
+<script src="../js/lib/jquery-1.10.2.js"></script>
+<script src="../js/lib/jquery-ui-1.10.4.js"></script>
+
+<script src="../js/classes/helpers/Counter.js"></script>
+<script src="../js/classes/helpers/Log.js"></script>
+
+<script src="../js/classes/objects/Params.js"></script>
+<script src="../js/classes/objects/RefParams.js"></script>
+<script src="../js/classes/objects/VirtualDevice.js"></script>
+<script src="../js/classes/objects/Actor.js"></script>
+<script src="../js/classes/objects/Actors.js"></script>
+<script src="../js/classes/objects/Actorgroup.js"></script>
+<script src="../js/classes/objects/Actions.js"></script>
+<script src="../js/classes/objects/Condition.js"></script>
+<script src="../js/classes/objects/Gather.js"></script>
+<script src="../js/classes/objects/Conditions.js"></script>
+<script src="../js/classes/objects/Rule.js"></script>
+</head>
+<body>
+<pre id="result">
+
+</pre>
+<script src="../js/classes/objects/Rules.js"></script>
+<script>
+		// Simulate global config
+		var Configuration = {
+			DEBUG_LEVEL : 4,
+			ID_PREFIX : "RID"
+		}
+		
+		// Simulate ID-Generator
+		// If the representation of all objects on the home
+		// automation server without an ID  an alternative
+		// counter is use to generates ID
+		var cSYS_ID = function() {
+
+			var count = new Counter()
+
+			return function() {
+				return Configuration.ID_PREFIX + count();
+			}
+
+		}()
+//
+var rules = new Rules()
+
+/*
+ *
+ */
+var rule = new Rule('RULE_5')
+var rule_params = {
+	'name': 'Klimaanlage',
+	'descr' : 'Regel zur Inbetriebnahme im Sommer'
+}
+
+rule.setParameter(rule_params)
+rule.addParam('link', 'Demo 5')
+rule.addParam('Kaptitel', 'X.3 Validierung und Anwendung')
+rule.addParam('Beispiel', 5)
+
+var sensor1 = new Condition('Temperatursensor, innen (S1)')
+sensor1.addRefParam( 'temperature', '>', 30 )
+
+var sensor2 = new Condition('Hygrometer außen (S2)')
+sensor2.setRefParameter({ 'humidity': ['>', 80] })
+
+var gather = new Gather('OR')
+gather.addCondition(sensor1)
+gather.addCondition(sensor2)
+
+var vdev = new VirtualDevice('ACTIVATION_TIMER')
+vdev.getParamObj().setParameter({'weekdays': '37', 'InitTime': 20})
+rule.setVirtualDevice(vdev)
+
+var actorA1 = new Actor('Fenster (A1)')
+actorA1.addParam('state', 'close')
+var actorA2 = new Actor('Fenster (A2)')
+actorA2.setParameter({'state':'close'})
+var actorA3 = new Actor('Klimaanlage (A3)')
+actorA3.getParamObj().setParameter({'state':'on', 'temperature':20.5})
+
+rule.getActions().addAction(actorA1)
+rule.getActions().addAction(actorA2)
+rule.getActions().addAction(actorA3)
+
+rules.addRule(rule)
+
+Log(rules.serialize())
+
+Log(rules.getInfo())
+
+var result = rules.serialize();
+$('#result').html(result); 
+</script>
+</body>
+</html>

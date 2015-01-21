@@ -1,0 +1,185 @@
+
+
+div {
+	display: block;
+	padding: 0;
+	margin: 0;
+}
+
+div.appContainer {
+	height: 100%;
+}
+
+#alertContainer {
+	position: absolute;
+	height: 150%;
+	width: 150%;
+	margin: -25% 0 0 -25%;
+	background-color: #333333;
+	opacity: 0.5;
+	filter: Alpha(Opacity = 50);
+	z-index: 1001;
+}
+
+
+button {
+	margin: 3px 5px;
+}
+
+
+#draggedItem {
+	border: 2px dashed #666;
+	text-shadow: 2px;
+	font-weight: bold;
+	padding: 10px;
+	z-index: 65535;
+	cursor: move;
+}
+
+#rd_rules, #rd_draggbar {
+	background-color: #FEFEFE;
+}
+
+#rd_rules>div {
+	overflow: scroll;
+	padding: 18px;
+}
+
+#rd_rules .placeholder {
+	padding: 10px;
+	display: inline-block;
+	border: 2px dashed #ccc;
+	height: 150px;
+	min-width: 100%
+	margin: 5px;
+}
+
+#rd_rules ul.obj_rule {
+	position: relative;
+	min-height: 100%;
+	/** TODO **/
+}
+
+#rd_rules ul.obj_rule>li {
+	position: relative;
+	width: 50%;
+}
+
+#rd_rules ul.obj_rule li.vdev {
+	display: block;
+	position: absolute;
+	right: 30px;
+	top: -30px;
+	z-index: 20;
+}
+
+#rd_rules ul.obj_rule>li>span.placeholder {
+	width: 90%;
+}
+
+#rd_rules ul.obj_rule>li.vdev>.placeholder {
+	height: 30px;
+	width: 30px;
+}
+
+#rd_rules ul.obj_rule li {
+	display: inline-block;
+}
+
+
+/**
+ * Toolbar settings
+ **/ 
+#rd_toolbar {
+	padding: 0;
+	margin: 0;
+	overflow: hidden;
+}
+
+#rd_toolbar > li {
+	padding: 0;
+	margin: 0;
+	padding: 5px 3px 5px 5px;
+	width: 120px;
+	height: 75px;
+	display: inline-table;
+	vertical-align: top;
+	overflow: hidden;
+}
+
+#rd_toolbar > li > * {
+	padding: 0;
+	margin: 0;
+	display: table-cell;
+	vertical-align: middle;
+	height: 100%;
+	width: 100%;
+}
+
+/**
+ * Dragbar settings
+ */
+#rd_draggbar {
+	overflow-y: scroll;
+}
+
+#rd_draggbar ul {
+	list-style: none;
+	padding: 0px;
+}
+
+#rd_draggbar li {
+	margin: 2px 0px 0px 5px;
+}
+
+/*
+ *
+ */
+div.rule-obj-box {
+	position: relative;
+	/* The connectors are located in absolute position to her parent Flag*/
+	font-size: 10px;
+	display: inline-block;
+	width: 150px;
+	min-height: 100px;
+	margin: 10px;
+	z-index: 501;
+}
+
+div.rule-obj-box  span {
+	text-align: center;
+}
+
+div.rule-obj-box  span.title {
+	padding-top: 10px;
+	font-size: 12px;
+	display: block;
+	border-bottom: 3px double #666;
+}
+
+div.rule-obj-box span.connector {
+	position: absolute;
+	background-color: #ddd;
+	z-index: 500;
+}
+
+.ui-draggable:hover {
+	cursor: pointer;
+	background-color: #ccc;
+}
+
+.ui-draggable.ui-draggable-dragging:hover {
+	cursor: move;
+}
+
+/*
+.sprite-document_new{ background-position: 0 0; width: 32px; height: 32px; } 
+.sprite-document_save{ background-position: 0 -68px; width: 32px; height: 32px; } 
+.sprite-document_save_as{ background-position: 0 -136px; width: 32px; height: 32px; } 
+.sprite-edit_clear{ background-position: 0 -204px; width: 32px; height: 32px; } 
+.sprite-emblem_system{ background-position: 0 -272px; width: 32px; height: 32px; } 
+.sprite-folder_drag_accept{ background-position: 0 -340px; width: 32px; height: 32px; } 
+.sprite-help_browser{ background-position: 0 -408px; width: 32px; height: 32px; } 
+.sprite-user_trash_full{ background-position: 0 -476px; width: 32px; height: 32px; } 
+.sprite-view_refresh{ background-position: 0 -544px; width: 32px; height: 32px; } 
+*/

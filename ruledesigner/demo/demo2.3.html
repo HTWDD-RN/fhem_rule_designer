@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Rules-Designer</title>
+
+<link href="../css/theme/jquery-ui-1.10.4.custom.css" rel="stylesheet">
+<script src="../js/lib/jquery-1.10.2.js"></script>
+<script src="../js/lib/jquery-ui-1.10.4.js"></script>
+
+<script src="../js/classes/helpers/Counter.js"></script>
+<script src="../js/classes/helpers/Log.js"></script>
+
+<script src="../js/classes/objects/Params.js"></script>
+<script src="../js/classes/objects/RefParams.js"></script>
+<script src="../js/classes/objects/VirtualDevice.js"></script>
+<script src="../js/classes/objects/Actor.js"></script>
+<script src="../js/classes/objects/Actors.js"></script>
+<script src="../js/classes/objects/Actorgroup.js"></script>
+<script src="../js/classes/objects/Actions.js"></script>
+<script src="../js/classes/objects/Condition.js"></script>
+<script src="../js/classes/objects/Gather.js"></script>
+<script src="../js/classes/objects/Conditions.js"></script>
+<script src="../js/classes/objects/Rule.js"></script>
+</head>
+<body>
+<pre id="result">
+
+</pre>
+<script src="../js/classes/objects/Rules.js"></script>
+<script>
+		// Simulate global config
+		var Configuration = {
+			DEBUG_LEVEL : 4,
+			ID_PREFIX : "RID"
+		}
+		
+		// Simulate ID-Generator
+		// If the representation of all objects on the home
+		// automation server without an ID  an alternative
+		// counter is use to generates ID
+		var cSYS_ID = function() {
+
+			var count = new Counter()
+
+			return function() {
+				return Configuration.ID_PREFIX + count();
+			}
+
+		}()
+//
+var rules = new Rules()
+
+/*
+ *
+ */
+var rule = new Rule('RULE_2_VAR_C')
+var rule_params = {
+	'name': 'Heizungssteuerung',
+	'descr' : 'Regel zur Heizungssteuerung',
+	'Bemerkung' : 'Variante 3 - Zeitbegrenzung als Ausführungsbeschränkung interpretiert'
+}
+
+rule.setParameter(rule_params)
+rule.addParam('link', 'Demo 2.3')
+rule.addParam('Kaptitel', 'X.3 Validierung und Anwendung')
+rule.addParam('Beispiel', 2.3)
+
+var vdev = new VirtualDevice('TIMER')
+vdev.getParamObj().setParameter({'BeginTime': 5,'EndTime':22})
+
+var sensor1 = new Condition('Thermometer (T)')
+sensor1.setRefParameter({'temperature':['<', 20.5]})
+
+var sensor2 = new Condition('Heizung (H)')
+sensor2.setRefParameter({'state':['=', 'off']})
+
+
+
+var actor = new Actor('Heizung (H)')
+actor.setParameter({'state':'on','temperature':21.7})
+
+var agroup = new Actorgroup()
+agroup.setVirtualDevice(vdev)
+agroup.getActors().addActor(actor)
+
+var gather = new Gather('AND')
+gather.addCondition(sensor1)
+gather.addCondition(sensor2)
+
+rule.setConditionObj(gather)
+rule.getActions().addAction(agroup)
+
+
+rules.addRule(rule)
+
+Log(rules.serialize())
+
+Log(rules.getInfo())
+
+var result = rules.serialize();
+$('#result').html(result); 
+</script>
+</body>
+</html>

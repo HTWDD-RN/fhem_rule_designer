@@ -1,0 +1,68 @@
+@media ( min-width : 480px) and ( max-width: 720px) {
+	/*
+ * Toolbar
+ */
+	#rd_toolbar {
+		height: 60px;
+	}
+	#rd_toolbar #trash {
+		position:relative;
+		height: 50px;
+		padding: 2px;
+	}
+
+	#rd_toolbar #trash span.ui-icon {
+		height: 44px;
+		position: absolute;	
+		left: 50%;
+		margin-left:-40%;
+		width: 80%;		
+		background-color: #FEFEFE;
+		border: 2px dotted #ddd;
+	}
+	
+	#rd_toolbar #trash span.ui-icon{
+		background-position: center -199px;
+	}
+	#rd_toolbar li a#btnNew span.ui-icon {
+		background-position: center 3px;
+	}
+	#rd_toolbar li a#btnLoad span.ui-icon {
+		background-position: center -336px;
+	}
+	#rd_toolbar li a#btnSave span.ui-icon {
+		background-position: center -65px;
+	}
+	#rd_toolbar li a#btnSaveAs span.ui-icon {
+		background-position: center -133px;
+	}
+	#rd_toolbar>ul li {
+		padding: 0;
+		margin: 0 5px 0 0;
+		overflow: hidden;
+		display: inline-block;
+		width: 50px;
+		height: 50px;
+	}
+	#rd_toolbar span {
+		height: 100%;
+		width:100%
+	}
+	#rd_toolbar>ul li span b, #trash b {
+		display: none;
+	}
+	#rd_toolbar>form {
+		padding:3px 10px;
+		width: 125px;
+		height: 50px;
+		text-align: center;
+	}
+	#rd_toolbar>form label {
+		font-size: 8px;
+		font-weight: bold;
+	}
+	#rd_toolbar>form input {
+		padding:1px 3px;
+		width: 100px;
+	}
+}

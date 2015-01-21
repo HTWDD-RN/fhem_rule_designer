@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Rules-Designer</title>
+
+<link href="../css/theme/jquery-ui-1.10.4.custom.css" rel="stylesheet">
+<script src="../js/lib/jquery-1.10.2.js"></script>
+<script src="../js/lib/jquery-ui-1.10.4.js"></script>
+
+<script src="../js/classes/helpers/Counter.js"></script>
+<script src="../js/classes/helpers/Log.js"></script>
+
+<script src="../js/classes/objects/Params.js"></script>
+<script src="../js/classes/objects/RefParams.js"></script>
+<script src="../js/classes/objects/VirtualDevice.js"></script>
+<script src="../js/classes/objects/Actor.js"></script>
+<script src="../js/classes/objects/Actors.js"></script>
+<script src="../js/classes/objects/Actorgroup.js"></script>
+<script src="../js/classes/objects/Actions.js"></script>
+<script src="../js/classes/objects/Condition.js"></script>
+<script src="../js/classes/objects/Gather.js"></script>
+<script src="../js/classes/objects/Conditions.js"></script>
+<script src="../js/classes/objects/Rule.js"></script>
+</head>
+<body>
+<pre id="result">
+
+</pre>
+<script src="../js/classes/objects/Rules.js"></script>
+<script>
+		// Simulate global config
+		var Configuration = {
+			DEBUG_LEVEL : 4,
+			ID_PREFIX : "RID"
+		}
+		
+		// Simulate ID-Generator
+		// If the representation of all objects on the home
+		// automation server without an ID  an alternative
+		// counter is use to generates ID
+		var cSYS_ID = function() {
+
+			var count = new Counter()
+
+			return function() {
+				return Configuration.ID_PREFIX + count();
+			}
+
+		}()
+//
+var rules = new Rules()
+
+/*
+ *
+ */
+var rule = new Rule('RULE_3')
+var rule_params = {
+	'name': 'Treppenhaus / Langer Gang',
+	'descr' : 'Regel zur zeitverzögerten Fernsteuerung des Lichtes',
+	'Bemerkung' : 'Unreales Beispiel - benötigt um die Möglichkeiten der Grammatik aufzuzeigen'
+}
+
+rule.setParameter(rule_params)
+rule.addParam('link', 'Demo 3')
+rule.addParam('Kaptitel', 'X.3 Validierung und Anwendung')
+rule.addParam('Beispiel', 3)
+
+var sensor1 = new Condition('Taster (S1)')
+sensor1.setRefParameter({'event':['=', 'click']})
+
+var sensor2 = new Condition('Taster (S2)')
+sensor2.setRefParameter({'event':['=', 'click']})
+
+var sensorX = new Condition('...')
+sensorX.setRefParameter({'event':['=', 'click']})
+
+var sensorN = new Condition('Taster (SN)')
+sensorN.setRefParameter({'event':['=', 'click']})
+
+var gather = new Gather('OR')
+gather.addCondition(sensor1)
+gather.addCondition(sensor2)
+gather.addCondition(sensorX)
+gather.addCondition(sensorN)
+
+var actor1 = new Actor('Lampe (L_1)')
+actor1.setParameter({'state':'on'})
+var actor2 = new Actor('Lampe (L_2)')
+actor2.setParameter({'state':'on'})
+var actorX = new Actor('...')
+actorX.setParameter({'state':'on'})
+var actorI = new Actor('Lampe (L_I)')
+actorI.setParameter({'state':'on'})
+
+var actorI1 = new Actor('Lampe (L_I1)')
+actorI1.setParameter({'state':'on'})
+var actorI2 = new Actor('Lampe (L_I2)')
+actorI2.setParameter({'state':'on'})
+var actorIX = new Actor('...')
+actorIX.setParameter({'state':'on'})
+var actorJ = new Actor('Lampe (L_J)')
+actorJ.setParameter({'state':'on'})
+
+var actorgroupJ = new Actorgroup()
+actorgroupJ.getActors().addActor(actorI1)
+actorgroupJ.getActors().addActor(actorI2)
+actorgroupJ.getActors().addActor(actorIX)
+actorgroupJ.getActors().addActor(actorJ)
+
+var vdevJ = new VirtualDevice('DELAY_TIMER')
+vdevJ.getParamObj().addParam('delay','2000000') // 3min 20s
+actorgroupJ.setVirtualDevice(vdevJ)
+
+var actorJ1 = new Actor('Lampe (L_J1)')
+actorJ1.setParameter({'state':'on'})
+var actorJ2 = new Actor('Lampe (L_J2)')
+actorJ2.setParameter({'state':'on'})
+var actorJX = new Actor('...')
+actorJX.setParameter({'state':'on'})
+var actorN = new Actor('Lampe (L_N)')
+actorN.setParameter({'state':'on'})
+
+var actorgroupN = new Actorgroup()
+actorgroupN.getActors().addActor(actorJ1)
+actorgroupN.getActors().addActor(actorJ2)
+actorgroupN.getActors().addActor(actorJX)
+actorgroupN.getActors().addActor(actorN)
+
+var vdevN = new VirtualDevice('DELAY_TIMER')
+vdevN.getParamObj().addParam('delay','4000000') // 6min 40s
+actorgroupN.setVirtualDevice(vdevN)
+
+rule.setConditionObj(gather)
+rule.getActions().addAction(actor1)
+rule.getActions().addAction(actor2)
+rule.getActions().addAction(actorX)
+rule.getActions().addAction(actorI)
+rule.getActions().addAction(actorgroupJ)
+rule.getActions().addAction(actorgroupN)
+
+rules.addRule(rule)
+
+Log(rules.serialize())
+
+Log(rules.getInfo())
+
+var result = rules.serialize();
+$('#result').html(result); 
+</script>
+</body>
+</html>

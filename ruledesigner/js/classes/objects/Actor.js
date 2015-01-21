@@ -24,9 +24,10 @@ var Actor = function(id) {
 	/**
 	 * Function to generate the HTML-Output return HTML-string
 	 */
-	this.display = function() {
-		return _view.display(_model)
+	this.display = function(_events) {
+		return _view.display(_model, _events)
 	}
+	
 
 	/**
 	 * Integrates a parameter directly, when not exists. It make a tunneling

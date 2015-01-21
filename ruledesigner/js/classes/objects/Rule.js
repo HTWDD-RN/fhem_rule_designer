@@ -62,8 +62,8 @@ var Rule = function(id) {
 	/**
 	 * Function to generate the HTML-Output return HTML-string
 	 */
-	this.display = function() {
-		return _view.display(_model)
+	this.display = function(_events) {
+		return _view.display(_model, _events)
 	}
 
 	/**
@@ -342,7 +342,7 @@ var RuleView = function(controller) {
 	/**
 	 * Function to generate the HTML-Output return HTML-string
 	 */
-	this.display = function(_model) {
+	this.display = function(_model, _events) {
 		var condObj = _model.getConditionObj()
 		var vdevObj = _model.getVirtualDevice()
 		var actionsObj = _model.getActions()
@@ -352,7 +352,7 @@ var RuleView = function(controller) {
 				+ '">'
 				+ '<li>'
 				+ (condObj != null ? condObj.display()
-						: '<span class="placeholder">Placeholder</span>')
+						: _events.enableDropElement('<span class="placeholder">Placeholder</span>','.gather, .sensor'))
 				+ '</li>' + '<li class="vdev">'
 				+ (vdevObj != null ? vdevObj.display() : 'VDEV') + '</li>'
 				+ '<li>' + (actionsObj.display()) + '</li>' + '</ul>'

@@ -346,17 +346,43 @@ var RuleView = function(controller) {
 		var condObj = _model.getConditionObj()
 		var vdevObj = _model.getVirtualDevice()
 		var actionsObj = _model.getActions()
+		
+		var dp_rule = $('<ul></ul>')
+		dp_rule.addClass('obj_rule')
+		
+		// Generate sensor /Condition part
+		var sensor = $('<li></li>')
+		sensor.addClass('placeholder')
+		if (condObj != null){
+			sensor.html(condObj.display())
+		} else {
+			var placeholder = $('<span></span>')
+			placeholder.html('Placeholder for Condition / Gather objects')
+			sensor.addClass(['placeholder', 'drop-condition', 'drop-gather'].join(' '))
+			sensor.html(placeholder)
+		}
+		
+		// Generate Virtual Device part
+		var vdev = $('<li></li>')
+		vdev.addClass('vdev')
+		if(vdevObj != null){
+			vdev.html(vdevObj.display())
+		} else {
+			vdev.addClass('drop-vdev')
+			var placeholder = $('<span></span>')
+			placeholder.html('Placeholder for Virtual Device')
+			vdev.html(placeholder)
+		}
+		
+		// Generate Actions part
+		var dp_actions = $('<li></li>')
+		dp_actions.html(actionsObj.display())
+		
 
-		var html = '<ul class="obj_rule" rel="'
-				+ _controller.SYS_ID
-				+ '">'
-				+ '<li>'
-				+ (condObj != null ? condObj.display()
-						: '<span class="placeholder">Placeholder</span>')
-				+ '</li>' + '<li class="vdev">'
-				+ (vdevObj != null ? vdevObj.display() : 'VDEV') + '</li>'
-				+ '<li>' + (actionsObj.display()) + '</li>' + '</ul>'
-		return html
+		// Build display rule
+		dp_rule.append(sensor, vdev, dp_actions)
+		
+		return $('<div></div>').html(dp_rule).html()
 	}
 
 }

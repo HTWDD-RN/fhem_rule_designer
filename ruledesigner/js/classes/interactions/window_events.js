@@ -128,12 +128,12 @@ var Events = function(view) {
 	 * Function to enables dragging
 	 */
 	this.enableItemDragging = function(elem) {
-//		Log($(ID.DRAGBAR + ' li').size())
+// Log($(ID.DRAGBAR + ' li').size())
 
 		var enableTrigger = false
 
 		var triggerPos = function() {
-	//		Log($(this).position())
+	// Log($(this).position())
 			if (enableTrigger) {
 				setTimeout(triggerPos, 10000)
 			}
@@ -163,7 +163,7 @@ var Events = function(view) {
 			scroll : false,
 			zIndex : 9999
 		}
-//		$(ID.DRAGBAR + ' li').draggable(setup)
+// $(ID.DRAGBAR + ' li').draggable(setup)
 		$(elem).draggable(setup)
 	}
 
@@ -176,24 +176,40 @@ var Events = function(view) {
 	
 	/**
 	 * A generalized function for enableDrop of an specific element
+	 * 
 	 * @param ui
 	 * @param accepts
 	 */
-	this.enableDropElement = function(elem, accepts) {
-		var setup = {
-			drop : function(event, ui) {
-						Log($(ui.draggable), $(ui.draggable).context, 5)
-						// Get drag info
-
-						// Destroy if drop successful and valid
-						$(elem).droppable('destroy')
-						$(ui.draggable).draggable('destroy')
-					},
-			accept :// Setup accept classes/id/elements
-						(!accepts ? '' : accepts)
+	this.enableDropElementsRule = function() {
+		var DROP_CLASSES = {
+				'.drop-condition': ['.drag-gather', '.drag-sensor'],
+				'.drop-gather': ['.drag-gather', '.drag-sensor'],
+				'.drop-vdev-cond': ['.drag-vdev-sensor'],
+				'.drop-vdev': ['.drag-vdev'],
+				'.drop-action': [ '.drag-actor', '.drag-actorgroup'],
+				'.drop-actor': ['.drag-actor'],
+				'.drop-vdev-actorgroup': ['.drag-actor-vdev']
 		}
-		// Make it droppable
-		$(elem).droppable(setup)
+		
+		var drop = function(event, ui) {
+		//	$(ui.draggable).draggable('destroy')
+			// Get drag info
+		Log('DROP: ',$(ui.draggable), $(ui.draggable).context, 5)
+		// TODO: Do somthing
+		// Destroy if drop successful and valid
+//		$(this).droppable('destroy')
+//		$(this).removeClass('^=drop-*')
+		}
+	
+		for(key in DROP_CLASSES){
+			cmd = '$("'+key+'")'
+			for(var i = 0; i < DROP_CLASSES[key].length; i++){
+				var setup = '{drop: drop, accept: "'+DROP_CLASSES[key][i]+'"}'
+				cmd+='.droppable('+setup+')'
+			}
+			Log(cmd)
+			eval(cmd)
+		}
 	}
 	
 }

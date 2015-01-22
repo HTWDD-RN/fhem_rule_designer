@@ -339,7 +339,6 @@ function MainView(_controller) {
 			$(e).append(div_preview);
 
 			$(e).tabs();
-
 			return e;
 		};
 
@@ -442,8 +441,8 @@ function MainView(_controller) {
 
 		objList.actualize();
 		objField.actualize();
-
 		$(window).resize();
+		_events.enableDropElementsRule()
 	}
 
 	/**
@@ -467,7 +466,8 @@ function MainView(_controller) {
 		// Add predefined rules
 		var _rules = _controller.getRules()
 		for ( var key in _rules) {
-			objField.addRuleTab(_rules[key])
+			objField.addRuleTab(_rules[key])			
+			_events.enableDropElementsRule()
 		}
 
 		// Generates draggable and add it to the view

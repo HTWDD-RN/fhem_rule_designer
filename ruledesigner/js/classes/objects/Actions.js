@@ -165,25 +165,23 @@ function ActionsView(controller) {
 	 * Function to generate the HTML-Output return HTML-string
 	 */
 	this.display = function(model) {
-		var actions = model.getActions()
-		if (actions.length > 0) {
-			var html = '<ul class="obj_actions">'
-				
-//			var keys = Object.keys(_actions)
-//			for (n = 0; n < actions.length; n++) {
-//				html += '<li>' + actions[n].display() + '</li>'
-//			}
+		var _actions = model.getActions()
+		
+		var actions = $('<ul></ul>')
+		actions.addClass('obj_actions')
 			
-			for(key in actions){
-				html += '<li>' + actions[key].display() + '</li>'
-			}
-			html += '</ul>'
-			return html
-			
-		} else {
-			// TODO: Platzhalter
-			return '<span class="placeholder">Action/ActorsGroup-placeholder</span>'
+		var container=$('<li></li>')
+		for(key in _actions){
+			actions.append(container.clone().html(_actions[key].display()))
 		}
+		
+		var placeholder = $('<span></span>')
+		placeholder.addClass('placeholder')
+		placeholder.html('Action/ActorsGroup-placeholder')
+		
+		actions.append(container.clone().addClass('drop-action').html(placeholder))
+		
+		return $('<div></div>').html(actions)
 	}
 
 }

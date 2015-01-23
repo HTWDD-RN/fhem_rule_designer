@@ -30,74 +30,18 @@
 
 </pre>
 <script src="../js/classes/objects/Rules.js"></script>
+
 <script>
 		// Simulate global config
 		Configuration.DEBUG_LEVEL = 4,
 		Configuration.ID_PREFIX = "RID"
-		
-		// Simulate ID-Generator
-		// If the representation of all objects on the home
-		// automation server without an ID  an alternative
-		// counter is use to generates ID
-		var cSYS_ID = function() {
-
-			var count = new Counter()
-
-			return function() {
-				return Configuration.ID_PREFIX + count();
-			}
-
-		}()
+</script>
+<script src="../demo/rules.js"></script>
+<script>
 //
 var rules = new Rules()
 
-/*
- *
- */
-var rule = new Rule('RULE_4')
-var rule_params = {
-	'name': 'Produktionskette',
-	'descr' : 'Regel zum Anfahren von Produktionsanlagen'
-}
-
-rule.setParameter(rule_params)
-rule.addParam('link', 'Demo 4')
-rule.addParam('Kaptitel', 'X.3 Validierung und Anwendung')
-rule.addParam('Beispiel', 4)
-
-var vdev = new VirtualDevice('ACTIVATION_TIMER')
-vdev.getParamObj().setParameter({'weekdays': '37', 'InitTime': 20})
-rule.setVirtualDevice(vdev)
-
-var actorM1 = new Actor('Anlage (M1)')
-actorM1.setParameter({'state':'on'})
-var actorM2 = new Actor('Anlage (M2)')
-actorM2.setParameter({'state':'on'})
-var actorM3 = new Actor('Anlage (M3)')
-actorM3.setParameter({'state':'on'})
-var actorM4 = new Actor('Anlage (M4)')
-actorM4.setParameter({'state':'on'})
-
-var actorgroup1 = new Actorgroup()
-actorgroup1.getActors().addActor(actorM3)
-actorgroup1.getActors().addActor(actorM3)
-
-var vdev = new VirtualDevice('DELAY_TIMER')
-vdev.getParamObj().addParam('delay','1200') 
-actorgroup1.setVirtualDevice(vdev)
-
-var actorgroup2 = new Actorgroup()
-actorgroup2.getActors().addActor(actorM4)
-
-var vdev = new VirtualDevice('DELAY_TIMER')
-vdev.getParamObj().addParam('delay','1200') 
-actorgroup2.setVirtualDevice(vdev)
-
-rule.getActions().addAction(actorM1)
-rule.getActions().addAction(actorgroup1)
-rule.getActions().addAction(actorgroup2)
-
-rules.addRule(rule)
+rules.addRule(DEMO.EXAMPLE4)
 
 Log(rules.serialize())
 

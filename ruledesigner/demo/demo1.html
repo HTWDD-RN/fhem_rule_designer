@@ -24,96 +24,25 @@
 <script src="../js/classes/objects/Rule.js"></script>
 
 <script src="../js/config.js"></script>
+<script src="../js/classes/objects/Rules.js"></script>
 </head>
 <body>
 <pre id="result">
 
 </pre>
-<script src="../js/classes/objects/Rules.js"></script>
+
 <script>
 		// Simulate global config
 		Configuration.DEBUG_LEVEL = 4,
 		Configuration.ID_PREFIX = "RID"
-		
-		// Simulate ID-Generator
-		// If the representation of all objects on the home
-		// automation server without an ID  an alternative
-		// counter is use to generates ID
-		var cSYS_ID = function() {
+</script>
+<script src="../demo/rules.js"></script>
+<script>
 
-			var count = new Counter()
-
-			return function() {
-				return Configuration.ID_PREFIX + count();
-			}
-
-		}()
-//
 var rules = new Rules()
 
-/*
- *
- */
-var rule = new Rule('RULE_1_LIGHT_ON')
-var rule_params = {
-	'name': 'Fernsteuerung Einschaltregel',
-	'descr' : 'Einschaltregel zu Fernsteuerung des Lichtes'
-}
-
-rule.getParamObj().setParameter(rule_params)
-rule.getParamObj().addParam('link', 'Demo 1 - Regel 1')
-rule.getParamObj().addParam('Kaptitel', 'X.3 Validierung und Anwendung')
-rule.getParamObj().addParam('Beispiel', 1)
-
-var cond = new Condition('Schalter (S)')
-var ref_params = {
-	'state': ['==', 'on']
-}
-cond.setRefParameter(ref_params)
-rule.setConditionObj(cond)
-
-var actor = new Actor('Lampe (L1)')
-var actor_params = {
-	'state' : 'on'
-}
-actor.setParameter(actor_params)
-rule.getActions().addAction(actor)
-
-rules.addRule(rule)
-
-Log(rules.serialize())
-
-Log(rules.getInfo())
-
-/*
- *
- */
-var rule = new Rule('RULE_1_LIGHT_OFF')
-var rule_params = {
-	'name': 'Fernsteuerung Ausschaltregel',
-	'descr' : 'Ausschaltregel zu Fernsteuerung des Lichtes'
-}
-
-rule.getParamObj().setParameter(rule_params)
-rule.getParamObj().addParam('link', 'Demo 1 -Regel 2')
-rule.getParamObj().addParam('Kaptitel', 'X.3 Validierung und Anwendung')
-rule.getParamObj().addParam('Beispiel', 1)
-var cond = new Condition('Schalter (S)')
-var ref_params = {
-	'state': ['!=', 'on']
-}
-cond.setRefParameter(ref_params)
-rule.setConditionObj(cond)
-
-var actor = new Actor('Lampe (L1)')
-var actor_params = {
-	'state' : 'off'
-}
-actor.setParameter(actor_params)
-rule.getActions().addAction(actor)
-
-rules.addRule(rule)
-
+rules.addRule(DEMO.EXAMPLE1.A)
+rules.addRule(DEMO.EXAMPLE1.B)
 
 Log(rules.serialize())
 

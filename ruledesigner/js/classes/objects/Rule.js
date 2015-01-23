@@ -347,42 +347,45 @@ var RuleView = function(controller) {
 		var vdevObj = _model.getVirtualDevice()
 		var actionsObj = _model.getActions()
 		
-		var dp_rule = $('<ul></ul>')
-		dp_rule.addClass('obj_rule')
+		var dp_rule = document.createElement('ul')
+		dp_rule.className = 'obj_rule'
 		
 		// Generate sensor /Condition part
-		var sensor = $('<li></li>')
-		sensor.addClass('placeholder')
+		var sensor = document.createElement('li')
+		sensor.innerHTML += (Configuration.DEBUG_LEVEL >= 5) ?  'Bedingungen: <hr>' : ''
 		if (condObj != null){
-			sensor.html(condObj.display())
+			sensor.innerHTML +=condObj.display()
 		} else {
-			var placeholder = $('<span></span>')
-			placeholder.html('Placeholder for Condition / Gather objects')
-			sensor.addClass(['placeholder', 'drop-condition', 'drop-gather'].join(' '))
-			sensor.html(placeholder)
+			var placeholder = document.createElement('span')
+			placeholder.innerHTML = 'Placeholder for Condition / Gather objects'
+			
+			sensor.className = ['placeholder', 'drop-condition', 'drop-gather'].join(' ')
+			sensor.setAttribute('rel', _controller.SYS_ID)
+			sensor.innerHTML += placeholder.outerHTML
 		}
 		
 		// Generate Virtual Device part
-		var vdev = $('<li></li>')
-		vdev.addClass('vdev')
+		var vdev = document.createElement('li')
+		vdev.innerHTML += (Configuration.DEBUG_LEVEL >= 5) ?  'VirtualDevice: <hr>' : ''
 		if(vdevObj != null){
-			vdev.html(vdevObj.display())
+			vdev.innerHTML += vdevObj.display()
 		} else {
-			vdev.addClass('drop-vdev')
-			var placeholder = $('<span></span>')
-			placeholder.html('Placeholder for Virtual Device')
-			vdev.html(placeholder)
+			vdev.className  = [ 'placeholder', 'vdev', 'drop-vdev' ].join(' ')
+			var placeholder = document.createElement('span')
+			placeholder.innerHTML = 'Placeholder for Virtual Device'
+			placeholder.setAttribute('rel', _controller.SYS_ID)
+			vdev.innerHTML += placeholder.outerHTML
 		}
 		
 		// Generate Actions part
-		var dp_actions = $('<li></li>')
-		dp_actions.html(actionsObj.display())
-		
+		var dp_actions = document.createElement('li')
+		dp_actions.innerHTML += (Configuration.DEBUG_LEVEL >= 5) ?  'Aktionen: <hr>' : ''
+		dp_actions.innerHTML += actionsObj.display()
 
 		// Build display rule
-		dp_rule.append(sensor, vdev, dp_actions)
+		dp_rule.innerHTML = [sensor.outerHTML, vdev.outerHTML, dp_actions.outerHTML].join("\n")
 		
-		return $('<div></div>').html(dp_rule).html()
+		return dp_rule.outerHTML
 	}
 
 }

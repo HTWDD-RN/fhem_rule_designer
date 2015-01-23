@@ -30,76 +30,18 @@
 
 </pre>
 	<script src="../js/classes/objects/Rules.js"></script>
-	<script>
+
+<script>
 		// Simulate global config
-		Configuration.DEBUG_LEVEL = 4, Configuration.ID_PREFIX = "RID"
-
-		// Simulate ID-Generator
-		// If the representation of all objects on the home
-		// automation server without an ID  an alternative
-		// counter is use to generates ID
-		var cSYS_ID = function() {
-
-			var count = new Counter()
-
-			return function() {
-				return Configuration.ID_PREFIX + count();
-			}
-
-		}()
+		Configuration.DEBUG_LEVEL = 4,
+		Configuration.ID_PREFIX = "RID"
+</script>
+<script src="../demo/rules.js"></script>
+<script>
 		//
 		var rules = new Rules()
 
-		/*
-		 *
-		 */
-		var rule = new Rule('RULE_5')
-		var rule_params = {
-			'name' : 'Klimaanlage',
-			'descr' : 'Regel zur Inbetriebnahme im Sommer'
-		}
-
-		rule.setParameter(rule_params)
-		rule.addParam('link', 'Demo 5')
-		rule.addParam('Kaptitel', 'X.3 Validierung und Anwendung')
-		rule.addParam('Beispiel', 5)
-
-		var sensor1 = new Condition('Temperatursensor, innen (S1)')
-		sensor1.addRefParam('temperature', '>', 30)
-
-		var sensor2 = new Condition('Hygrometer außen (S2)')
-		sensor2.setRefParameter({
-			'humidity' : [ '>', 80 ]
-		})
-
-		var gather = new Gather('OR')
-		gather.addCondition(sensor1)
-		gather.addCondition(sensor2)
-
-		var vdev = new VirtualDevice('ACTIVATION_TIMER')
-		vdev.getParamObj().setParameter({
-			'weekdays' : '37',
-			'InitTime' : 20
-		})
-		rule.setVirtualDevice(vdev)
-
-		var actorA1 = new Actor('Fenster (A1)')
-		actorA1.addParam('state', 'close')
-		var actorA2 = new Actor('Fenster (A2)')
-		actorA2.setParameter({
-			'state' : 'close'
-		})
-		var actorA3 = new Actor('Klimaanlage (A3)')
-		actorA3.getParamObj().setParameter({
-			'state' : 'on',
-			'temperature' : 20.5
-		})
-
-		rule.getActions().addAction(actorA1)
-		rule.getActions().addAction(actorA2)
-		rule.getActions().addAction(actorA3)
-
-		rules.addRule(rule)
+		rules.addRule(DEMO.EXAMPLE5)
 
 		Log(rules.serialize())
 

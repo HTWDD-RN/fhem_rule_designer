@@ -42,3 +42,26 @@ html, body {
 .appContainer {
 	overflow: hidden;
 }
+
+/**
+ * Format Rule-elements
+ */
+.obj_rule * {
+	margin: 3px 5px;
+	padding: 3px 5px;
+}
+
+.obj_rule ul {
+border: 1px solid #666;
+}
+
+.obj_rule ul li {
+list-style: none;
+}
+
+.placeholder {
+	border: 1px dashed #006;
+	background-color: #ccf;
+	min-height: 20px;
+	display: block;
+}

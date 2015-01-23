@@ -152,6 +152,26 @@ function __RuleDesigner() {
 		}
 		return false
 	};
+	
+	
+	
+	/**
+	 * Adds ...
+	 */
+	 this.addElement=function(rel, id){
+	 	
+		alert(rel)	
+		var source = null 
+	 	var target_resource = _rules.search(rel)
+	 	
+	 	if(id == 'Actorsgroup'){
+	 		source = new Actorgroup()
+	 		if (target_resource.addAction(source))
+	 			return target_resource.display()
+	 	}
+	 	Log(target_resource, source, 5)
+	 	return null
+	 }
 
 	/**
 	 * This function is searching and removing rules or items from the model by an ID. In

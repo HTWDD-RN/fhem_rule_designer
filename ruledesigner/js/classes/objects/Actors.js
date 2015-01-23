@@ -131,7 +131,14 @@ var ActorsView = function(controller){
 	 * return HTML-string
 	 */
 	this.display = function(model){
-		return '' //TODO:
+		var result = ''
+		var _actor = model.getActors()
+		for(var n=0; n<_actors.length; n++){
+			var actor = document.createElement('li')
+			actor.innerHTML = _actor.display()
+			result += actor.outerHTML
+		}		
+		return result
 	}
 	
 }

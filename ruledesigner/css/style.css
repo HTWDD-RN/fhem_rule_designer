@@ -94,7 +94,7 @@
  * Draggbar - Object list
  */
 .ui-objlist li {
-	height: 25px;
+	min-height: 25px;
 	margin: 3px;
 	padding: 3px 5px;
 	font-size: 1.15em;
@@ -181,8 +181,8 @@ ul#gathers li.ui-objlist-body {
 	height: 75px;
 	width: 180px;
 	left: 50%;
+	top: -18px;
 	margin-left: -90px;
-	background-color: #fff;
 	z-index: 2;
 	text-align: center;
 }

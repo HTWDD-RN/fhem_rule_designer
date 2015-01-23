@@ -353,14 +353,14 @@ function Wrapper() {
 		cat.actors = $.grep(devices, function(elem, i) {
 			if ($.inArray(elem.TYPE, vdev_helper_modules) > -1)
 				return null
-			if (elem.READINGS.length > 0)
+			if (elem.SETS.length > 0)
 				return elem
 			return null
 		})
 		cat.sensors = $.grep(devices, function(elem, i) {
 			if ($.inArray(elem.TYPE, vdev_helper_modules) > -1)
 				return null
-			if (elem.SETS.length > 0)
+			if (elem.READINGS.length > 0)
 				return elem
 			return null
 		})

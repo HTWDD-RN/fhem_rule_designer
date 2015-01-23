@@ -417,6 +417,16 @@ function MainView(_controller) {
 	};
 
 	/**
+	 * Function adds an element to an object, which is given by an relation id
+	 * @param SYS_ID as relation id
+	 * @param ID - external object id / data id from the object which should adding
+	 * @return display-information for slight replacing or null
+	 */
+	this.addElement = function(rel, id) {
+		return _controller.addElement(rel, id)
+	}
+
+	/**
 	 * This initialize the removing of the element with the SYS_ID. Normally the
 	 * function gets the SYS_ID from HTML-rel-attribute
 	 * 
@@ -438,11 +448,11 @@ function MainView(_controller) {
 	};
 
 	this.actualize = function() {
-
 		objList.actualize();
 		objField.actualize();
 		$(window).resize();
 		_events.enableDropElementsRule()
+		_events.enableAddActionGroupOnClick()
 	}
 
 	/**

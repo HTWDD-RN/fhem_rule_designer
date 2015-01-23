@@ -180,6 +180,36 @@ var ActorgroupView = function(controller) {
 	 * Function to generate the HTML-Output return HTML-string
 	 */
 	this.display = function(model) {
+		var placeholder = ''
+		
+		var result = (Configuration.DEBUG_LEVEL >= 5) ?  'Actorgroup: <hr>' : ''
+		
+		var actorgroup = document.createElement('ul')		
+		actorgroup.className('obj_actorgroup')
+		
+		// VirtualDevice
+		var vdev = document.createElement('li')	
+		if(!model.getVirtualDevice()){
+			vdev.className = ['placeholder', 'vdev-actor', 'drop-vdev-actor'].join(' ')
+			vdev.setAttribute('rel', _controller.SYS_ID)
+			vdev.innerHTML += 'VirtualDevice-placeholder'
+		} else {
+			vdev.innerHTML += model.getVirtualDevice		
+		}
+		actorgroup += vdev.outerHTML()
+		
+		for (key in model.getActors()) {
+		
+		}
+		
+		// Adds permanently an placeholder to the actions output	
+		placeholder = document.createElement('li')
+		placeholder.className = ['placeholder', 'drop-actor'].join(' ')
+		placeholder.setAttribute('rel', _controller.SYS_ID)
+		placeholder.innerHTML = 'Actor-placeholder'
+		container.innerHTML  = placeholder.outerHTML		
+		actorgroup.innerHTML += container.outerHTML
+		
 		return '' // TODO:
 
 	}

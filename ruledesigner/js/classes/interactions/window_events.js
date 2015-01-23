@@ -100,7 +100,7 @@ var Events = function(view) {
 	this.enableTrash = function() {
 		$('#trash').droppable(
 				{
-					accept : '.ui-tabs-active',
+					accept : ('.ui-tabs-active, .trashable'),
 					drop : function(event, ui) {
 						var hash = $('a',$(ui.draggable)).attr('href')
 								.replace('#', '') // get url
@@ -182,34 +182,37 @@ var Events = function(view) {
 	 */
 	this.enableDropElementsRule = function() {
 		var DROP_CLASSES = {
-				'.drop-condition': ['.drag-gather', '.drag-sensor'],
-				'.drop-gather': ['.drag-gather', '.drag-sensor'],
-				'.drop-vdev-cond': ['.drag-vdev-sensor'],
-				'.drop-vdev': ['.drag-vdev'],
-				'.drop-action': [ '.drag-actor', '.drag-actorgroup'],
-				'.drop-actor': ['.drag-actor'],
-				'.drop-vdev-actorgroup': ['.drag-actor-vdev']
+				'.drop-condition': "'.drag-gather', '.drag-sensor'",
+				'.drop-gather': "'.drag-gather, .drag-sensor'",
+				'.drop-vdev-cond': "'.drag-vdev-sensor'",
+				'.drop-vdev': "'.drag-vdev'",
+				'.drop-action':  "'.drag-actor, .drag-actorgroup'",
+				'.drop-actor': "'.drag-actor'",
+				'.drop-vdev-actorgroup': "'.drag-actor-vdev'"
 		}
 		
 		var drop = function(event, ui) {
-		//	$(ui.draggable).draggable('destroy')
-			// Get drag info
-		Log('DROP: ',$(ui.draggable), $(ui.draggable).context, 5)
-		// TODO: Do somthing
-		// Destroy if drop successful and valid
-//		$(this).droppable('destroy')
-//		$(this).removeClass('^=drop-*')
+		Log('DROP: ',$(ui.draggable), $(event), 5)
+
+		$(this).removeClass('^=drop-*')
 		}
 	
 		for(key in DROP_CLASSES){
 			cmd = '$("'+key+'")'
-			for(var i = 0; i < DROP_CLASSES[key].length; i++){
-				var setup = '{drop: drop, accept: "'+DROP_CLASSES[key][i]+'"}'
-				cmd+='.droppable('+setup+')'
-			}
+			var setup = '{drop: drop, accept: ('+DROP_CLASSES[key]+')}'
+			cmd+='.droppable('+setup+')'
 			Log(cmd)
 			eval(cmd)
 		}
+	}
+	
+	this.enableAddActionGroupOnClick = function(){
+		$('.obj_actions .placeholder').click(function(e){
+			var rel = $(this).attr('rel')
+			var disp = _view.addElement(rel, 'Actorsgroup')
+			var cs = '.'+$(disp).attr('class')
+			$(cs).html($(disp).html())		
+		})
 	}
 	
 }

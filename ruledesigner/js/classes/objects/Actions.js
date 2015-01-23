@@ -167,21 +167,25 @@ function ActionsView(controller) {
 	this.display = function(model) {
 		var _actions = model.getActions()
 		
-		var actions = $('<ul></ul>')
-		actions.addClass('obj_actions')
-			
-		var container=$('<li></li>')
+		var actions = document.createElement('ul')
+		actions.className = 'obj_actions'
+		
+		// Add the linked actions (actors and actorgroups)
+		var container = document.createElement('li')
 		for(key in _actions){
-			actions.append(container.clone().html(_actions[key].display()))
+			container.innerHTML  =_actions[key].display()
+			actions.innerHTML += container.outerHTML
 		}
 		
-		var placeholder = $('<span></span>')
-		placeholder.addClass('placeholder')
-		placeholder.html('Action/ActorsGroup-placeholder')
+		// Adds permanently an placeholder to the actions output	
+		var placeholder = document.createElement('span')
+		placeholder.className = ['placeholder', 'drop-action'].join(' ')
+		placeholder.setAttribute('rel', _controller.SYS_ID)
+		placeholder.innerHTML = 'Action/ActorsGroup-placeholder <br/> Click for creating a new actorgroup'
+		container.innerHTML  = placeholder.outerHTML		
+		actions.innerHTML += container.outerHTML
 		
-		actions.append(container.clone().addClass('drop-action').html(placeholder))
-		
-		return $('<div></div>').html(actions)
+		return actions.outerHTML
 	}
 
 }

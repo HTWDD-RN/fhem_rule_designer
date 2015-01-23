@@ -30,73 +30,19 @@
 
 </pre>
 	<script src="../js/classes/objects/Rules.js"></script>
-	<script>
+
+<script>
 		// Simulate global config
-		// Simulate global config
-		Configuration.DEBUG_LEVEL = 4, Configuration.ID_PREFIX = "RID"
-
-		// Simulate ID-Generator
-		// If the representation of all objects on the home
-		// automation server without an ID  an alternative
-		// counter is use to generates ID
-		var cSYS_ID = function() {
-
-			var count = new Counter()
-
-			return function() {
-				return Configuration.ID_PREFIX + count();
-			}
-
-		}()
+		Configuration.DEBUG_LEVEL = 4,
+		Configuration.ID_PREFIX = "RID"
+</script>
+<script src="../demo/rules.js"></script>
+<script>
 		//
 		var rules = new Rules()
 
-		/*
-		 *
-		 */
-		var rule = new Rule('RULE_2_VAR_B')
-		var rule_params = {
-			'name' : 'Heizungssteuerung',
-			'descr' : 'Regel zur Heizungssteuerung',
-			'Bemerkung' : 'Variante 2 - Zeitbegrenzung als Ablehnungskriterium interpretiert'
-		}
-
-		rule.setParameter(rule_params)
-		rule.addParam('link', 'Demo 2.2')
-		rule.addParam('Kaptitel', 'X.3 Validierung und Anwendung')
-		rule.addParam('Beispiel', 2.2)
-
-		var vdev = new VirtualDevice('TIMER')
-		vdev.getParamObj().setParameter({
-			'BeginTime' : 5,
-			'EndTime' : 22
-		})
-
-		var sensor1 = new Condition('Thermometer (T)')
-		sensor1.setRefParameter({
-			'temperature' : [ '<', 20.5 ]
-		})
-
-		var sensor2 = new Condition('Heizung (H)')
-		sensor2.setRefParameter({
-			'state' : [ '=', 'off' ]
-		})
-
-		var actor = new Actor('Heizung (H)')
-		actor.setParameter({
-			'state' : 'on',
-			'temperature' : 21.7
-		})
-
-		var gather = new Gather('AND')
-		gather.addCondition(sensor1)
-		gather.addCondition(sensor2)
-
-		rule.setConditionObj(gather)
-		rule.getActions().addAction(actor)
-		rule.setVirtualDevice(vdev)
-
-		rules.addRule(rule)
+	
+		rules.addRule(DEMO.EXAMPLE2.B)
 
 		Log(rules.serialize())
 

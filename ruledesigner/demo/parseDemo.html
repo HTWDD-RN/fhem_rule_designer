@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Rules-Designer</title>
+
+<link href="../css/theme/jquery-ui-1.10.4.custom.css" rel="stylesheet">
+<script src="../js/lib/jquery-1.10.2.js"></script>
+<script src="../js/lib/jquery-ui-1.10.4.js"></script>
+
+<script src="../js/classes/helpers/Counter.js"></script>
+<script src="../js/classes/helpers/Log.js"></script>
+
+<script src="../js/classes/objects/Params.js"></script>
+<script src="../js/classes/objects/RefParams.js"></script>
+<script src="../js/classes/objects/VirtualDevice.js"></script>
+<script src="../js/classes/objects/Actor.js"></script>
+<script src="../js/classes/objects/Actors.js"></script>
+<script src="../js/classes/objects/Actorgroup.js"></script>
+<script src="../js/classes/objects/Actions.js"></script>
+<script src="../js/classes/objects/Condition.js"></script>
+<script src="../js/classes/objects/Gather.js"></script>
+<script src="../js/classes/objects/Conditions.js"></script>
+<script src="../js/classes/objects/Rule.js"></script>
+
+<script src="../js/config.js"></script>
+<script src="../js/classes/objects/Rules.js"></script>
+</head>
+<style>
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html, body {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+body {
+	padding: 10px;
+}
+
+#txtJSON, #result {
+	width: 49%;
+	height: 100%;
+	padding: 5px;
+	display: inline-block;
+	vertical-align: top;
+	border: 1px solid #222;
+	overflow: scroll;
+}
+</style>
+<script type="text/javascript">
+	// Simulate ID-Generator
+	// If the representation of all objects on the home
+	// automation server without an ID an alternative
+	// counter is use to generates ID
+	var cSYS_ID = function() {
+
+		var count = new Counter()
+
+		return function() {
+			return Configuration.ID_PREFIX + count();
+		}
+
+	}()
+
+	var change = function() {
+		var input = $('#txtJSON').val()
+		try {
+			var _parse = JSON.parse(input, vparse)
+
+			try {
+				var _stringify = JSON.stringify(_parse, null, 3)
+				$('#result').html(_stringify)
+			} catch (err) {
+				$('#result').html('ERROR: JSON.stringify - ' + err.message)
+			}
+		} catch (err) {
+			$('#result').html('ERROR: JSON.parse - ' + err.message)
+		}
+	}
+
+	var vparse = function() {
+		console.log(arguments)
+		var obj = null
+		switch (arguments[0]) {
+		case 'ACTORGROUP':
+			obj = new Actor()
+			break;
+		case 'ACTOR':
+			obj = new Actor()
+			break;
+		case 'COND':
+			obj = new Condition()
+			break;
+		case 'RULE':
+			obj = new Rule()
+			break;
+		case 'VDEV':
+			obj = new VirtualDevice()
+			break;
+		default:
+			return arguments[0]
+		}
+		return obj
+	}
+</script>
+<body>
+	<textarea id="txtJSON" onChange="change()"></textarea>
+	<pre id="result"></pre>
+</body>
+</html>

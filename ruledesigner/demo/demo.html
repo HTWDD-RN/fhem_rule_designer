@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Rules-Designer</title>
+
+<link href="../css/theme/jquery-ui-1.10.4.custom.css" rel="stylesheet">
+<script src="../js/lib/jquery-1.10.2.js"></script>
+<script src="../js/lib/jquery-ui-1.10.4.js"></script>
+
+<script src="../js/classes/helpers/Counter.js"></script>
+<script src="../js/classes/helpers/Log.js"></script>
+
+<script src="../js/classes/objects/Params.js"></script>
+<script src="../js/classes/objects/RefParams.js"></script>
+<script src="../js/classes/objects/VirtualDevice.js"></script>
+<script src="../js/classes/objects/Actor.js"></script>
+<script src="../js/classes/objects/Actors.js"></script>
+<script src="../js/classes/objects/Actorgroup.js"></script>
+<script src="../js/classes/objects/Actions.js"></script>
+<script src="../js/classes/objects/Condition.js"></script>
+<script src="../js/classes/objects/Gather.js"></script>
+<script src="../js/classes/objects/Conditions.js"></script>
+<script src="../js/classes/objects/Rule.js"></script>
+
+<script src="../js/config.js"></script>
+<script src="../js/classes/objects/Rules.js"></script>
+</head>
+<body>
+	<script src="../demo/rules.js"></script>
+	<select id="ruleChanger" onChange="change()">
+
+	</select>
+	<pre id="result">
+
+	</pre>
+
+	<script>
+		// Simulate global config
+		Configuration.DEBUG_LEVEL = 4, Configuration.ID_PREFIX = "RID"
+	</script>
+	<script>
+		var change = function() {
+			var rules = new Rules()
+			var str = $('#ruleChanger').val()
+			var rule = eval(str)
+			rules.addRule(rule)
+
+			$('#result').html(rules.serialize());
+			delete rules
+		}
+
+		if (DEMO) { // Get sure DEMO is defined
+			// Generates an complete list with the recursive 
+
+			keyBuilder = function(pre, obj, results) {
+				for (key in obj) {
+					if (!(obj[key] instanceof Rule) && Object.keys(obj[key])) { // generate subkeys with under bound Rule object  
+						keyBuilder(pre + key + '.', obj[key], results)
+					} else {
+						results.push(pre + key)
+					}
+				}
+			}
+		
+			var results = []
+			keyBuilder('', DEMO, results)
+			for (var n = 0; n < results.length; n++) {
+				var option = document.createElement('option')
+				option.value = 'DEMO.' + results[n]
+				option.innerHTML = results[n]
+				$('#ruleChanger').append(option.outerHTML)
+			}
+			change()
+		}
+	</script>
+</body>
+</html>

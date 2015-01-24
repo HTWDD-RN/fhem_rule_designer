@@ -54,6 +54,15 @@ body {
 }
 </style>
 <script type="text/javascript">
+
+/**
+ * Set global variables
+ */
+
+// structure of Array [element type, number of used arguments]
+// "-1" stand for infinity
+var _GatherList = [ [ "AND", -1 ], [ "OR", -1 ], [ "NOT", 1 ] ];
+
 	// Simulate ID-Generator
 	// If the representation of all objects on the home
 	// automation server without an ID an alternative
@@ -88,23 +97,47 @@ body {
 		console.log(arguments)
 		var obj = null
 		switch (arguments[0]) {
-		case 'ACTORGROUP':
-			obj = new Actor()
-			break;
 		case 'ACTOR':
 			obj = new Actor()
+			obj.setParameter(arguments[1].PARAMS)
+			break;
+		case 'ACTORGROUP':
+			obj = new Actorgroup()
+			for (key in  arguments[1]){
+				var tmp = arguments[1][key]
+				if(tmp instanceof Actor)
+					obj.addActor(tmp)
+				if(tmp instanceof VirtualDevice)
+					obj.setVirtualDevice(tmp)
+			}
 			break;
 		case 'COND':
-			obj = new Condition()
+			obj = new Condition(arguments[1].SENSOR)
+			obj.setRefParameter(arguments[1].REF_PARAMS)
 			break;
 		case 'RULE':
 			obj = new Rule()
+			obj.setConditionObj(arguments[1].COND)
+			obj.setVirtualDevice(arguments[1].VDEV)
+			if(arguments[1].ACTIONS !== undefined){
+					obj.getActions().addAction(arguments[1].ACTIONS)
+			}
 			break;
 		case 'VDEV':
-			obj = new VirtualDevice()
+			obj = new VirtualDevice(arguments[1].TYPE)
+			if(arguments[1].REF_PARAMS){
+				obj.setRefParameter(arguments[1].REF_PARAMS)
+			} else { 
+				obj.setParameter(arguments[1].PARAMS)
+			}
 			break;
 		default:
-			return arguments[0]
+			for(key in _GatherList){
+				if(arguments[0] == _GatherList[key][0]){
+					return new Gather(key)
+				}
+			}
+			return arguments[1]
 		}
 		return obj
 	}

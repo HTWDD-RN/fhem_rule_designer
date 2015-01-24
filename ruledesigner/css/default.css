@@ -51,6 +51,16 @@ html, body {
 	padding: 3px 5px;
 }
 
+.obj_rule hr{
+	padding: 0;
+	border: none;
+	border-top: 1px solid #222;
+	color: #FFFFFF;
+	background-color: #FFFFFF;
+	height: 1px;
+	margin: 3px 20px 5px;
+}
+
 .obj_rule ul {
 border: 1px solid #666;
 }

@@ -47,6 +47,9 @@ var Configuration = {
 	GUI : {
 		APP_CONTAINER : '.appContainer',
 		MBOX_CONTAINER : '.alertContainer',
+		ADDITIONALS: {
+			ID: 'rd_adds'
+		},
 		DRAGBAR : {
 			ID : 'rd_draggbar',
 			OBJECT_LIST : {

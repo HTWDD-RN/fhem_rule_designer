@@ -3,7 +3,7 @@
  * Toolbar
  */
 	#rd_toolbar {
-		height: 80px;
+		min-height: 80px;
 	}
 	#rd_toolbar #trash {
 		position: relative;

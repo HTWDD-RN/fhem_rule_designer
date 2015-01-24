@@ -185,21 +185,22 @@ var ActorgroupView = function(controller) {
 		var result = (Configuration.DEBUG_LEVEL >= 5) ?  'Actorgroup: <hr>' : ''
 		
 		var actorgroup = document.createElement('ul')		
-		actorgroup.className('obj_actorgroup')
+		actorgroup.className = 'obj_actorgroup'
 		
 		// VirtualDevice
 		var vdev = document.createElement('li')	
-		if(!model.getVirtualDevice()){
+		if(model.getVirtualDevice() == null){
 			vdev.className = ['placeholder', 'vdev-actor', 'drop-vdev-actor'].join(' ')
 			vdev.setAttribute('rel', _controller.SYS_ID)
 			vdev.innerHTML += 'VirtualDevice-placeholder'
 		} else {
-			vdev.innerHTML += model.getVirtualDevice		
+			vdev.innerHTML += model.getVirtualDevice()
 		}
-		actorgroup += vdev.outerHTML()
+		actorgroup.innerHTML += vdev.outerHTML
 		
-		for (key in model.getActors()) {
-		
+		var actors = model.getActors()
+		if(actors.lenght > 0){
+			actorgroup.innerHTML += actors.display().outerHTML
 		}
 		
 		// Adds permanently an placeholder to the actions output	
@@ -207,10 +208,10 @@ var ActorgroupView = function(controller) {
 		placeholder.className = ['placeholder', 'drop-actor'].join(' ')
 		placeholder.setAttribute('rel', _controller.SYS_ID)
 		placeholder.innerHTML = 'Actor-placeholder'
-		container.innerHTML  = placeholder.outerHTML		
-		actorgroup.innerHTML += container.outerHTML
+		actorgroup.innerHTML += placeholder.outerHTML
 		
-		return '' // TODO:
+		result += actorgroup.outerHTML
+		return result
 
 	}
 

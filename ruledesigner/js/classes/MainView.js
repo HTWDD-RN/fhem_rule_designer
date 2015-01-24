@@ -110,7 +110,11 @@ function MainView(_controller) {
 
 		var ID = '#' + Configuration.GUI.DRAGBAR.ID;
 
-		var flagSegmentation = 'Classic'
+		var flagSegmentation = _controller.getAvailableSegmentation().defaultFunc
+		
+		this.setFlagSegmentation = function ( setup ){
+			flagSegmentation = setup
+		}
 
 		this.init = function() {
 
@@ -224,6 +228,58 @@ function MainView(_controller) {
 
 		};
 	}
+	
+	var generateAdditionals = function() {
+		
+		
+		var ID = '#' + Configuration.GUI.ADDITIONALS.ID;
+	
+		var links = {
+			'Demo' : ['demo/demo.html', 'JSON-Demo', 'Zur JSON-Test-App wechseln']		
+		}		
+
+		/**
+		 * Function
+		 */
+		var createLinks = function () {			
+			var tmp = []
+			for (key in links) {
+				var a = document.createElement('a')
+				a.setAttribute('href', links[key][0])
+				a.innerHTML = links[key][1]
+				a.setAttribute('title', links[key][2])
+				tmp.push(a.outerHTML)
+			}
+			return tmp.join(' ')
+		}
+		
+		this.addSelectorOptions = function(){
+			var tmp = _controller.getAvailableSegmentation()
+			var options = Object.keys(tmp);
+			for (key in options){
+				if(options[key] != 'defaultFunc') {
+					var option = document.createElement('option')
+					option.value = options[key]
+					option.innerHTML = options[key].substring(3)
+					$(ID + ' select.filter-seg').append(option.outerHTML)
+				}
+			}
+			$(ID + ' select.filter-seg').val(tmp.defaultFunc)
+		}
+		
+		this.init = function(){
+			var tmp = document.createElement('div')
+			tmp.id = Configuration.GUI.ADDITIONALS.ID
+			$(tmp).append(createLinks())
+			$(tmp).append('<hr/>')
+			var selectX = document.createElement('select')
+			selectX.className = 'filter-seg'
+			$(tmp).append(selectX.outerHTML)
+			return tmp
+		}
+		
+	}
+	
 	var generateDropableObjectField = function() {
 
 		Log("MainView.js - generateDropableObjectField");
@@ -231,7 +287,7 @@ function MainView(_controller) {
 		var ID = '#' + Configuration.GUI.EDITOR.ID;
 
 		var Preview_ID = 'rd_rules_preview';
-
+		
 		/**
 		 * Function which is displaying an new rule
 		 * 
@@ -397,6 +453,7 @@ function MainView(_controller) {
 	};
 
 	var toolbar = new generateToolbar;
+	var additionals = new generateAdditionals;
 	var objList = new generateDraggableObjectList;
 	var objField = new generateDropableObjectField;
 
@@ -440,6 +497,15 @@ function MainView(_controller) {
 		}
 		return true
 	}
+	
+	/**
+	 * do changing the object list style
+	 */
+	 this.changeObjectList = function (setup){
+	 	  objList.setFlagSegmentation(setup)
+	     objList.actualize()
+	     $(window).resize()
+	 }
 
 	this.reset = function() {
 		$(objList).children().remove();
@@ -450,6 +516,8 @@ function MainView(_controller) {
 	this.actualize = function() {
 		objList.actualize();
 		objField.actualize();
+		additionals.addSelectorOptions()
+		
 		$(window).resize();
 		_events.enableDropElementsRule()
 		_events.enableAddActionGroupOnClick()
@@ -467,7 +535,12 @@ function MainView(_controller) {
 		$(Configuration.GUI.APP_CONTAINER).append(_toolbar);
 		_events.enableButtonEvents();
 		_events.enableTrash()
-
+		
+		// Generates additionals
+		var _additionals = additionals.init();
+		$(Configuration.GUI.APP_CONTAINER).append(_additionals);
+		_events.enableFilterSegmentation()
+		
 		// Generates droppable field and add it to the view
 		var _objField = objField.init();
 		$(Configuration.GUI.APP_CONTAINER).append(_objField);

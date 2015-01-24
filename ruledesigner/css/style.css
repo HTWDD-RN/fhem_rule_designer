@@ -1,4 +1,39 @@
 /*
+ * Additionals
+ */
+#rd_adds {
+	display: block;
+	z-index: 1;
+} 
+
+#rd_adds a {
+	text-decoration: none;
+   color: #00F;
+}
+
+#rd_adds a::before {
+	content: ' [ '
+}
+
+#rd_adds a::after {
+	content: ' ] '
+}
+#rd_adds a:hover {
+	color: #222;
+}
+
+#rd_adds hr{
+	color: #222;
+	margin: 5px 10px 3px;
+}
+#rd_adds .filter-seg {
+	width: 100%;
+	border-radius: 5px;
+	padding: 2px 5px;
+	margin: 2px 0; 
+}
+ 
+/*
  * Toolbar
  */
 #rd_toolbar {
@@ -6,6 +41,8 @@
 	box-sizing: border-box;
 	z-index: 2;
 	padding: 4px;
+	background-size: 100% 100%;
+   background-repeat: no-repeat;
 }
 
 #rd_toolbar>* {

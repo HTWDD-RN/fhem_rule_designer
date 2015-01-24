@@ -7,7 +7,8 @@ var Events = function(view) {
 	var ID = {
 		DRAGBAR : '#' + Configuration.GUI.DRAGBAR.ID,
 		TOOLBAR : '#' + Configuration.GUI.TOOLBAR.ID,
-		EDITOR : '#' + Configuration.GUI.EDITOR.ID
+		EDITOR : '#' + Configuration.GUI.EDITOR.ID,
+		ADDS : '#' + Configuration.GUI.ADDITIONALS.ID
 	}
 
 	this.enableButtonEvents = function() {
@@ -93,6 +94,16 @@ var Events = function(view) {
 			_view.addRule();
 		});
 	}
+
+	/**
+	 * Enable actualize object list by filter segmentions is changed
+	 */
+	 this.enableFilterSegmentation = function () {
+	 		$(ID.ADDS + ' select.filter-seg').change(function () {
+				_view.changeObjectList($(this).val())	 		
+	 		})
+	 }
+
 
 	/**
 	 * Function to enable trashing

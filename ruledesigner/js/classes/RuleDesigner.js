@@ -114,7 +114,7 @@ function __RuleDesigner() {
 	 * @returns JSON-object with object informations
 	 */
 	this.getItems = function(segmentation) {
-		var func ='_wrapper.getAvailableSegmentations.get' + segmentation+'()'
+		var func ='_wrapper.getAvailableSegmentations.' + segmentation+'()'
 		return eval(func)
 	}
 
@@ -125,6 +125,8 @@ function __RuleDesigner() {
 	 * @return object of function
 	 */
 	this.getAvailableSegmentation = function() {
+		if((typeof _wrapper) === 'undefined')
+			return {defaultFunc: 'getClassic'}
 		return _wrapper.getAvailableSegmentations
 	}
 

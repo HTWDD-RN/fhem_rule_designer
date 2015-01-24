@@ -328,14 +328,14 @@ function Wrapper() {
 		var cat = {}
 		for (var n = 0; n < supported_protocols.length; n++) {
 			cat[supported_protocols[n]] = $.grep(devices, function(elem, i) {
-				if (elem.Internals.TYPE == supported_protocols[n])
+				if (elem.TYPE !== 'undefined' && elem.TYPE == supported_protocols[n])
 					return elem
 				return null
 			})
 		}
 		for (var n = 0; n < dev_helper_modules.length; n++) {
 			cat[dev_helper_modules[n]] = $.grep(devices, function(elem, i) {
-				if (elem.Internals.TYPE == dev_helper_modules[n])
+				if (elem.TYPE !== 'undefined' && elem.TYPE == dev_helper_modules[n])
 					return elem
 				return null
 			})

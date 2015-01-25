@@ -221,8 +221,7 @@ var Events = function(view) {
 		$('.obj_actions .placeholder').click(function(e){
 			var rel = $(this).attr('rel')
 			var disp = _view.addElement(rel, 'Actorsgroup')
-			var cs = '.'+$(disp).attr('class')
-			$(cs).html($(disp).html())
+			$(this).parent().html($(disp).html())
 			_view.actualize() // Refresh JSON-Preview
 		})
 	}

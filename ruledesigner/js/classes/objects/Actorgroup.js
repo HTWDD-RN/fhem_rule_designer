@@ -194,13 +194,15 @@ var ActorgroupView = function(controller) {
 			vdev.setAttribute('rel', _controller.SYS_ID)
 			vdev.innerHTML += 'VirtualDevice-placeholder'
 		} else {
-			vdev.innerHTML += model.getVirtualDevice()
+			vdev.innerHTML += model.getVirtualDevice().display()
 		}
 		actorgroup.innerHTML += vdev.outerHTML
 		
 		var actors = model.getActors()
-		if(actors.lenght > 0){
-			actorgroup.innerHTML += actors.display().outerHTML
+		if(actors.getActors().length > 0){
+			var tmp = actors.display()
+			Log(tmp)
+			actorgroup.innerHTML += tmp 
 		}
 		
 		// Adds permanently an placeholder to the actions output	

@@ -195,6 +195,6 @@ function GatherView(controller) {
 		for(var n  = 0; n < _conditions.length; n++){
 			gather.innerHTML += _conditions[n].display()
 		}
-		return gather
+		return gather.outerHTML
 	}
 }

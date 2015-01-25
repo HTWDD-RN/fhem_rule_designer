@@ -135,7 +135,7 @@ var ActorsView = function(controller){
 		var actors = model.getActors()
 		for(var n=0; n<actors.length; n++){
 			var actor = document.createElement('li')
-			actor.innerHTML = _actor.display()
+			actor.innerHTML = actors[n].display()
 			result += actor.outerHTML
 		}		
 		return result

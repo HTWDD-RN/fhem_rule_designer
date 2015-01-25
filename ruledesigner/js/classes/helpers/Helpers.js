@@ -114,7 +114,9 @@ $.arrayIntersect = function(a, b) {
 		return $.inArray(i, b) > -1;
 	});
 };
-
+/**
+ * TODO
+ */
 $.arrayComplement = function(a, b) {
 	return $.grep(a, function(i) {
 		return $.inArray(i, b) == -1;

@@ -1,3 +1,6 @@
+/**
+ * TODO
+ */
 $(window).resize(
 		function() {
 			

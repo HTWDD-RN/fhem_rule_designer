@@ -90,11 +90,19 @@ function MainView(_controller) {
 			return toolbar;
 		};
 
+		
+		/**
+		 * TODO
+		 */
 		this.setSize = function(width, height) {
 			$(ID).css('width', width);
 			$(ID).css('height', height);
 		};
 
+		
+		/**
+		 * TODO
+		 */
 		this.getID = function() {
 			return ID;
 		};
@@ -112,10 +120,18 @@ function MainView(_controller) {
 
 		var flagSegmentation = _controller.getAvailableSegmentation().defaultFunc
 
+		
+		/**
+		 * TODO
+		 */
 		this.setFlagSegmentation = function(setup) {
 			flagSegmentation = setup
 		}
 
+		
+		/**
+		 * TODO
+		 */
 		this.init = function() {
 
 			Log('MainView.js - generateDraggableObjectList.init', 4);
@@ -128,6 +144,10 @@ function MainView(_controller) {
 			return objList;
 		};
 
+		
+		/**
+		 * TODO
+		 */
 		this.actualize = function() {
 
 			$(ID).html('')
@@ -229,6 +249,10 @@ function MainView(_controller) {
 		};
 	}
 
+	
+	/**
+	 * TODO
+	 */
 	var generateAdditionals = function() {
 
 		var ID = '#' + Configuration.GUI.ADDITIONALS.ID;
@@ -253,6 +277,10 @@ function MainView(_controller) {
 			return tmp.join(' ')
 		}
 
+		
+		/**
+		 * TODO
+		 */
 		this.addSelectorOptions = function() {
 			var tmp = _controller.getAvailableSegmentation()
 			var options = Object.keys(tmp);
@@ -267,6 +295,10 @@ function MainView(_controller) {
 			$(ID + ' select.filter-seg').val(tmp.defaultFunc)
 		}
 
+		
+		/**
+		 * TODO
+		 */
 		this.init = function() {
 			var tmp = document.createElement('div')
 			tmp.id = Configuration.GUI.ADDITIONALS.ID
@@ -280,6 +312,10 @@ function MainView(_controller) {
 
 	}
 
+	
+	/**
+	 * TODO
+	 */
 	var generateDropableObjectField = function() {
 
 		Log("MainView.js - generateDropableObjectField");
@@ -457,6 +493,10 @@ function MainView(_controller) {
 	var objList = new generateDraggableObjectList;
 	var objField = new generateDropableObjectField;
 
+	
+	/**
+	 * TODO
+	 */
 	this.addRule = function() {
 		// _events.disableItemDragging() // Disable draggbar events
 		if ((_rule = _controller.addNewRule()) != null) {
@@ -465,6 +505,10 @@ function MainView(_controller) {
 		}
 	};
 
+	
+	/**
+	 * TODO
+	 */
 	this.loadRule = function() {
 		// _events.disableItemDragging() // Disable draggbar events
 		if ((_rule = _controller.loadRule()) != null) {
@@ -511,8 +555,9 @@ function MainView(_controller) {
 		$(window).resize()
 	}
 
+	
 	/**
-	 * 
+	 * TODO
 	 */
 	this.reset = function() {
 		$(objList).children().remove();
@@ -521,7 +566,7 @@ function MainView(_controller) {
 	};
 	
 	/**
-	 * 
+	 * TODO
 	 */
 	this.actualize = function() {
 		objList.actualize();

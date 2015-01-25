@@ -10,6 +10,10 @@ var _GatherList = [ [ "AND", -1 ], [ "OR", -1 ], [ "NOT", 1 ] ];
 // communication between designer field and rules model objects
 var cSYS_ID = new Counter()
 
+
+/**
+ * TODO
+ */
 var getDemoRules = function() {
 
 	var rules = []

@@ -165,6 +165,10 @@ var ActorModel = function(controller, id) {
 
 }
 
+
+/**
+ * TODO
+ */
 var ActorView = function(controller) {
 
 	var _self = this

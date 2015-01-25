@@ -1,3 +1,6 @@
+/**
+ * TODO
+ */
 var Events = function(view) {
 	var _view = view
 
@@ -10,7 +13,10 @@ var Events = function(view) {
 		EDITOR : '#' + Configuration.GUI.EDITOR.ID,
 		ADDS : '#' + Configuration.GUI.ADDITIONALS.ID
 	}
-
+	
+	/**
+	 * TODO
+	 */
 	this.enableButtonEvents = function() {
 
 		// Toolbar buttons
@@ -44,7 +50,10 @@ var Events = function(view) {
 		});
 
 	}
-
+	
+	/**
+	 * TODO
+	 */
 	this.enableMenuButton = function() {
 		
 		if ($("ul.ui-menu").size()){
@@ -74,6 +83,10 @@ var Events = function(view) {
 		
 
 	}
+	
+	/**
+	 * TODO
+	 */
 	this.disableMenuButton = function() {
 		
 		if ($("ul.ui-menu").size()){ // is menu function activated
@@ -86,8 +99,9 @@ var Events = function(view) {
 	
 	}
 
+	
 	/**
-	 * 
+	 * TODO
 	 */
 	this.enableAddButton = function() {
 		$('#btnAddRule').click(function() {
@@ -216,7 +230,11 @@ var Events = function(view) {
 			eval(cmd)
 		}
 	}
+
 	
+	/**
+	 * TODO
+	 */
 	this.enableAddActionGroupOnClick = function(){
 		$('.obj_actions .placeholder').click(function(e){
 			var rel = $(this).attr('rel')

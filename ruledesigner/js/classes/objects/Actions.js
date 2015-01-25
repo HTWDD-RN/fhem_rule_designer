@@ -53,6 +53,10 @@ function Actions() {
 
 }
 
+
+/**
+ * TODO
+ */
 function ActionsModel(controller) {
 
 	var _self = this
@@ -155,6 +159,10 @@ function ActionsModel(controller) {
 	}
 }
 
+
+/**
+ * TODO
+ */
 function ActionsView(controller) {
 
 	var _self = this

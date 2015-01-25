@@ -1,20 +1,21 @@
-if (!DEMO) // Is another DEMO defined
+if (typeof DEMO === 'undefined') // Is another DEMO defined
 	var DEMO = {}
 
 	// Simulate ID-Generator
 	// If the representation of all objects on the home
 	// automation server without an ID an alternative
 	// counter is use to generates ID
-var cSYS_ID = function() {
+if (typeof cSYS_ID === 'undefined') {
+	var cSYS_ID = function() {
 
-	var count = new Counter()
+		var count = new Counter()
 
-	return function() {
-		return Configuration.ID_PREFIX + count();
-	}
+		return function() {
+			return Configuration.ID_PREFIX + count();
+		}
 
-}()
-
+	}()
+}
 DEMO.EXAMPLE1 = {}
 DEMO.EXAMPLE1.A = function() {
 	var rule = new Rule('RULE_1_LIGHT_ON')

@@ -175,7 +175,24 @@ var ActorView = function(controller) {
 	 * Function to generate the HTML-Output return HTML-string
 	 */
 	this.display = function(model) {
-		return '' // TODO:
+		
+		var tmp = document.createElement('div')
+		// TODO
+		tmp.innerHTML += '<span class="item-descr item-descr-'+ controller.SYS_ID +'">'+ 'ACTOR ID: '+ model.getID() +'</span>'
+		
+		var form = document.createElement('form')
+				
+		var row = document.createElement('div')
+		// TODO - replace text field to more comfortable function
+		var txt = document.createElement('textarea')
+		
+		txt.innerHTML += JSON.stringify(model.getParamObj().toJSON())
+ 		row.innerHTML += txt.outerHTML
+		form.innerHTML += row.outerHTML
+			
+		tmp.innerHTML+= form.outerHTML
+		
+		return tmp.outerHTML
 	}
 
 }

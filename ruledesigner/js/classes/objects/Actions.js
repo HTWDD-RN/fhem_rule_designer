@@ -173,17 +173,15 @@ function ActionsView(controller) {
 		// Add the linked actions (actors and actorgroups)
 		var container = document.createElement('li')
 		for(key in _actions){
-			container.innerHTML  =_actions[key].display()
-			actions.innerHTML += container.outerHTML
+			actions.innerHTML += _actions[key].display()
 		}
 		
 		// Adds permanently an placeholder to the actions output	
 		var placeholder = document.createElement('span')
 		placeholder.className = ['placeholder', 'drop-action'].join(' ')
 		placeholder.setAttribute('rel', _controller.SYS_ID)
-		placeholder.innerHTML = 'Action/ActorsGroup-placeholder <br/> Click for creating a new actorgroup'
-		container.innerHTML  = placeholder.outerHTML		
-		actions.innerHTML += container.outerHTML
+		placeholder.innerHTML = 'Action/ActorsGroup-placeholder <br/> Click for creating a new actorgroup'	
+		actions.innerHTML += placeholder.outerHTML
 		
 		return actions.outerHTML
 	}

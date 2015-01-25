@@ -111,8 +111,8 @@ function MainView(_controller) {
 		var ID = '#' + Configuration.GUI.DRAGBAR.ID;
 
 		var flagSegmentation = _controller.getAvailableSegmentation().defaultFunc
-		
-		this.setFlagSegmentation = function ( setup ){
+
+		this.setFlagSegmentation = function(setup) {
 			flagSegmentation = setup
 		}
 
@@ -228,20 +228,20 @@ function MainView(_controller) {
 
 		};
 	}
-	
+
 	var generateAdditionals = function() {
-		
-		
+
 		var ID = '#' + Configuration.GUI.ADDITIONALS.ID;
-	
+
 		var links = {
-			'Demo' : ['demo/demo.html', 'JSON-Demo', 'Zur JSON-Test-App wechseln']		
-		}		
+			'Demo' : [ 'demo/demo.html', 'JSON-Demo',
+					'Zur JSON-Test-App wechseln' ]
+		}
 
 		/**
 		 * Function
 		 */
-		var createLinks = function () {			
+		var createLinks = function() {
 			var tmp = []
 			for (key in links) {
 				var a = document.createElement('a')
@@ -252,12 +252,12 @@ function MainView(_controller) {
 			}
 			return tmp.join(' ')
 		}
-		
-		this.addSelectorOptions = function(){
+
+		this.addSelectorOptions = function() {
 			var tmp = _controller.getAvailableSegmentation()
 			var options = Object.keys(tmp);
-			for (key in options){
-				if(options[key] != 'defaultFunc') {
+			for (key in options) {
+				if (options[key] != 'defaultFunc') {
 					var option = document.createElement('option')
 					option.value = options[key]
 					option.innerHTML = options[key].substring(3)
@@ -266,8 +266,8 @@ function MainView(_controller) {
 			}
 			$(ID + ' select.filter-seg').val(tmp.defaultFunc)
 		}
-		
-		this.init = function(){
+
+		this.init = function() {
 			var tmp = document.createElement('div')
 			tmp.id = Configuration.GUI.ADDITIONALS.ID
 			$(tmp).append(createLinks())
@@ -277,9 +277,9 @@ function MainView(_controller) {
 			$(tmp).append(selectX.outerHTML)
 			return tmp
 		}
-		
+
 	}
-	
+
 	var generateDropableObjectField = function() {
 
 		Log("MainView.js - generateDropableObjectField");
@@ -287,7 +287,7 @@ function MainView(_controller) {
 		var ID = '#' + Configuration.GUI.EDITOR.ID;
 
 		var Preview_ID = 'rd_rules_preview';
-		
+
 		/**
 		 * Function which is displaying an new rule
 		 * 
@@ -475,8 +475,12 @@ function MainView(_controller) {
 
 	/**
 	 * Function adds an element to an object, which is given by an relation id
-	 * @param SYS_ID as relation id
-	 * @param ID - external object id / data id from the object which should adding
+	 * 
+	 * @param SYS_ID
+	 *            as relation id
+	 * @param ID -
+	 *            external object id / data id from the object which should
+	 *            adding
 	 * @return display-information for slight replacing or null
 	 */
 	this.addElement = function(rel, id) {
@@ -497,27 +501,33 @@ function MainView(_controller) {
 		}
 		return true
 	}
-	
+
 	/**
 	 * do changing the object list style
 	 */
-	 this.changeObjectList = function (setup){
-	 	  objList.setFlagSegmentation(setup)
-	     objList.actualize()
-	     $(window).resize()
-	 }
+	this.changeObjectList = function(setup) {
+		objList.setFlagSegmentation(setup)
+		objList.actualize()
+		$(window).resize()
+	}
 
+	/**
+	 * 
+	 */
 	this.reset = function() {
 		$(objList).children().remove();
 		$(objField).children().remove();
 		$('input[name=txtMakro]').val('');
 	};
-
+	
+	/**
+	 * 
+	 */
 	this.actualize = function() {
 		objList.actualize();
 		objField.actualize();
 		additionals.addSelectorOptions()
-		
+
 		$(window).resize();
 		_events.enableDropElementsRule()
 		_events.enableAddActionGroupOnClick()
@@ -535,12 +545,12 @@ function MainView(_controller) {
 		$(Configuration.GUI.APP_CONTAINER).append(_toolbar);
 		_events.enableButtonEvents();
 		_events.enableTrash()
-		
+
 		// Generates additionals
 		var _additionals = additionals.init();
 		$(Configuration.GUI.APP_CONTAINER).append(_additionals);
 		_events.enableFilterSegmentation()
-		
+
 		// Generates droppable field and add it to the view
 		var _objField = objField.init();
 		$(Configuration.GUI.APP_CONTAINER).append(_objField);
@@ -549,7 +559,7 @@ function MainView(_controller) {
 		// Add predefined rules
 		var _rules = _controller.getRules()
 		for ( var key in _rules) {
-			objField.addRuleTab(_rules[key])			
+			objField.addRuleTab(_rules[key])
 			_events.enableDropElementsRule()
 		}
 

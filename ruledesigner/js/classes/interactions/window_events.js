@@ -222,7 +222,8 @@ var Events = function(view) {
 			var rel = $(this).attr('rel')
 			var disp = _view.addElement(rel, 'Actorsgroup')
 			var cs = '.'+$(disp).attr('class')
-			$(cs).html($(disp).html())		
+			$(cs).html($(disp).html())
+			_view.actualize() // Refresh JSON-Preview
 		})
 	}
 	

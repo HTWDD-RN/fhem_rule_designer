@@ -190,7 +190,7 @@ function GatherView(controller) {
 		
 		var gather = document.createElement('div')
 		var logical = document.createElement('span')
-		logical.innerHTML = getLogical()
+		logical.innerHTML = model.getLogical()
 		gather.innerHTML = logical.outerHTML
 		for(var n  = 0; n < _conditions.length; n++){
 			gather.innerHTML += _conditions[n].display()

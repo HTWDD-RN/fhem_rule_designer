@@ -10,7 +10,24 @@ var _GatherList = [ [ "AND", -1 ], [ "OR", -1 ], [ "NOT", 1 ] ];
 // communication between designer field and rules model objects
 var cSYS_ID = new Counter()
 
-// console.log(Counter1())
+var getDemoRules = function() {
+
+	var rules = []
+
+	keyBuilder = function(obj, rules) {
+
+		for (key in obj) {
+			if (!(obj[key] instanceof Rule) && Object.keys(obj[key])) {
+				keyBuilder(obj[key], rules)
+			} else {
+				rules.push(obj[key])
+			}
+		}
+
+	}
+	keyBuilder(DEMO, rules)
+	return rules
+}
 
 /**
  * Klasse RulesDesigner TODO: Singleton
@@ -61,7 +78,7 @@ function __RuleDesigner() {
 					})
 		}
 		stepsCounter()
-		
+
 		_view.actualize();
 		stepsCounter()
 		Log('NUM OF INIT STEPS : ' + (stepsCounter() - 1))
@@ -114,7 +131,7 @@ function __RuleDesigner() {
 	 * @returns JSON-object with object informations
 	 */
 	this.getItems = function(segmentation) {
-		var func ='_wrapper.getAvailableSegmentations.' + segmentation+'()'
+		var func = '_wrapper.getAvailableSegmentations.' + segmentation + '()'
 		return eval(func)
 	}
 
@@ -125,8 +142,10 @@ function __RuleDesigner() {
 	 * @return object of function
 	 */
 	this.getAvailableSegmentation = function() {
-		if((typeof _wrapper) === 'undefined')
-			return {defaultFunc: 'getClassic'}
+		if ((typeof _wrapper) === 'undefined')
+			return {
+				defaultFunc : 'getClassic'
+			}
 		return _wrapper.getAvailableSegmentations
 	}
 
@@ -154,30 +173,29 @@ function __RuleDesigner() {
 		}
 		return false
 	};
-	
-	
-	
+
 	/**
 	 * Adds ...
 	 */
-	 this.addElement=function(rel, id){
-	 	
-		alert(rel)	
-		var source = null 
-	 	var target_resource = _rules.search(rel)
-	 	
-	 	if(id == 'Actorsgroup'){
-	 		source = new Actorgroup()
-	 		if (target_resource.addAction(source))
-	 			return target_resource.display()
-	 	}
-	 	Log(target_resource, source, 5)
-	 	return null
-	 }
+	this.addElement = function(rel, id) {
+
+		alert(rel)
+		var source = null
+		var target_resource = _rules.search(rel)
+
+		if (id == 'Actorsgroup') {
+			source = new Actorgroup()
+			if (target_resource.addAction(source))
+				return target_resource.display()
+		}
+		Log(target_resource, source, 5)
+		return null
+	}
 
 	/**
-	 * This function is searching and removing rules or items from the model by an ID. In
-	 * this system the ID is called SYS_ID.
+	 * This function is searching and removing rules or items from the model by
+	 * an ID. In this system the ID is called SYS_ID.
+	 * 
 	 * @param SYS_ID
 	 * @return boolean - true if removing successful
 	 */
@@ -242,7 +260,16 @@ function __RuleDesigner() {
 			// Step 2 Initialize a new rule
 			_self.addNewRule()
 
-			// Step 3 - Initialize/Build WildCard - GUI
+			// Step [Optional] add demo rules
+			if (Configuration.DEBUG_LEVEL >= 5 && typeof DEMO !== 'undefined'){
+				var demorules = getDemoRules()
+				for(key in demorules){
+					_rules.addRule(demorules[key])
+				}
+//				_rules.addRule(demorules[0])
+			}
+
+				// Step 3 - Initialize/Build WildCard - GUI
 			_view = new MainView(_self);
 			stepsCounter()
 

@@ -25,6 +25,7 @@
 
 <script src="../js/config.js"></script>
 <script src="../js/classes/objects/Rules.js"></script>
+<script src="../js/classes/helpers/ImportHelper.js"></script>
 </head>
 <style>
 * {
@@ -54,14 +55,13 @@ body {
 }
 </style>
 <script type="text/javascript">
+	/**
+	 * Set global variables
+	 */
 
-/**
- * Set global variables
- */
-
-// structure of Array [element type, number of used arguments]
-// "-1" stand for infinity
-var _GatherList = [ [ "AND", -1 ], [ "OR", -1 ], [ "NOT", 1 ] ];
+	// structure of Array [element type, number of used arguments]
+	// "-1" stand for infinity
+	var _GatherList = [ [ "AND", -1 ], [ "OR", -1 ], [ "NOT", 1 ] ];
 
 	// Simulate ID-Generator
 	// If the representation of all objects on the home
@@ -80,8 +80,7 @@ var _GatherList = [ [ "AND", -1 ], [ "OR", -1 ], [ "NOT", 1 ] ];
 	var change = function() {
 		var input = $('#txtJSON').val()
 		try {
-			var _parse = JSON.parse(input, vparse)
-
+			var _parse = ImportHelper.parseJSON(input)
 			try {
 				var _stringify = JSON.stringify(_parse, null, 3)
 				$('#result').html(_stringify)
@@ -93,57 +92,11 @@ var _GatherList = [ [ "AND", -1 ], [ "OR", -1 ], [ "NOT", 1 ] ];
 		}
 	}
 
-	var vparse = function() {
-		console.log(arguments)
-		var obj = null
-		switch (arguments[0]) {
-		case 'ACTOR':
-			obj = new Actor()
-			obj.setParameter(arguments[1].PARAMS)
-			break;
-		case 'ACTORGROUP':
-			obj = new Actorgroup()
-			for (key in  arguments[1]){
-				var tmp = arguments[1][key]
-				if(tmp instanceof Actor)
-					obj.addActor(tmp)
-				if(tmp instanceof VirtualDevice)
-					obj.setVirtualDevice(tmp)
-			}
-			break;
-		case 'COND':
-			obj = new Condition(arguments[1].SENSOR)
-			obj.setRefParameter(arguments[1].REF_PARAMS)
-			break;
-		case 'RULE':
-			obj = new Rule()
-			obj.setConditionObj(arguments[1].COND)
-			obj.setVirtualDevice(arguments[1].VDEV)
-			if(arguments[1].ACTIONS !== undefined){
-					obj.getActions().addAction(arguments[1].ACTIONS)
-			}
-			break;
-		case 'VDEV':
-			obj = new VirtualDevice(arguments[1].TYPE)
-			if(arguments[1].REF_PARAMS){
-				obj.setRefParameter(arguments[1].REF_PARAMS)
-			} else { 
-				obj.setParameter(arguments[1].PARAMS)
-			}
-			break;
-		default:
-			for(key in _GatherList){
-				if(arguments[0] == _GatherList[key][0]){
-					return new Gather(key)
-				}
-			}
-			return arguments[1]
-		}
-		return obj
-	}
+
 </script>
 <body>
-	<textarea id="txtJSON" onChange="change()"></textarea>
+	<textarea id="txtJSON" onChange="change()"
+		style="white-space: pre-wrap;"></textarea>
 	<pre id="result"></pre>
 </body>
 </html>

@@ -314,8 +314,8 @@ var Events = function(view) {
 		var type = $($($(event)[0].target)[0])
 		if(id !== undefined && rel !== undefined){
 			var disp = _view.addElement(rel, id, type)
-			$(parent).html($(disp).html())
-			_view.actualize() // Refresh JSON-Preview
+		//	$(parent).html($(disp).html())
+		//	_view.actualize() // Refresh JSON-Preview
 			return true
 		}
 		return false

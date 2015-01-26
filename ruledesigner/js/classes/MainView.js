@@ -519,7 +519,13 @@ function MainView(_controller) {
 	 * @return display-information for slight replacing or null
 	 */
 	this.addElement = function(rel, id, type) {
-		return _controller.addElement(rel, id, type)
+		var bool = _controller.addElement(rel, id, type)
+		if(bool){
+			objField.rebuildRules()
+			_self.actualize()
+			return true
+		}
+		return false
 	}
 
 	/**

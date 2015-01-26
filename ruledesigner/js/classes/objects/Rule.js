@@ -70,7 +70,7 @@ var Rule = function(id) {
 	 * This function identify an object and calls the each add method for it
 	 * @param obj to add
 	 */
-	 function addObject(obj) {
+	 this.addObject = function (obj) {
 		if (obj instanceof Condition || obj instanceof Gather) {
 			return _self.setConditionObj(obj)
 		}
@@ -78,7 +78,7 @@ var Rule = function(id) {
 			return _self.setVirtualDevice(obj)	 	
 	 	}
 	 	if(obj instanceof Actor || obj instanceof Actorgroup){
-	 		return _self.addAction(obj)
+	 		return _self.getActions().addAction(obj)
 	 	}
 	 	return false
 	 }
@@ -183,6 +183,7 @@ var RuleModel = function(controller, id) {
 	var _conditions = null // Object
 
 	var _virtual_device = null // Object
+		
 	/**
 	 * TODO
 	 */
@@ -394,6 +395,7 @@ var RuleView = function(controller) {
 		var actionsObj = _model.getActions()
 		
 		var dp_rule = document.createElement('ul')
+		dp_rule.setAttribute('rel', _controller.SYS_ID)
 		dp_rule.className = 'obj_rule'
 		
 		// Generate sensor /Condition part
@@ -419,10 +421,10 @@ var RuleView = function(controller) {
 		if(vdevObj != null){
 			vdev.innerHTML += vdevObj.display()
 		} else {
+			vdev.setAttribute('rel', _controller.SYS_ID)
 			vdev.className  = [ 'placeholder', 'drop-vdev' ].join(' ')
 			var placeholder = document.createElement('span')
 			placeholder.innerHTML = 'Virtual Device placeholder'
-			placeholder.setAttribute('rel', _controller.SYS_ID)
 			vdev.innerHTML += placeholder.outerHTML
 		}	
 		container.innerHTML += vdev.outerHTML

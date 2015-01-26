@@ -518,8 +518,8 @@ function MainView(_controller) {
 	 *            adding
 	 * @return display-information for slight replacing or null
 	 */
-	this.addElement = function(rel, id) {
-		return _controller.addElement(rel, id)
+	this.addElement = function(rel, id, type) {
+		return _controller.addElement(rel, id, type)
 	}
 
 	/**

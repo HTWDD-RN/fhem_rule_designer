@@ -307,15 +307,25 @@ var Events = function(view) {
 		
 		var drop = function(event, ui) {
 		Log('DROP: ',$(ui.draggable), $(event), 5)
-
-		$(this).removeClass('^=drop-*')
+		var id = $($(ui.draggable)[0]).attr('id')
+		var rel = $($($(event)[0].target)[0]).attr('rel')
+		var parent = getParentRel($($(event)[0].target))
+		alert(parent.html())
+		var type = $($($(event)[0].target)[0])
+		if(id !== undefined && rel !== undefined){
+			var disp = _view.addElement(rel, id, type)
+			$(parent).html($(disp).html())
+			_view.actualize() // Refresh JSON-Preview
+			return true
+		}
+		return false
 		}
 	
 		for(key in DROP_CLASSES){
 			cmd = '$("'+key+'")'
 			var setup = '{drop: drop, accept: ('+DROP_CLASSES[key]+')}'
 			cmd+='.droppable('+setup+')'
-			Log(cmd)
+	// Log(cmd)
 			eval(cmd)
 		}
 	}

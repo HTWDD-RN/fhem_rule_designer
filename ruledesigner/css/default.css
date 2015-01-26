@@ -28,6 +28,16 @@ html, body {
 	cursor: pointer;
 }
 
+.ui-draggable:hover {
+	background-color: #F8F8F8;
+	border: 1px dotted #222222;
+}
+
+#rd_rules .ui-draggable:hover {
+	background-color: #F8F8F8;
+	border: 1px dotted #222222;
+}
+
 #rd_rules ul li.ui-draggable-dragging {
 	border-bottom-left-radius: 5px;
 	border-bottom-right-radius: 5px;

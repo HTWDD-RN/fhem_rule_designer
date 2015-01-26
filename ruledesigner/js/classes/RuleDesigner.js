@@ -152,6 +152,18 @@ function __RuleDesigner() {
 			}
 		return _wrapper.getAvailableSegmentations
 	}
+	
+	/**
+	 * Return the available seqmentation of the loaded wrapper. This function
+	 * used to allow filtering the draggable items
+	 * 
+	 * @return object of function
+	 */
+	this.getObjectInfo = function() {
+		var seg = _wrapper.getAvailableSegmentations
+
+		return _wrapper.getAvailableSegmentations
+	}
 
 	/**
 	 * Returns the initiated list of virtual devices. TODO: Replaced with an
@@ -181,18 +193,53 @@ function __RuleDesigner() {
 	/**
 	 * Adds ...
 	 */
-	this.addElement = function(rel, id) {
+	this.addElement = function(rel, id, type) {
 
-		alert(rel)
+		var bool = true
 		var source = null
 		var target_resource = _rules.search(rel)
 
-		if (id == 'Actorsgroup') {
+		// Ist Object eine Regel
+		var obj = _rules.search(id)
+		if(bool && obj !== undefined && obj instanceof Rule){
+			// TODO - Regel to Actorside
+			bool = false
+		}
+		
+		if (bool && id == 'Actorsgroup') {
 			source = new Actorgroup()
 			if (target_resource.addAction(source))
 				return target_resource.display()
 		}
+		
+		if(bool){
+		for (key in _GatherList){
+			if(_GatherList[key][0] == id){
+				obj = new Gather(id)
+				bool = false
+			}
+		}
+		}
+
+		if(bool){ // Detect VirtualDevices
+			if($(type).hasClass('drop-vdev') || $(type).hasClass('drop-vdev-cond') || $(type).hasClass('drop-vdev-actorgroup')){
+				obj = new VirtualDevice(id)
+				bool = false // Detect Condition
+			} else if($(type).hasClass('drop-condition') || $(type).hasClass('drop-gather')){
+				obj = new Condition(id)
+				bool = false //Detect Actor
+			} else if($(type).hasClass('drop-action') || $(type).hasClass('drop-actor')){
+				obj = new Condition(id)
+				bool = false
+			}
+		}
+
+	//	Log(VIRTUAL_DEVICES)
+		
+	//	var info = this.getObjectInfo(id)
 		Log(target_resource, source, 5)
+		if (!bool && target_resource.addObject(obj))
+			return target_resource.display()
 		return null
 	}
 

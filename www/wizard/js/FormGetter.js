@@ -58,3 +58,16 @@ function getActorValue(id) {
 function getConditions() {
 	$("#new_rule_if_and_list");
 }
+
+/*****************
+ * 
+ * AT GETTER
+ * 
+ *****************/
+function getSunValue() {
+	return $('input[name=sonne]:checked').val();
+}
+
+function getRepeat() {
+	return $('#repeat').is(':checked');
+}

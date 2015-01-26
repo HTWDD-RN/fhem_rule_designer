@@ -110,12 +110,33 @@ function deleteById(id) {
 	$(id).remove();
 }
 
-function printRule() {
+function sendRule(id) {
 	var rule = generateRule();
+	
+	var url = CGI_RUL+"?q=getrule";
+	var data = "id="+encodeURIComponent(id);
+	
+	$.post(url, data, function(data) {
+		if(data) {
+			deleteById(data.ID);
+		}
+		});
 	
 	postRule(rule);
 	
-	//$("#rule_text").text(rule);
+	if(DEBUG) {
+		$("#rule_text").text(rule);
+	}
+}
+
+function sendAtRule() {
+	var rule = generateAtRule();
+	
+	postRule(rule);
+	
+	if(DEBUG) {
+		$("#rule_text").text(rule);
+	}
 }
 
 function postRule(rule) {
@@ -123,7 +144,7 @@ function postRule(rule) {
 	var data = "json="+encodeURIComponent(rule);
 	
 	$.post(url, data, function() {
-		//$("#rule_text").text(rule);
+		if (DEBUG) $("#rule_text").text(rule);
 	});
 }
 
@@ -165,7 +186,6 @@ function loadRulelist() {
 	var url = CGI_RUL+"?q=rulelist";
 	
 	$.getJSON( url, function( data ) {
-		//$("#rulelist").text(data);
 		$.each( data, function( i, item ) {
 				var state;
 				var stateclass;
@@ -188,7 +208,9 @@ function loadRulelist() {
 				template += '<p class = "rulename '+stateclass+'">'+ item.NAME +' ('+ state +')</p>';
 				template += '<p class = "ruledescription">'+ item.DESCRIPTION +'</p>';
 				template += '<p class = "rulelistmenu">';
-				template += '<span>bearbeiten</span>';
+				//template += '<span onclick="manipulateRule(\''+ item.NAME +'\')">bearbeiten</span>';
+				
+				//template += '<a href="http://localhost:8083/fhem/wizard/html/new.html?id='+ item.NAME +'">bearbeiten</a>';
 				
 				if(item.STATE == "1")
 					template += '<span onclick="deactivateRule(\''+ item.NAME +'\')">deaktivieren</span>';
@@ -201,4 +223,13 @@ function loadRulelist() {
 				$(template).appendTo( "#rulelist" );
 			})
 	});
+}
+
+function manipulateRule(ruleID) {
+	var url = CGI_RUL+"?q=getrule";
+	var data = "id="+encodeURIComponent(ruleID);
+	
+	$.post(url, data, function(data) {
+		return data;
+		});
 }

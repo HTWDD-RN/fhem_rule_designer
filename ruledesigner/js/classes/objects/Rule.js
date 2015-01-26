@@ -65,7 +65,24 @@ var Rule = function(id) {
 	this.display = function(_events) {
 		return _view.display(_model, _events)
 	}
-
+	
+	/**
+	 * This function identify an object and calls the each add method for it
+	 * @param obj to add
+	 */
+	 function addObject(obj) {
+		if (obj instanceof Condition || obj instanceof Gather) {
+			return _self.setConditionObj(obj)
+		}
+	 	if(obj instanceof VirtualDevice){
+			return _self.setVirtualDevice(obj)	 	
+	 	}
+	 	if(obj instanceof Actor || obj instanceof Actorgroup){
+	 		return _self.addAction(obj)
+	 	}
+	 	return false
+	 }
+	 
 	/**
 	 * Integrates a parameter directly, when not exists. It make a tunneling
 	 * call to the addParam function of the including Params object
@@ -135,7 +152,7 @@ var Rule = function(id) {
 	this.setParameter = function(data) {
 		return _model.getParamObj().setParameter(data)
 	}
-
+	
 	// Bind model functions
 	// var keys = Object.keys(_model)
 	// for (var n = 0; n < keys.length; n++) {
@@ -166,7 +183,36 @@ var RuleModel = function(controller, id) {
 	var _conditions = null // Object
 
 	var _virtual_device = null // Object
+	/**
+	 * TODO
+	 */
+	this.removeObject = function(SYS_ID){
+		
+		if(_conditions != null){
+			if (_conditions.SYS_ID == SYS_ID){
+				Log((typeof _conditions) +' '+ key + ' removed.')
+				_conditions.unset()
+				delete _conditions
+				_conditions = null
+				return true
+			} else if ( _conditions instanceof Gather && _conditions.removeObject(SYS_ID)){
+				return true
+			}
+		}
+		
+		if (_virtual_device != null && _virtual_device.SYS_ID == SYS_ID){
+			_virtual_device.unset()
+			delete _virtual_device
+			_virtual_device = null
+			return true
+		}
+		
+		if(_actions.removeObject(SYS_ID)){
+			return true
+		}
 
+		return false
+	}
 	/**
 	 * This function is use to reset the member variables in variable environment
 	 * @return bool - true if successful
@@ -355,35 +401,40 @@ var RuleView = function(controller) {
 		sensor.innerHTML += (Configuration.DEBUG_LEVEL >= 5) ?  'Bedingungen: <hr>' : ''
 		if (condObj != null){
 			sensor.innerHTML +=condObj.display()
+			sensor.className = 'sensor-side'
 		} else {
 			var placeholder = document.createElement('span')
-			placeholder.innerHTML = 'Placeholder for Condition / Gather objects'
+			placeholder.innerHTML = 'Condition / Gather objects placeholder'
 			
-			sensor.className = ['placeholder', 'drop-condition', 'drop-gather'].join(' ')
+			sensor.className = ['sensor-side', 'placeholder', 'drop-condition', 'drop-gather'].join(' ')
 			sensor.setAttribute('rel', _controller.SYS_ID)
 			sensor.innerHTML += placeholder.outerHTML
 		}
 		
 		// Generate Virtual Device part
-		var vdev = document.createElement('li')
+		var container = document.createElement('li')
+			container.className = 'vdev'
+		var vdev = document.createElement('div')
 		vdev.innerHTML += (Configuration.DEBUG_LEVEL >= 5) ?  'VirtualDevice: <hr>' : ''
 		if(vdevObj != null){
 			vdev.innerHTML += vdevObj.display()
 		} else {
-			vdev.className  = [ 'placeholder', 'vdev', 'drop-vdev' ].join(' ')
+			vdev.className  = [ 'placeholder', 'drop-vdev' ].join(' ')
 			var placeholder = document.createElement('span')
-			placeholder.innerHTML = 'Placeholder for Virtual Device'
+			placeholder.innerHTML = 'Virtual Device placeholder'
 			placeholder.setAttribute('rel', _controller.SYS_ID)
 			vdev.innerHTML += placeholder.outerHTML
-		}
+		}	
+		container.innerHTML += vdev.outerHTML
 		
 		// Generate Actions part
 		var dp_actions = document.createElement('li')
+		dp_actions.className = 'actor-side'
 		dp_actions.innerHTML += (Configuration.DEBUG_LEVEL >= 5) ?  'Aktionen: <hr>' : ''
 		dp_actions.innerHTML += actionsObj.display()
 
 		// Build display rule
-		dp_rule.innerHTML = [sensor.outerHTML, vdev.outerHTML, dp_actions.outerHTML].join("\n")
+		dp_rule.innerHTML = [sensor.outerHTML, container.outerHTML, dp_actions.outerHTML].join("\n")
 		
 		return dp_rule.outerHTML
 	}

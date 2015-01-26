@@ -90,7 +90,6 @@ function MainView(_controller) {
 			return toolbar;
 		};
 
-		
 		/**
 		 * TODO
 		 */
@@ -99,7 +98,6 @@ function MainView(_controller) {
 			$(ID).css('height', height);
 		};
 
-		
 		/**
 		 * TODO
 		 */
@@ -120,7 +118,6 @@ function MainView(_controller) {
 
 		var flagSegmentation = _controller.getAvailableSegmentation().defaultFunc
 
-		
 		/**
 		 * TODO
 		 */
@@ -128,7 +125,6 @@ function MainView(_controller) {
 			flagSegmentation = setup
 		}
 
-		
 		/**
 		 * TODO
 		 */
@@ -144,7 +140,6 @@ function MainView(_controller) {
 			return objList;
 		};
 
-		
 		/**
 		 * TODO
 		 */
@@ -249,7 +244,6 @@ function MainView(_controller) {
 		};
 	}
 
-	
 	/**
 	 * TODO
 	 */
@@ -258,8 +252,9 @@ function MainView(_controller) {
 		var ID = '#' + Configuration.GUI.ADDITIONALS.ID;
 
 		var links = {
-			'Demo' : [ 'demo/demo.html', 'JSON-Demo',
-					'Zur JSON-Test-App wechseln' ]
+			'JSON' : [ 'demo/demo.html', 'JSON-Examples', 'Switch to test app' ],
+			'PARSE' : [ 'demo/parseDemo.html', 'Parse JSON',
+					'Switch to parse app' ]
 		}
 
 		/**
@@ -277,7 +272,6 @@ function MainView(_controller) {
 			return tmp.join(' ')
 		}
 
-		
 		/**
 		 * TODO
 		 */
@@ -295,7 +289,6 @@ function MainView(_controller) {
 			$(ID + ' select.filter-seg').val(tmp.defaultFunc)
 		}
 
-		
 		/**
 		 * TODO
 		 */
@@ -312,7 +305,6 @@ function MainView(_controller) {
 
 	}
 
-	
 	/**
 	 * TODO
 	 */
@@ -466,8 +458,9 @@ function MainView(_controller) {
 		 * @param objects
 		 * @see /classes/objects/Rules.js
 		 */
-		var rebuildRules = function(_rules) {
+		this.rebuildRules = function() {
 			Log('MainView.js - generateDropableObjectField.actualizeRules', 4)
+			var rules = controller.getRules()
 			for (key in rules) {
 				$('Tab_' + key).html(rules[key].display())
 			}
@@ -493,7 +486,6 @@ function MainView(_controller) {
 	var objList = new generateDraggableObjectList;
 	var objField = new generateDropableObjectField;
 
-	
 	/**
 	 * TODO
 	 */
@@ -505,7 +497,6 @@ function MainView(_controller) {
 		}
 	};
 
-	
 	/**
 	 * TODO
 	 */
@@ -539,11 +530,14 @@ function MainView(_controller) {
 	 * @return true, if succeed
 	 */
 	this.removeElement = function(SYS_ID) {
-		if (!_controller.removeRule(SYS_ID)) {// If SYS_ID not a rule
-			return _controller.removeElement(SYS_ID) // search and remove
-			// element
+		Log('MainView -', SYS_ID, 5)
+		var bool = _controller.removeObject(SYS_ID)
+		if(bool){
+			_self.actualize()
+			return true
 		}
-		return true
+		objField.rebuildRules()
+		return false
 	}
 
 	/**
@@ -555,7 +549,6 @@ function MainView(_controller) {
 		$(window).resize()
 	}
 
-	
 	/**
 	 * TODO
 	 */
@@ -564,7 +557,7 @@ function MainView(_controller) {
 		$(objField).children().remove();
 		$('input[name=txtMakro]').val('');
 	};
-	
+
 	/**
 	 * TODO
 	 */
@@ -576,6 +569,7 @@ function MainView(_controller) {
 		$(window).resize();
 		_events.enableDropElementsRule()
 		_events.enableAddActionGroupOnClick()
+
 	}
 
 	/**
@@ -605,8 +599,10 @@ function MainView(_controller) {
 		var _rules = _controller.getRules()
 		for ( var key in _rules) {
 			objField.addRuleTab(_rules[key])
-			_events.enableDropElementsRule()
 		}
+
+		_events.enableDropElementsRule()
+		_events.initializeTrashable()
 
 		// Generates draggable and add it to the view
 		var _objList = objList.init();

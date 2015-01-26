@@ -45,4 +45,15 @@ QUnit.test( "Test Actors-object (js/classes/objects/Actors.js)", function( asser
 	assert.ok(obj.unset())
 	assert.equal(JSON.stringify(obj.toJSON()), '[]', 'toJSON: function')
 	Log(JSON.stringify(obj.toJSON()))
+	
+	assert.ok(obj.addObject(actor1), 'addActor first actor')
+	assert.ok(obj.addObject(new Actor('ID2')), 'addActor second')
+	assert.equal(JSON.stringify(obj.toJSON()), '[{"ACTOR":"ID1","PARAMS":{}},{"ACTOR":"ID2","PARAMS":{}}]','toJSON: proof representation')
+	
+	assert.ok(obj.addObject(new Actor('ID3')), 'addActor third')
+	assert.ok(obj.addObject(actor4), 'addActor forth')
+	assert.equal(JSON.stringify(obj.toJSON()), '[{"ACTOR":"ID1","PARAMS":{}},{"ACTOR":"ID2","PARAMS":{}},{"ACTOR":"ID3","PARAMS":{}},{"ACTOR":"ID4","PARAMS":{}}]','toJSON: proof representation')
+
+	
+	
 })

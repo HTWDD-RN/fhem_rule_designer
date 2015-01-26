@@ -33,7 +33,7 @@ var Actorgroup = function() {
 		}
 
 		// Forall actors-objects
-		var actors = _model.getActors()
+		var actors = _model.getActors().getActors()
 		for ( var key in actors) {
 			if ((obj = actors[key].search(SYS_ID)) != null)
 				return obj
@@ -41,7 +41,18 @@ var Actorgroup = function() {
 
 		return null
 	}
-
+	
+	/**
+	 * This function identify an object and calls the each add method for it
+	 * @param obj to add
+	 */
+	 this.addObject = function(obj) {
+	 	if(obj instanceof VirtualDevice){
+	 		return _self.setVirtualDevice(obj)
+	 	}
+	 	return false
+	 }
+	 
 	/**
 	 * Function to generate the HTML-Output return HTML-string
 	 */
@@ -72,6 +83,25 @@ var ActorgroupModel = function(controller) {
 	var _actors = new Actors()
 
 	var _virtual_device = null
+	
+	/**
+	 * TODO
+	 */
+	this.removeObject = function(SYS_ID){
+		
+		if(_actors.removeObject(SYS_ID)){
+				return true
+		}
+		
+		if (_virtual_device != null && _virtual_device.SYS_ID == SYS_ID){
+			_virtual_device.unset()
+			delete _virtual_device
+			_virtual_device = null
+			return true
+		}
+
+		return false
+	}
 
 	/**
 	 * This function is use to reset the member variables in variable
@@ -184,8 +214,9 @@ var ActorgroupView = function(controller) {
 		
 		var result = (Configuration.DEBUG_LEVEL >= 5) ?  'Actorgroup: <hr>' : ''
 		
-		var actorgroup = document.createElement('ul')		
-		actorgroup.className = 'obj_actorgroup'
+		var actorgroup = document.createElement('ul')
+		actorgroup.className = 'obj_actorgroup trashable'
+		actorgroup.setAttribute('rel', _controller.SYS_ID)
 		
 		// VirtualDevice
 		var vdev = document.createElement('li')	
@@ -201,7 +232,6 @@ var ActorgroupView = function(controller) {
 		var actors = model.getActors()
 		if(actors.getActors().length > 0){
 			var tmp = actors.display()
-			Log(tmp)
 			actorgroup.innerHTML += tmp 
 		}
 		

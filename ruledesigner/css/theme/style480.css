@@ -66,4 +66,8 @@
 		padding:1px 3px;
 		width: 100px;
 	}
+	
+#rd_rules>div .actor-side {
+	max-width: 250px;
+}
 }

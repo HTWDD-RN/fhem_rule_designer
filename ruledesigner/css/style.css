@@ -41,8 +41,6 @@
 	box-sizing: border-box;
 	z-index: 2;
 	padding: 4px;
-	background-size: 100% 100%;
-   background-repeat: no-repeat;
 }
 
 #rd_toolbar>* {
@@ -177,9 +175,17 @@ ul#gathers li.ui-objlist-body {
 /*
  * Object field
  */
+#rd_rules > *{
+	overflow: visible
+}
+
 #rd_rules>div {
-	overflow: scroll;
+/*	overflow: scroll; */
 	padding: 18px;
+}
+
+#rd_rules>div * {
+	border-radius: 5px;
 }
 
 #rd_rules li span.ui-icon {
@@ -195,31 +201,30 @@ ul#gathers li.ui-objlist-body {
 	position: relative;
 }
 
-#rd_rules ul.obj_rule>li {
+#rd_rules ul.obj_rule > li {
 	/* Inline-Darstellung des Aktoren/Sensoren-Bereich, max. Hoehe */
 	display: table-cell;
 	list-style: none;
 	border: 2px dashed #666;
-	width: 50%;
-	height: 100%;
 	overflow: visible;
 	vertical-align: middle;
 	z-index: 1;
+}
+
+#rd_rules ul.obj_rule > li.vdev {
+	/* Anordnung der zentralen Virtual-Device Box*/
+	display: block;
+	position: absolute;
+	width: 100%;
+	top:  -18px;
+	left: 0;
+	text-align: center;
+	z-index: 2;
+	margin: 0;
+	border: none;
 }
 
 #rd_rules ul.obj_rule>li:first-child {
 	text-align: right;
 }
 
-#rd_rules ul.obj_rule>li.vdev {
-	/* Anordnung der zentralen Virtual-Device Box*/
-	display: block;
-	position: absolute;
-	height: 75px;
-	width: 180px;
-	left: 50%;
-	top: -18px;
-	margin-left: -90px;
-	z-index: 2;
-	text-align: center;
-}

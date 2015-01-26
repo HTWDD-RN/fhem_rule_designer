@@ -40,7 +40,13 @@ QUnit.test( "Test Actorgroup-object (js/classes/objects/Actorgroup.js)", functio
 	assert.ok(obj.getVirtualDevice(), 'getVirtualDevice: Test if virtual device set')
 	assert.equal( JSON.stringify(obj.toJSON()), '{"ACTORGROUP":{"VDEV":{"TYPE":"VD_DIGITAL_TIMER","PARAMS":{}},"ACTORS":[]}}', 'toJSON: proof representation')
 	
-	// Tst unset
+	// Test unset
 	assert.ok(obj.unset())
 	assert.equal(JSON.stringify(obj.toJSON()), '{"ACTORGROUP":{}}', 'toJSON: function')
+	
+	// Test addObject
+	assert.ok(obj.addObject(vdev), 'setVirtualDevice')
+	assert.equal( JSON.stringify(obj.toJSON()), '{"ACTORGROUP":{"VDEV":{"TYPE":"VD_DIGITAL_TIMER","PARAMS":{}},"ACTORS":[]}}', 'toJSON: proof representation')
+
+	
 })

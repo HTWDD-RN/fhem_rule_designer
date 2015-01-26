@@ -37,6 +37,17 @@ var Actors = function(){
 		return _view.display(_model, _events)
 	}
 	
+	/**
+	 * This function identify an object and calls the each add method for it
+	 * @param obj to add
+	 */
+	 this.addObject = function(obj) {
+	 	if(obj instanceof Actor){
+	 		return _self.addActor(obj)
+	 	}
+	 	return false
+	 }
+	 
 	// Bind model functions
 //	var keys = Object.keys(_model)
 //	for (var n = 0; n < keys.length; n++) {
@@ -55,6 +66,23 @@ var ActorsModel = function(controller){
 	var _controller = controller
 	
 	var _actors = []
+	
+
+	/**
+	 * TODO
+	 */
+	this.removeObject = function(SYS_ID) {
+
+		for (key in _actors) {
+			if (_actors[key].SYS_ID == SYS_ID) {
+				Log((typeof _actors[key]) + ' ' + SYS_ID + ' removed.')
+				delete _actors[key]
+				return true
+			}
+		}
+
+		return false
+	}
 	
 	/**
 	 * This function is use to reset the member variables in variable environment
@@ -89,9 +117,9 @@ var ActorsModel = function(controller){
 		 * @return boolean - true if successf
 	 */
 	this.removeActor = function(SYS_ID){
-		for(var n = 0; n < _actors.length; n++) {
-			if( _actors[n].SYS_ID == SYS_ID || (SYS_ID instanceof Actor && SYS_ID === _actors[n]) ){
-				_actors.splice(n, 1)
+		for(key in _actors) {
+			if( _actors[key].SYS_ID == SYS_ID || (SYS_ID instanceof Actor && SYS_ID === _actors[n]) ){
+				delete _actors.splice(key, 1)
 				return true
 			}
 		}
@@ -112,8 +140,8 @@ var ActorsModel = function(controller){
 	 */
 	this.toJSON = function (){
 		var tmp = []
-		for(var n = 0; n < _actors.length; n++){
-			tmp.push(_actors[n].toJSON())
+		for(key in _actors){
+			tmp.push(_actors[key].toJSON())
 		}
 		return tmp
 	}

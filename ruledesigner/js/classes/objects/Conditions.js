@@ -51,11 +51,31 @@ var Conditions = function() {
 var ConditionsModel = function(controller) {
 
 	var _obj = null
+	/**
+	 * 
+	 */
+	this.removeObject = function(SYS_ID) {
 
+		if (_obj != null) {
+			if (_obj.SYS_ID == SYS_ID) { // Check SYS_ID
+				Log((typeof _obj) + ' ' + key + ' removed.')
+				_obj.unset()
+				delete _obj
+				_obj = null
+				return true
+			}
+			
+			return _obj.removeObject(SYS_ID) // Search for VirtualDevice
+
+		}
+		
+		return false
+	}
+	
 	/**
 	 * This function is use to reset the member variables in variable
-	 * environment
-	 * Here in mapping functionality for removeObject
+	 * environment Here in mapping functionality for removeObject
+	 * 
 	 * @return bool - true if successful
 	 */
 	this.unset = function() {

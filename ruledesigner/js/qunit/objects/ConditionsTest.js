@@ -43,4 +43,6 @@ QUnit.test( "Test Conditions-object (js/classes/objects/Conditions.js)", functio
 	// Test unset
 	assert.ok(obj.unset())
 	assert.equal(JSON.stringify(obj.toJSON()), '{}', 'toJSON: function')
+	
+	
 })

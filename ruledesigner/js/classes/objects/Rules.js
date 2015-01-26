@@ -68,6 +68,27 @@ function RulesModel(controller, id) {
 	var _rules = {}
 
 	/**
+	 * TODO
+	 */
+	this.removeObject = function(SYS_ID){
+		Log('Rules -', SYS_ID, 5)
+		for(var key in _rules){
+			if(key == SYS_ID){
+				_rules[key].unset()
+				_rules[key] = undefined
+				delete _rules[key]
+				Log('Rule ' + key + ' removed.')
+				return true
+			} else {
+				if(_rules[key].removeObject(SYS_ID)){
+					return true
+				}
+			}
+		}
+		return false
+	}	
+	
+	/**
 	 * This function is use to reset the member variables in variable environment
 	 * @return bool - true if successful
 	 */

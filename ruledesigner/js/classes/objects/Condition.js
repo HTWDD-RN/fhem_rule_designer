@@ -157,6 +157,22 @@ var ConditionModel = function(controller, id) {
 
 	var _virtual_device = null
 
+	
+	/**
+	 * TODO
+	 */
+	this.removeObject = function(SYS_ID){
+
+		if (_virtual_device != null && _virtual_device.SYS_ID == SYS_ID){
+			_virtual_device.unset()
+			delete _virtual_device
+			_virtual_device = null
+			return true
+		}
+
+		return false
+	}
+	
 	/**
 	 * This function is use to reset the member variables in variable environment
 	 * @return bool - true if successful
@@ -257,6 +273,8 @@ var ConditionView = function(controller) {
 	this.display = function(model) {
 		
 		var tmp = document.createElement('div')
+		tmp.className =  'trashable'
+		tmp.setAttribute('rel', _controller.SYS_ID)
 		// TODO
 		tmp.innerHTML += '<span class="item-descr item-descr-'+ controller.SYS_ID +'">'+ 'SENSOR ID: '+ model.getID() +'</span>'
 		

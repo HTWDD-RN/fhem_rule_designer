@@ -31,9 +31,11 @@ $(window).resize(
 
 			$(ID.EDITOR + ' > div').css('margin-top', topMargin);
 			
-			$(ID.DRAGBAR + ' li.ui-objlist-head').css('display', 'block');
+			$(ID.DRAGBAR + ' li.ui-objlist-head').css('display', 'inline-block');
+			
 
 			if (width >= 720) {
+				$(ID.EDITOR).css({'overflow' : 'scroll'})
 				$(ID.DRAGBAR + ' ul.ui-objlist').css('margin-right', margin);
 
 				events.disableMenuButton()
@@ -50,9 +52,10 @@ $(window).resize(
 				$(ID.DRAGBAR).css('width', draggbar_width - 8);
 				$(ID.DRAGBAR).css('float', 'left');
 				$(ID.DRAGBAR + ' li').css('padding', '2px 5px');
-
-				var width2 = draggbar_width / 2 - (2 + 1) * margin - 8;
-				$(ID.DRAGBAR + ' li:not(.ui-objlist-head)').css('width', width2);
+				
+				var width2 = draggbar_width / 2 - (2 + 1) * margin - 10;
+				$(ID.DRAGBAR + ' li').css('width', width2);
+				$(ID.DRAGBAR + ' li.ui-objlist-head').css('width', 2*width2+margin);
 
 				$(ID.EDITOR).css('width', width - 1 * margin - 16);
 				$(ID.EDITOR).css('margin-left', 0);
@@ -64,6 +67,7 @@ $(window).resize(
 								- $(ID.EDITOR + ' > ul:first').height() - 8);
 
 			} else if (width >= 480) {
+				$(ID.EDITOR).css({'overflow' : 'scroll'})
 				$(ID.DRAGBAR + ' ul.ui-objlist').css('margin-right', margin);
 
 				events.disableMenuButton()
@@ -82,7 +86,7 @@ $(window).resize(
 				$(ID.DRAGBAR).css('float', 'left');
 
 				var width2 = draggbar_width / 1 - (1 + 1) * margin - 8;
-				$(ID.DRAGBAR + ' li:not(.ui-objlist-head)').css('width', width2);
+				$(ID.DRAGBAR + ' li').css('width', width2);
 
 				$(ID.EDITOR).css('width', width - 1 * margin - 48);
 				$(ID.EDITOR).css('margin-left', 0);

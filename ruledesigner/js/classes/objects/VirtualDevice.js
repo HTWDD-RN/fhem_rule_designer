@@ -126,8 +126,10 @@ var VirtualDeviceView = function(controller) {
 	this.display = function(model) {
 			
 			var tmp = document.createElement('div')
+			tmp.className = 'trashable'
+			tmp.setAttribute('rel', _controller.SYS_ID)
 			// TODO
-			tmp.innerHTML += '<span class="item-descr item-descr-'+ controller.SYS_ID +'">'+ 'ACTOR ID: '+ model.getID() +'</span>'
+			tmp.innerHTML += '<span class="item-descr item-descr-'+ controller.SYS_ID +'">'+ 'VDEV ID: '+ model.getID() +'</span>'
 			
 			var form = document.createElement('form')
 					

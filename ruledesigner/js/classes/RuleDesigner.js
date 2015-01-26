@@ -204,7 +204,7 @@ function __RuleDesigner() {
 	 * @return boolean - true if removing successful
 	 */
 	this.removeElement = function(SYS_ID) {
-		var obj = rules.search(SYS_ID)
+		var obj = _rules.search(SYS_ID)
 		if (obj != null) {
 			obj.unset()
 			delete obj // Use for deleting keys, global und local environment
@@ -216,6 +216,15 @@ function __RuleDesigner() {
 		}
 		return false
 	}
+	
+	/**
+	 * 
+	 */
+	this.removeObject = function(SYS_ID){
+		Log('RuleDesigner -', SYS_ID, 5)
+		return _rules.removeObject(SYS_ID)
+	}
+	
 
 	/**
 	 * LoadRule TODO: implements interface
@@ -262,15 +271,15 @@ function __RuleDesigner() {
 			stepsCounter()
 
 			// Step 2 Initialize a new rule
-			_self.addNewRule()
+//			_self.addNewRule()
 
 			// Step [Optional] add demo rules
 			if (Configuration.DEBUG_LEVEL >= 5 && typeof DEMO !== 'undefined'){
 				var demorules = getDemoRules()
-				for(key in demorules){
-					_rules.addRule(demorules[key])
-				}
-//				_rules.addRule(demorules[0])
+//				for(key in demorules){
+//					_rules.addRule(demorules[key])
+//				}
+				_rules.addRule(demorules[7])
 			}
 
 				// Step 3 - Initialize/Build WildCard - GUI

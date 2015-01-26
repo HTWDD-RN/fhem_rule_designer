@@ -41,7 +41,18 @@ function Actions() {
 	this.display = function(_events) {
 		return _view.display(_model, _events)
 	}
-
+	
+	/**
+	 * This function identify an object and calls the each add method for it
+	 * @param obj to add
+	 */
+	 this.addObject = function (obj) {
+	 	if(obj instanceof Actor || obj instanceof Actorgroup){
+	 		return _self.addAction(obj)
+	 	}
+	 	return false
+	 }
+	 
 	// Bind model functions
 //	var keys = Object.keys(_model)
 //	for (var n = 0; n < keys.length; n++) {
@@ -64,6 +75,26 @@ function ActionsModel(controller) {
 	var _controller = controller
 
 	var _actions = {}
+	
+	/**
+	 * TODO
+	 */
+	this.removeObject = function(SYS_ID){
+		for(var key in _actions){
+			if(key == SYS_ID){
+				_actions[key].unset()
+				_actions[key] = undefined
+				delete _actions[key]
+				Log('Rule ' + key + ' removed.')
+				return true
+			} else {// Do only the follow for Actorgroups
+				if(_actions[key] instanceof Actorgroup && _actions[key].removeObject(SYS_ID)){
+					return true
+				}
+			}
+		}
+		return false
+	}
 	
 	/**
 	 * This function is use to reset the member variables in variable environment

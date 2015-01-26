@@ -74,4 +74,10 @@ QUnit.test( "Test ActionsTest-object (js/classes/objects/Actions.js)", function(
 	assert.ok(obj.unset())
 	assert.equal(JSON.stringify(obj.toJSON()), '[]', 'toJSON: function')
 	
+	// Test addObject
+	assert.ok(obj.addAction(actor1), 'addActor: add actor 1')
+	assert.ok(obj.addAction(actor2), 'addActor: add actor 2')
+	assert.ok(obj.addAction(actorgroup), 'addActor: add actorgroup')
+	assert.equal(JSON.stringify(obj.toJSON()), '[{"ACTOR":"L1","PARAMS":{"state":"on"}},{"ACTOR":"L2","PARAMS":{"state":"off"}},{"ACTORGROUP":{}}]', 'toJSON: proof representation, after removing, before add virtual device')
+
 })

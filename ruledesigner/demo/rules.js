@@ -16,7 +16,15 @@ if (typeof cSYS_ID === 'undefined') {
 
 	}()
 }
+
+/**
+*
+*/
 DEMO.EXAMPLE1 = {}
+
+/**
+*
+*/
 DEMO.EXAMPLE1.A = function() {
 	var rule = new Rule('RULE_1_LIGHT_ON')
 	var rule_params = {
@@ -46,6 +54,9 @@ DEMO.EXAMPLE1.A = function() {
 	return rule
 }() // Execute the rule generation directly and store it after finishing
 
+/**
+ *
+ */
 DEMO.EXAMPLE1.B = function() {
 	/*
 	 * 
@@ -77,8 +88,50 @@ DEMO.EXAMPLE1.B = function() {
 	return rule
 }() // Execute the rule generation directly and store it after finishing
 
+/**
+ *
+ */
+DEMO.EXAMPLE1.C = function() {
+	/*
+	 * 
+	 */
+	var rule = new Rule('RULE_1_LIGHT_OFF(2)')
+	var rule_params = {
+		'name' : 'Fernsteuerung Ausschaltregel',
+		'descr' : 'Ausschaltregel zu Fernsteuerung des Lichtes'
+	}
+
+	rule.getParamObj().setParameter(rule_params)
+	rule.getParamObj().addParam('link', 'Demo 1 -Regel 2 Var. NOT')
+	rule.getParamObj().addParam('Kaptitel', 'X.3 Validierung und Anwendung')
+	rule.getParamObj().addParam('Beispiel', 1)
+	var notGather = new Gather('NOT')
+	var cond = new Condition('Schalter (S)')
+	var ref_params = {
+		'state' : [ '==', 'on' ]
+	}
+	cond.setRefParameter(ref_params)
+	notGather.addCondition(cond)
+	rule.setConditionObj(notGather)
+
+	var actor = new Actor('Lampe (L1)')
+	var actor_params = {
+		'state' : 'off'
+	}
+	actor.setParameter(actor_params)
+	rule.getActions().addAction(actor)
+
+	return rule
+}() // Execute the rule generation directly and store it after finishing
+
+/**
+ *
+ */
 DEMO.EXAMPLE2 = {}
 
+/**
+ *
+ */
 DEMO.EXAMPLE2.A = function() {
 	var rule = new Rule('RULE_2_VAR_A')
 	var rule_params = {
@@ -125,6 +178,9 @@ DEMO.EXAMPLE2.A = function() {
 	return rule
 }() // Execute the rule generation directly and store it after finishing
 
+/**
+ *
+ */
 DEMO.EXAMPLE2.B = function() {
 	/*
 	 * 
@@ -174,6 +230,9 @@ DEMO.EXAMPLE2.B = function() {
 	return rule
 }() // Execute the rule generation directly and store it after finishing
 
+/**
+ *
+ */
 DEMO.EXAMPLE2.C = function() {
 
 	/*
@@ -226,6 +285,9 @@ DEMO.EXAMPLE2.C = function() {
 	return rule
 }()
 
+/**
+ *
+ */
 DEMO.EXAMPLE3 = function() {
 	/*
 	 * 
@@ -350,6 +412,9 @@ DEMO.EXAMPLE3 = function() {
 	return rule
 }() // Execute the rule generation directly and store it after finishing
 
+/**
+ *
+ */
 DEMO.EXAMPLE4 = function() {
 
 	/*
@@ -391,7 +456,7 @@ DEMO.EXAMPLE4 = function() {
 	})
 
 	var actorgroup1 = new Actorgroup()
-	actorgroup1.getActors().addActor(actorM3)
+	actorgroup1.getActors().addActor(actorM2)
 	actorgroup1.getActors().addActor(actorM3)
 
 	var vdev = new VirtualDevice('DELAY_TIMER')
@@ -412,6 +477,9 @@ DEMO.EXAMPLE4 = function() {
 	return rule
 }() // Execute the rule generation directly and store it after finishing
 
+/**
+ *
+ */
 DEMO.EXAMPLE5 = function() {
 
 	/*

@@ -13,7 +13,27 @@ var Events = function(view) {
 		EDITOR : '#' + Configuration.GUI.EDITOR.ID,
 		ADDS : '#' + Configuration.GUI.ADDITIONALS.ID
 	}
-	
+
+	var enableTrigger = false
+	/**
+	 * 
+	 */
+	var triggerPos = function() {
+		if (enableTrigger) {
+			setTimeout(triggerPos, 10000)
+		}
+	}
+	/**
+	 * 
+	 */
+	var getParentRel = function(src){
+		var rel = src.parent()
+		var att = rel.attr('rel')
+		if( att === undefined && $(src) != $(ID.EDITOR)){
+			getParentRel($(src.parent()))
+		}
+		return rel
+	}	
 	/**
 	 * TODO
 	 */
@@ -23,11 +43,13 @@ var Events = function(view) {
 		$(ID.TOOLBAR + ' a:not(.inputLoad)').button()
 
 		$('#btnNew').click(function(e) {
+			e.preventDefault()
 			$('input[name="txtMakro"]').removeAttr('disabled');
 			_view.reset()
 		});
 
 		$('#inputLoad').click(function(e) {
+			e.preventDefault()
 			if (view.loadRule()) {
 				// TODO -Resetting the GUI
 				$('input[name="txtMakro"]').attr('disabled', 'disabled');
@@ -35,6 +57,7 @@ var Events = function(view) {
 		});
 
 		$('#btnLoad').click(function(e) {
+			e.preventDefault()
 			$("#inputLoad").trigger('click');
 			return false;
 		});
@@ -44,6 +67,7 @@ var Events = function(view) {
 		// });
 
 		$('#btnSaveAs').click(function(e) {
+			e.preventDefault()
 			// if (_view.saveAsRule()) {
 			// $('input[name="txtMakro"]').attr('disabled', 'disabled');
 			// }
@@ -67,6 +91,7 @@ var Events = function(view) {
 		$('#menu').show().hide();
 		
 		$('#menu-open').click(function(e) {
+			e.preventDefault()
 			if (!flags.menu) {
 				$('#menu.ui-menu').show();
 				flags.menu = true
@@ -77,6 +102,7 @@ var Events = function(view) {
 		})
 
 		$('#menu li').click(function(e) {
+			e.preventDefault()
 			$('#menu.ui-menu').hide();
 			flags.menu = false
 		})
@@ -104,7 +130,8 @@ var Events = function(view) {
 	 * TODO
 	 */
 	this.enableAddButton = function() {
-		$('#btnAddRule').click(function() {
+		$('#btnAddRule').click(function(e) {
+			e.preventDefault()
 			_view.addRule();
 		});
 	}
@@ -127,42 +154,105 @@ var Events = function(view) {
 				{
 					accept : ('.ui-tabs-active, .trashable'),
 					drop : function(event, ui) {
-						var hash = $('a',$(ui.draggable)).attr('href')
-								.replace('#', '') // get url
+						var src = $(ui.draggable)
+						var parent = getParentRel(src)		
 						var rel
-						if ($('#' + hash).size() == 1) {
-							rel = $('#' + hash).attr('rel')
+						if($('a',src).attr('href') !== undefined) {
+							var hash = $('a',src).attr('href').replace('#', '') 
+							if ($('#' + hash).size() == 1) {
+								rel = $('#' + hash).attr('rel')
+							} else {
+								rel = $(src).attr('rel')
+							}
 						} else {
-							rel = $($(event.toElement).context).attr('rel')
-						}
-						console.log(hash, rel);
-						_view.removeElement(rel) // removeData
-
-						$(ui.draggable).remove() // remove tab and other
+							rel = $(src).attr('rel')
+							// TODO: Change display
+						}				
+						if(!_view.removeElement(rel)) // removeData
+							return false
+												
+						src.remove() // remove tab and other
 						// elements
-						if (hash != null) { // the hash is use for tabbing and
+						if (hash != undefined && bool) { // the hash is use
+															// for tabbing and
 							// is equal to the partner container
 							// id
-							$('#' + hash).remove() // remove container
+							$('#' + hash).remove() // remove tab container
 						}
+						return true
 					}
 				})
 	}
 
 	/**
+	 * 
+	 */
+	this.initializeTrashable =function(){
+			var setup = {
+				revert : true,
+				start : function(event, ui) {
+					Log('Drg start', ui, 5)
+					$(ID.EDITOR).css({
+						overflow : 'visible'
+					})
+					if (Configuration.DEBUG_LEVEL >= 5)
+						enableTrigger = true
+					triggerPos()
+				},
+				drag : function(event, ui) {
+				},
+				stop : function(event, ui) {
+					$(ID.EDITOR).css({
+						'overflow' : 'scroll'
+					})
+					enableTrigger = false
+				},
+				appendTo : '#trash',
+				containment: 'window',
+				scroll : false,
+				zIndex : 9999
+			}
+			$('.trashable').draggable(setup)
+	}
+
+	/**
+	 * 
+	 */
+	this.enableTrashable =function(obj){
+
+			var setup = {
+				revert : true,
+				start : function(event, ui) {
+					Log('Drg start', ui, 5)
+					$(ID.EDITOR).css({
+					// overflow : 'visible'
+					})
+					if (Configuration.DEBUG_LEVEL >= 5)
+						enableTrigger = true
+					triggerPos()
+				},
+				drag : function(event, ui) {
+				},
+				stop : function(event, ui) {
+					$(ID.EDITOR).css({
+						'overflow' : 'hidden'
+					})
+					enableTrigger = false
+				},
+				appendTo : '#trash',
+				containment: 'window',
+				scroll : false,
+				zIndex : 9999
+			}
+			$(obj).draggable(setup)
+	}
+	
+	/**
 	 * Function to enables dragging
 	 */
 	this.enableItemDragging = function(elem) {
-// Log($(ID.DRAGBAR + ' li').size())
 
 		var enableTrigger = false
-
-		var triggerPos = function() {
-	// Log($(this).position())
-			if (enableTrigger) {
-				setTimeout(triggerPos, 10000)
-			}
-		}
 
 		var setup = {
 			revert : true,
@@ -184,11 +274,10 @@ var Events = function(view) {
 				enableTrigger = false
 			},
 			appendTo : 'body',
-			// containment: 'window',
+			containment: 'window',
 			scroll : false,
 			zIndex : 9999
 		}
-// $(ID.DRAGBAR + ' li').draggable(setup)
 		$(elem).draggable(setup)
 	}
 
@@ -237,6 +326,7 @@ var Events = function(view) {
 	 */
 	this.enableAddActionGroupOnClick = function(){
 		$('.obj_actions .placeholder').click(function(e){
+			e.preventDefault()
 			var rel = $(this).attr('rel')
 			var disp = _view.addElement(rel, 'Actorsgroup')
 			$(this).parent().html($(disp).html())

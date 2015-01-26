@@ -38,6 +38,15 @@ function Gather(gather) {
 		return _view.display(_model, _events)
 	}
 
+	/**
+	 * This function identify an object and calls the each add method for it
+	 * 
+	 * @param obj
+	 *            to add
+	 */
+	function addObject(obj) {
+		return _self.addCondition(obj)
+	}
 	// Bind model functions
 	// var keys = Object.keys(_model)
 	// for (var n = 0; n < keys.length; n++) {
@@ -57,18 +66,43 @@ function GatherModel(controller, gather) {
 	var _log_gather = gather
 
 	var _conditions = []
-	
+
 	/**
-	 * This function is use to reset the member variables in variable environment
+	 * TODO
+	 */
+	this.removeObject = function(SYS_ID) {
+
+		for (key in _conditions) {
+			if (_conditions[key].SYS_ID == SYS_ID) {
+				Log((typeof _conditions[key]) + ' ' + SYS_ID + ' removed.')
+				_conditions[key].unset()
+				delete _conditions
+				_conditions = null
+				return true
+			} else if (_conditions[key].removeObject(SYS_ID)) {
+				return true
+			}
+		}
+
+		return false
+	}
+
+	/**
+	 * This function is use to reset the member variables in variable
+	 * environment
+	 * 
 	 * @return bool - true if successful
 	 */
 	this.unset = function() {
-		
-		_log_gather = Configuration.MESSAGES.MESSAGE_NEED_LOG_GATHER_TYPE // Set message as default
-		
-		while(_conditions.length>0)
-			_conditions.splice(0,1)
-			
+
+		_log_gather = Configuration.MESSAGES.MESSAGE_NEED_LOG_GATHER_TYPE // Set
+		// message
+		// as
+		// default
+
+		while (_conditions.length > 0)
+			_conditions.splice(0, 1)
+
 		if (_conditions.length == 0)
 			return true
 
@@ -161,10 +195,11 @@ function GatherModel(controller, gather) {
 	 */
 	this.toJSON = function() {
 		var tobj = new Object()
-		
-		if(_log_gather == Configuration.MESSAGES.MESSAGE_NEED_LOG_GATHER_TYPE || _log_gather == '')
+
+		if (_log_gather == Configuration.MESSAGES.MESSAGE_NEED_LOG_GATHER_TYPE
+				|| _log_gather == '')
 			return tobj
-			
+
 		var tmp = []
 		for (var n = 0; n < _conditions.length; n++) {
 			tmp.push(_conditions[n].toJSON())
@@ -185,16 +220,35 @@ function GatherView(controller) {
 	 * Function to generate the HTML-Output return HTML-string
 	 */
 	this.display = function(model) {
-		
+
 		var _conditions = model.getConditions()
-		
+		var _log = model.getLogical()
+
 		var gather = document.createElement('div')
+		gather.className = [ 'trashable', 'gather', 'gather-' + _log ]
+				.join(' ')
+		gather.setAttribute('rel', _controller.SYS_ID)
+
 		var logical = document.createElement('span')
-		logical.innerHTML = model.getLogical()
+		logical.innerHTML = _log
 		gather.innerHTML = logical.outerHTML
-		for(var n  = 0; n < _conditions.length; n++){
+		for (var n = 0; n < _conditions.length; n++) {
 			gather.innerHTML += _conditions[n].display()
 		}
+
+		// TODO: Bind on gather list
+		if (_log != 'NOT' || _conditions.length == 0) {
+			var sensor = document.createElement('div')
+			var placeholder = document.createElement('span')
+			placeholder.innerHTML = 'Condition / Gather objects placeholder'
+
+			sensor.className = [ 'placeholder', 'drop-condition', 'drop-gather' ]
+					.join(' ')
+			sensor.setAttribute('rel', _controller.SYS_ID)
+			sensor.innerHTML += placeholder.outerHTML
+			gather.innerHTML += sensor.outerHTML
+		}
+
 		return gather.outerHTML
 	}
 }

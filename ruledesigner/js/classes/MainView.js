@@ -462,7 +462,7 @@ function MainView(_controller) {
 			Log('MainView.js - generateDropableObjectField.actualizeRules', 4)
 			var rules = controller.getRules()
 			for (key in rules) {
-				$('Tab_' + key).html(rules[key].display())
+				$('#Tab_' + key).html(rules[key].display())
 			}
 			;
 		};
@@ -533,6 +533,7 @@ function MainView(_controller) {
 		Log('MainView -', SYS_ID, 5)
 		var bool = _controller.removeObject(SYS_ID)
 		if(bool){
+			objField.rebuildRules()
 			_self.actualize()
 			return true
 		}
@@ -569,6 +570,7 @@ function MainView(_controller) {
 		$(window).resize();
 		_events.enableDropElementsRule()
 		_events.enableAddActionGroupOnClick()
+		_events.initializeTrashable()
 
 	}
 

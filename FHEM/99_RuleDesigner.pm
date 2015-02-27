@@ -43,7 +43,7 @@ use vars qw(%data);
 
 # Variables
 my $MODULE_NAME = "wizard";#"ruledesigner";
-my $url = "/". $MODULE_NAME;
+my $url = "/ruledesigner/". $MODULE_NAME;
 my $contenttype = "application/json; charset=UTF-8";
 my $fhemhost = 'localhost';
 my $fhemport = '8083';
@@ -60,7 +60,7 @@ RuleDesigner_Initialize($)
 	my ($hash) = @_;
 	$hash->{DefFn} = "RD_define";
 	
-	$data{FWEXT}{$url}{LINK} = $MODULE_NAME."/index.html";
+	$data{FWEXT}{$url}{LINK} = "ruledesigner/".$MODULE_NAME."/index.html";
 	$data{FWEXT}{$url}{NAME} = $MODULE_NAME;
 	$data{FWEXT}{$url}{FUNC} = "RD_CGI";
 	

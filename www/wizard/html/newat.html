@@ -8,9 +8,8 @@
 	<script src="../js/functions.js"></script>
 	<script src="../js/FormGetter.js"></script>
 	<script src="../js/rule.js"></script>
-	<script src="../js/modify.js"></script>
 </head>
-<body onload="loadRuleparams()">
+<body>
 
 	<header>
 		<h1>FHEM Regel Wizard</h1>
@@ -20,26 +19,26 @@
 			<ul>
 				<li><a href="http://localhost:8083/fhem">FHEM</a></li>
 				<li><a href="http://localhost:8083/fhem/wizard/index.html">Hauptseite</a></li>
-				<li><a href="#">Neue Regel</a></li>
-				<li><a href="http://localhost:8083/fhem/wizard/html/newat.html">Sonnenstand App</a></li>
+				<li><a href="http://localhost:8083/fhem/wizard/html/new.html">Neue Regel</a></li>
+				<li><a href="#">Sonnenstand App</a></li>
 				<li><a href="http://localhost:8083/fhem/wizard/html/list.html">Liste aller Regeln</a></li>
 			</ul>
 		</nav>
 	</header>
 	
 	<section>
-		<h1>Was ist eine Regel und wie ist sie aufgebaut?</h1>
-		Eine Regel beschreibt, wann ein Gerät welchen Zustand annhemen soll.
+		<h1>Was ist die Sonnenstand App?</h1>
+		Auf dieser Seite kannst Du abhängig vom Sonnenauf- und untergang Regeln erstellen.
 	</section>
 	
 	<section id="new_rule_description">
-		<h1>1. Gebe deiner Regel einen Namen und eine Beschreibung:</h1>
+		<h1>1. Gebe Deiner Regel einen Namen und eine Beschreibung:</h1>
 		
 		<p class="label">Name:</p>
 		<input type="text" name="input_rule_name" id="input_rule_name" />
 		
 		<p class="hint">
-			Der Name hilft dir, später die Regel in der "Liste aller Regeln" wieder zu finden.
+			Der Name hilft Dir, später die Regel in der "Liste aller Regeln" wieder zu finden.
 			Wähle dazu einen aussagekräftigen Namen, wie zum Beispiel "Alle Lichter aus".
 		</p>
 		
@@ -47,36 +46,27 @@
 		<textarea rows="5" cols="80" id="input_rule_descr"></textarea>
 			
 		<p class="hint">
-			Wenn du magst, kannst du deiner Regel auch noch eine Beschreibung hinzufügen.
+			Wenn Du magst, kannst Du deiner Regel auch noch eine Beschreibung hinzufügen.
 		</p>
 	</section>
 	
-	<section id="new_rule_if">
-		<h1>2. Wann soll die Regel ausgeführt werden?</h1>
+	<section id="new_rule_at">
+		<h1>2. Wähle einen Zeitpunkt aus:</h1>
 		<p class="hint">
-			Wähle hier Ereignisse aus, wann deine Regel ausgeführt werden soll.
-			Ein Ereignis kann dabei zum Beispiel eine Uhrzeit sein, oder ein Schalter der gedrückt wird.
+			Hier kannst Du auswählen, ob die Regel zum Sonnenaufgang, oder Sonnenuntergang ausgeührt werden soll.
 		</p>
 	
-		<p class="label">Wähle hier eine Möglichkeit aus:</p>
-		<select size="5" name="input_sensors" id="input_sensors">
-			<script type="text/javascript">
-				printListOfSensors();
-			</script>		
-		</select>
-		<input type="button" value="hinzuf&uuml;gen" onclick="printSensor()" />
-		
-		<p class="label">Sage, was genau passieren muss:</p>
-		<div id="new_rule_if_and_list"></div>
+		<p class="label">W&auml;hle zwischen Sonnenauf- und Sonnenuntergang:</p>
+		<input type="radio" name="sonne" value="sunrise()" checked="checked" class="sonne">Sonnenaufgang<br>
+    	<input type="radio" name="sonne" value="sunset()" class="sonne">Sonnenuntergang<br>
+    	<input type="checkbox" name="repeat" value="repeat" id="repeat">Wiederholen<br>
 	</section>
-	
-
 
 
 	<section id="new_rule_then">
 		<h1>3. Was soll die Regel ausführen?</h1>
 		<p class="hint">
-			Hier stellst du ein, was eigentlich in deiner Regel passieren soll. Zum Beispiel könntest du eine Lampe einschalten.
+			Hier stellst Du ein, was eigentlich in deiner Regel passieren soll. Zum Beispiel könntest Du eine Lampe einschalten.
 		</p>
 		
 		<p class="label">Wähle dazu hier ein Gerät aus:</p>
@@ -92,7 +82,9 @@
 	</section>
 	
 	<section>
-		<a href="#" id="finish_btn" onclick="sendRule(getID())">FERTIG :-)</a>
+<!-- 		<a href="#" id="finish_btn" onclick="sendAtRule()">FERTIG :-)</a>
+ -->
+ <a href="#" id="finish_btn" onclick="sendAtRule()">FERTIG :-)</a>
 		
 		<p id="rule_text"></p>
 	</section>

@@ -48,6 +48,8 @@ my $contenttype = "application/json; charset=UTF-8";
 my $fhemhost = 'localhost';
 my $fhemport = '8083';
 
+my $placeholder = '%_%';
+
 
 ################################################################################
 # FHEM MODULE FUNCTIONS 
@@ -104,6 +106,9 @@ RD_CGI()
 			when 'delete'		{ RD_CGI_DeleteRule(%rule) }
 			when 'deactivate'	{ RD_CGI_DeactivateRule(%rule) }
 			when 'activate'		{ RD_CGI_ActivateRule(%rule) }
+			when 'getrule'		{ $json_ret = RD_CGI_GetRule(%rule) }
+			when 'check'		{ # TODO
+			 }
 			default				{ $json_ret = '{"TYPE": "Error", "Message": "Unsupported query: '.$query.'"}'; }
 		}
 		
@@ -121,6 +126,7 @@ sub RD_CGI_DeleteRule
 	
 	RD_Repo_DeleteRule($attr{'id'});
 	RD_Telnet("delete ".$attr{'id'});
+	RD_Telnet("save");
 }
 
 # handles rule deactivation requests
@@ -133,6 +139,7 @@ sub RD_CGI_DeactivateRule
 	
 	RD_Repo_SetState($attr{'id'}, $state);
 	RD_Telnet("delete ".$attr{'id'});
+	RD_Telnet("save");
 }
 
 # handels rule activation requests
@@ -149,6 +156,15 @@ sub RD_CGI_ActivateRule
 	my %rule = %{ parseRule($json) };
 
 	RD_Telnet($rule{'RULE'});
+	RD_Telnet("save");
+}
+
+sub
+RD_CGI_GetRule
+{
+	my %attr = @_;
+	Log3($MODULE_NAME, 4, "Look for rule with id: ".$attr{'id'});
+	return RD_Repo_GetRule($attr{'id'});
 }
 
 # returns a URL for a json list with all FHEM devices as json object.
@@ -187,6 +203,7 @@ RD_CGI_Definerule
 			RD_Telnet($rule{'RULE'});
 		}
 		
+		RD_Telnet("save");
 		return '{"TYPE":"Info", "Message":"Success."}';
 	}
 
@@ -329,6 +346,22 @@ sub RD_Repo_GetRule
 	return $r;
 }
 
+# check wether a rule 
+# - ~ name already exists
+# - the rule condition and action already exists 
+#	(independent of the name and description of a rule)
+# - 
+#sub RD_Repo_GetRule
+#{
+#	my %rule = @_;
+#	
+#	if ( RD_Repo_IfExists($rule{'ID'}) ) {
+#		return '{"TYPE":"Error", "Message":"Rule name already exists."}';
+#	}
+#	
+#	
+#}
+
 ################################################################################
 # RULE COMPILER
 ################################################################################
@@ -357,12 +390,27 @@ sub parseRule
 				$res{'ACTION'} = parseActorList($rule{$_});
 			}
 			when 'VDEV' {
-				# TODO: 
+				#parseVdev($rule{$_}); 
+				$res{'VDEV'} = vdevInterprator($rule{$_});
 			}
 		}
 	}
 	
-	$res{'RULE'} = "define ".$res{"ID"}.$res{'COND'}{'RULE'}.$res{'ACTION'}."}";
+	$res{'RULE'} = "define ".$res{"ID"};
+	
+	if ($res{'VDEV'}) {
+		$res{'RULE'} .= " ".$res{'VDEV'}{'RULE'}." ";
+		if($res{'VDEV'}{'COND'}) {
+			$res{'RULE'} .= "{ if (".$res{'VDEV'}{'COND'}.")";
+		}
+		$res{'RULE'} .= $res{'ACTION'};
+	} else {
+		$res{'RULE'} .= $res{'COND'}{'RULE'}.$res{'ACTION'}."}";
+	}
+	#$res{'RULE'} .= $res{'COND'}{'RULE'}.$res{'ACTION'}."}";
+	Log3($MODULE_NAME, 5, "Rule befor escape: ".$res{'RULE'});
+	$res{'RULE'} = escapePerlForFHEM123($res{'RULE'});
+	Log3($MODULE_NAME, 5, "Rule after escape: ".$res{'RULE'});
 	
 	return \%res;
 }
@@ -430,7 +478,7 @@ sub parseCondition
 	}
 	
 	
-	$condition{'params'} =~ s/%/$condition{'var'}/ge; 
+	$condition{'params'} =~ s/$placeholder/$condition{'var'}/ge; 
 	
 	return \%condition;
 }
@@ -490,7 +538,7 @@ sub parseCondParams
 					when '==' {$op = 'eq'; }
 					when '!=' {$op = 'ne'; }
 				}
-				$ret .= '% '. $op;
+				$ret .= "$placeholder $op";
 			}
 			when 1 {
 				$ret .= ' "'. $v .'"';
@@ -531,7 +579,6 @@ sub parseActor
 			}
 			when 'PARAMS'	{
 				$state = $v;	
-				$state =~ s/%/\\045/g;
 			}
 		}
 	}
@@ -541,6 +588,154 @@ sub parseActor
 	$rule .= '" }';
 	
 	return $rule;
+}
+
+# Parse rule of <vdev>:
+# {"TYPE": id, ["PARAMS":<params> | "REF_PARAMS": <ref_params>]}
+sub parseVdev
+{
+	my ($vdev) = @_;
+	
+	my %res;
+
+	while (my($k, $v) = each $vdev) {
+		
+		given ($k) {
+			when 'TYPE' {
+				$res{"TYPE"} = $v;
+			}
+			when 'PARAMS' {
+				$res{"PARAMS"} = $v;
+			}
+			when 'REF_PARAMS' {
+				$res{"REF_PARAMS"} = parseCondParams($v);
+			}
+		}
+	}
+	
+	Log3($MODULE_NAME, 4, Dumper(%res));
+}
+
+# interprates the vitual device (vdev) type
+sub vdevInterprator
+{
+	my %vdev = %{(shift)};
+	my %rule;
+	$rule{'VDEV'} = \%vdev;
+	
+	given ($vdev{"TYPE"}) {
+		when 'VD_DIGITAL_TIMER' {
+			my @sets = $vdev{'SETS'};
+			
+			my @wdays;
+			foreach (split(//, $sets[0]))
+			{
+			      push(@wdays,'$wday == '.$_);
+			}
+			
+			
+			my @beginTime = $sets[1];
+			
+			my @endTime = $sets[2];
+			
+
+			my @beginDate = split(/\./,$sets[3]);
+			my @date;
+			push(@date, '$mday >= '.$beginDate[0]);
+			push(@date, '$month >= '.$beginDate[1]);
+			push(@date, '$year >= '.$beginDate[2]);
+			
+			my @endDate = split(/\./,$sets[4]);
+			push(@date, '$mday <= '.$endDate[0]);
+			push(@date, '$month <= '.$endDate[1]);
+			push(@date, '$year <= '.$endDate[2]);
+			
+			my @cond;
+			push(@cond, createSeperatedString(' || ', @wdays));
+			push(@cond, createSeperatedString(' && ', @date));
+			
+			$rule{'COND'} = createSeperatedString(' && ', @cond);
+			# TODO
+			$rule{'RULE'} = "";
+		}
+		
+		
+		# at: http://fhem.de/commandref_DE.html#at
+		# <timespec> Format: [+][*{N}]<timedet>
+		# http://www.fhemwiki.de/wiki/AT_zu_einem_absoluten_Datum_ausf%C3%BChren
+		when 'at' {
+			$vdev{'TYPE'} = 'at';
+			
+			my $timespec;
+			if( $vdev{'PARAMS'}{'TIMESPEC'}{'RELATIVE'} == 1) {
+				$timespec .= '+';
+			}
+			
+			if( $vdev{'PARAMS'}{'TIMESPEC'}{'REPEAT'} == 1) {
+				$timespec .= '*';
+			}
+			
+			if( $vdev{'PARAMS'}{'TIMESPEC'}{'COUNT'}) {
+				$timespec .= '['.$vdev{'PARAMS'}{'TIMESPEC'}{'COUNT'}.']';
+			}
+			
+			if( $vdev{'PARAMS'}{'TIMESPEC'}{'TIME'}) {
+				# TIME Format: HH:MM:SS or HH:MM
+				$timespec .= $vdev{'PARAMS'}{'TIMESPEC'}{'TIME'};
+			} elsif( $vdev{'PARAMS'}{'TIMESPEC'}{'FUNC'}) {
+				$timespec .= '{'.$vdev{'PARAMS'}{'TIMESPEC'}{'FUNC'}.'}';
+			}
+			
+			my @cond;
+			if( $vdev{'PARAMS'}{'CONDITION'}{'WEEKDAY'} ) {
+				my @wdays;
+				foreach (split(//, $vdev{'PARAMS'}{'CONDITION'}{'WEEKDAY'}))
+				{
+				      push(@wdays,'$wday == '.$_);
+				}
+				push(@cond, createSeperatedString(' || ', @wdays));
+			}
+			
+			if( $vdev{'PARAMS'}{'CONDITION'}{'DATE'} ) {
+				push(@cond, '$mday == '.$vdev{'PARAMS'}{'CONDITION'}{'DATE'}{'DAY'});
+				push(@cond, '$month == '.$vdev{'PARAMS'}{'CONDITION'}{'DATE'}{'MONTH'});
+				push(@cond, '$year == '.$vdev{'PARAMS'}{'CONDITION'}{'DATE'}{'YEAR'});
+			}
+			
+			if( $vdev{'PARAMS'}{'CONDITION'}{'STARTDATE'} ) {
+				push(@cond, '$mday >= '.$vdev{'PARAMS'}{'CONDITION'}{'STARTDATE'}{'DAY'});
+				push(@cond, '$month >= '.$vdev{'PARAMS'}{'CONDITION'}{'STARTDATE'}{'MONTH'});
+				push(@cond, '$year >= '.$vdev{'PARAMS'}{'CONDITION'}{'STARTDATE'}{'YEAR'});
+			}
+			
+			if( $vdev{'PARAMS'}{'CONDITION'}{'ENDDATE'} ) {
+				push(@cond, '$mday >= '.$vdev{'PARAMS'}{'CONDITION'}{'ENDDATE'}{'DAY'});
+				push(@cond, '$month >= '.$vdev{'PARAMS'}{'CONDITION'}{'ENDDATE'}{'MONTH'});
+				push(@cond, '$year >= '.$vdev{'PARAMS'}{'CONDITION'}{'ENDDATE'}{'YEAR'});
+			}
+			
+			$rule{'COND'} = createSeperatedString(' && ', @cond);
+			$rule{'RULE'} = 'at '.$timespec;
+		}
+		# WeekdayTimer: http://fhem.de/commandref.html#WeekdayTimer
+		when 'WeekdayTimer' { }
+		# sequence: http://fhem.de/commandref_DE.html#sequence
+		when 'sequence' { }
+		# SUNRISE_EL: http://fhem.de/commandref.html#SUNRISE_EL
+		when 'SUNRISE_EL' { }
+		# rain: http://fhem.de/commandref.html#rain
+		when 'rain' { }
+		# Heating_Control: http://fhem.de/commandref_DE.html#Heating_Control
+		when 'Heating_Control' { }
+		# Calendar: http://fhem.de/commandref_DE.html#Calendar
+		when 'Calendar' { }
+		# THRESHOLD: http://fhem.de/commandref_DE.html#THRESHOLD
+		when 'THRESHOLD' { }
+		# watchdog: http://fhem.de/commandref_DE.html#watchdog
+		when 'watchdog' { }
+	}
+	
+	return \%rule;
 }
 
 # Returns a seperated string by a given seperator and an array.
@@ -566,6 +761,22 @@ sub createSeperatedString
 	$res .= $list[$lastIdx];
 	
 	return $res;
+}
+
+# Escape Perl specific symbols for FHEM
+sub escapePerlForFHEM123
+{
+	my ($str) = @_;
+	
+	Log3($MODULE_NAME, 5, "Bevor escape: ".$str);
+	
+	# escape % and @
+	$str =~ s/%/%%/g;
+	$str =~ s/@/@@/g;
+	
+	Log3($MODULE_NAME, 5, "After escape: ".$str);
+	
+	return $str;
 }
 
 # starts a telnet session to send the generated FHEM rule

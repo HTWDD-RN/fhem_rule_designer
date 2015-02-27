@@ -38,8 +38,33 @@ function generateRule() {
 	return rule;
 }
 
-function generateActions() {
-	return "";
+function generateAtRule() {
+	var rule = '[{';
+	
+	rule += generateKeyValuePair("ID", getID())+",";
+	rule += generateObject("PARAMS", generateParams(getID(), getDescription()) )+",";
+	
+	/*
+
+	*/
+	
+	var vdev = '"VDEV": {"TYPE": "at","PARAMS":{"TIMESPEC":{"FUNC": "';
+	vdev += getSunValue();
+	if(getRepeat()) {
+		vdev += '", "REPEAT":"1'
+	}
+	
+	vdev += '"}}},';
+	
+	rule += vdev;
+
+	rule += generateArray("ACTION", generateActions(), "obj");
+	
+	rule += '';
+	
+	rule += '}]';
+	
+	return rule;
 }
 
 function generateKeyValuePair(key, value) {

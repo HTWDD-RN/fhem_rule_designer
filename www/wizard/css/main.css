@@ -138,7 +138,17 @@ p.rulelistmenu span {
 	color: blue;
 }
 
+p.rulelistmenu a {
+	margin-right: 15px;
+	color: blue;
+	text-decoration: none;
+}
+
 p.rulelistmenu span:hover {
+	text-decoration: underline;
+}
+
+p.rulelistmenu a:hover {
 	text-decoration: underline;
 }
 
